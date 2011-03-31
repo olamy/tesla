@@ -33,6 +33,7 @@ import java.util.Properties;
 
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.eventspy.internal.EventSpyDispatcher;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.ExecutionEvent;
@@ -56,9 +57,10 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.project.ProjectSorter;
+import org.apache.maven.repository.AetherMirrorSelector;
 import org.apache.maven.repository.DelegatingLocalArtifactRepository;
 import org.apache.maven.repository.LocalRepositoryNotAccessibleException;
-import org.apache.maven.settings.Mirror;
+import org.apache.maven.repository.MirrorSelector;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.building.SettingsProblem;
@@ -93,14 +95,13 @@ import org.sonatype.aether.util.graph.selector.ExclusionDependencySelector;
 import org.sonatype.aether.util.graph.selector.OptionalDependencySelector;
 import org.sonatype.aether.util.graph.selector.ScopeDependencySelector;
 import org.sonatype.aether.util.graph.transformer.ChainedDependencyGraphTransformer;
-import org.sonatype.aether.util.graph.transformer.NearestVersionConflictResolver;
 import org.sonatype.aether.util.graph.transformer.ConflictMarker;
 import org.sonatype.aether.util.graph.transformer.JavaDependencyContextRefiner;
 import org.sonatype.aether.util.graph.transformer.JavaEffectiveScopeCalculator;
+import org.sonatype.aether.util.graph.transformer.NearestVersionConflictResolver;
 import org.sonatype.aether.util.graph.traverser.FatArtifactTraverser;
 import org.sonatype.aether.util.repository.ChainedWorkspaceReader;
 import org.sonatype.aether.util.repository.DefaultAuthenticationSelector;
-import org.sonatype.aether.util.repository.DefaultMirrorSelector;
 import org.sonatype.aether.util.repository.DefaultProxySelector;
 
 /**
@@ -147,6 +148,12 @@ public class DefaultMaven
     @Requirement
     private EventSpyDispatcher eventSpyDispatcher;
 
+    @Requirement
+    private MirrorSelector mirrorSelector;
+
+    @Requirement( role = ArtifactRepositoryLayout.class )
+    private Map<String, ArtifactRepositoryLayout> repositoryLayouts;
+    
     public MavenExecutionResult execute( MavenExecutionRequest request )
     {
         MavenExecutionResult result;
@@ -387,13 +394,7 @@ public class DefaultMaven
             }
         }
 
-        DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
-        for ( Mirror mirror : request.getMirrors() )
-        {
-            mirrorSelector.add( mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirror.getMirrorOf(),
-                                mirror.getMirrorOfLayouts() );
-        }
-        session.setMirrorSelector( mirrorSelector );
+        session.setMirrorSelector( new AetherMirrorSelector( mirrorSelector, repositoryLayouts, request.getMirrors() ) );
 
         DefaultProxySelector proxySelector = new DefaultProxySelector();
         for ( Proxy proxy : decrypted.getProxies() )

@@ -25,19 +25,18 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.settings.Mirror;
 
 /**
- * Handles the selection of mirrors for repositories.
- * 
- * @author Benjamin Bentmann
+ * Components that implement this role/interface are consulted when Maven determines mirror of artifact
+ * repositories.
  */
-public interface MirrorSelector
+public interface MirrorSelectorDelegate
 {
-
     /**
      * Determines the mirror for the specified repository.
      * 
      * @param repository The repository to determine the mirror for, must not be {@code null}.
      * @param mirrors The available mirrors, may be {@code null}.
      * @return The mirror specification for the repository or {@code null} if no mirror matched.
+     * @TODO decide how to report "forbidden" repository
      */
     Mirror getMirror( ArtifactRepository repository, List<Mirror> mirrors );
 

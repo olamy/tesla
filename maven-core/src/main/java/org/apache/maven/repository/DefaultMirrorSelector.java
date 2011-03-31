@@ -27,6 +27,7 @@ import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.settings.Mirror;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 
 @Component( role = MirrorSelector.class )
@@ -37,6 +38,9 @@ public class DefaultMirrorSelector
     private static final String WILDCARD = "*";
 
     private static final String EXTERNAL_WILDCARD = "external:*";
+
+    @Requirement( role = MirrorSelectorDelegate.class, optional = true )
+    private List<MirrorSelectorDelegate> delegates;
 
     public Mirror getMirror( ArtifactRepository repository, List<Mirror> mirrors )
     {
@@ -58,6 +62,16 @@ public class DefaultMirrorSelector
                 {
                     return mirror;
                 }
+            }
+        }
+
+        for ( MirrorSelectorDelegate delegate : delegates )
+        {
+            Mirror mirror = delegate.getMirror( repository, mirrors );
+
+            if ( mirror != null )
+            {
+                return mirror;
             }
         }
 
