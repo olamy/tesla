@@ -51,6 +51,7 @@
     <modelloVersion>1.4.1</modelloVersion>
     <jxpathVersion>1.3</jxpathVersion>
     <aetherVersion>1.11</aetherVersion>
+    <slf4jVersion>1.6.1</slf4jVersion>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
@@ -261,6 +262,17 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-interpolation</artifactId>
         <version>${plexusInterpolationVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-nop</artifactId>
+        <version>${slf4jVersion}</version>
+        <scope>runtime</scope>
       </dependency>
       <!--  Wagon -->
       <dependency>
