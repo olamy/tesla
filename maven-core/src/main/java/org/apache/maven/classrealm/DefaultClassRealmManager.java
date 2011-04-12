@@ -204,7 +204,7 @@ public class DefaultClassRealmManager
         imports.put( "javax.enterprise.inject.*", coreRealm );
         imports.put( "org.sonatype.inject.*", coreRealm );
         imports.put( "org.slf4j.*", coreRealm );
-        imports.put( "com.google.inject.*", coreRealm );
+        imports.put( "com.google.inject", coreRealm );
     }
 
     /**
