@@ -59,6 +59,7 @@ import org.apache.maven.settings.building.SettingsSource;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -370,6 +371,8 @@ public class MavenCli
             ContainerConfiguration cc = new DefaultContainerConfiguration()
                 .setClassWorld( cliRequest.classWorld )
                 .setRealm( setupContainerRealm( cliRequest ) )
+                .setClassPathScanning( PlexusConstants.SCANNING_INDEX )
+                .setAutoWiring( true )
                 .setName( "maven" );
 
             container = new DefaultPlexusContainer( cc );

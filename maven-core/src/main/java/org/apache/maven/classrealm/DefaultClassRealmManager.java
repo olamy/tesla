@@ -198,6 +198,11 @@ public class DefaultClassRealmManager
         imports.put( "org.codehaus.plexus.util.xml.pull.XmlPullParser", coreRealm );
         imports.put( "org.codehaus.plexus.util.xml.pull.XmlPullParserException", coreRealm );
         imports.put( "org.codehaus.plexus.util.xml.pull.XmlSerializer", coreRealm );
+
+        // javax.inject (JSR-330)
+        imports.put( "javax.inject.*", coreRealm );
+        imports.put( "javax.enterprise.inject.*", coreRealm );
+        imports.put( "org.sonatype.inject.*", coreRealm );
     }
 
     /**
