@@ -403,6 +403,8 @@ public class DefaultMaven
 
             if ( server.getConfiguration() != null )
             {
+                Properties headers = new Properties();
+
                 Xpp3Dom dom = (Xpp3Dom) server.getConfiguration();
                 for ( int i = dom.getChildCount() - 1; i >= 0; i-- )
                 {
@@ -411,10 +413,28 @@ public class DefaultMaven
                     {
                         dom.removeChild( i );
                     }
+                    else if ( "httpHeaders".equals( child.getName() ) )
+                    {
+                        for ( Xpp3Dom header : child.getChildren() )
+                        {
+                            Xpp3Dom n = header.getChild( "name" );
+                            Xpp3Dom v = header.getChild( "value" );
+                            if ( n != null && v != null )
+                            {
+                                String name = n.getValue();
+                                String value = v.getValue();
+                                if ( name != null && value != null )
+                                {
+                                    headers.put( name, value );
+                                }
+                            }
+                        }
+                    }
                 }
 
                 XmlPlexusConfiguration config = new XmlPlexusConfiguration( dom );
                 configProps.put( "aether.connector.wagon.config." + server.getId(), config );
+                configProps.put( "aether.connector.http.headers." + server.getId(), headers );
             }
 
             configProps.put( "aether.connector.perms.fileMode." + server.getId(), server.getFilePermissions() );
