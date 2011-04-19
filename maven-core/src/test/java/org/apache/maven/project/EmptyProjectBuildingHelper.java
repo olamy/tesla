@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
+import org.apache.maven.model.building.ModelProblemCollector;
 
 /**
  * A stub implementation to bypass artifact resolution from repositories.
@@ -56,6 +57,10 @@ public class EmptyProjectBuildingHelper
     }
 
     public void selectProjectRealm( MavenProject project )
+    {
+    }
+
+    public void callDelegates( MavenProject project, ProjectBuildingRequest request, ModelProblemCollector problems )
     {
     }
 

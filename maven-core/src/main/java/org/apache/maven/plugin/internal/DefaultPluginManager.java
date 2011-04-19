@@ -95,12 +95,14 @@ public class DefaultPluginManager
     {
         MavenSession session = legacySupport.getSession();
 
+        MavenProject project = session.getCurrentProject();
+
         PluginDescriptor pluginDescriptor;
         try
         {
             pluginDescriptor =
-                pluginManager.getPluginDescriptor( plugin, session.getCurrentProject().getRemotePluginRepositories(),
-                                                   session.getRepositorySession() );
+                pluginManager.getPluginDescriptor( plugin, project.getRemotePluginRepositories(),
+                                                   project.getRepositorySession() );
 
             pluginManager.setupPluginRealm( pluginDescriptor, session, null, null, null );
         }
@@ -127,12 +129,14 @@ public class DefaultPluginManager
     {
         MavenSession session = legacySupport.getSession();
 
+        MavenProject project = session.getCurrentProject();
+
         PluginDescriptor pluginDescriptor;
         try
         {
             pluginDescriptor =
-                pluginManager.getPluginDescriptor( plugin, session.getCurrentProject().getRemotePluginRepositories(),
-                                                   session.getRepositorySession() );
+                pluginManager.getPluginDescriptor( plugin, project.getRemotePluginRepositories(),
+                                                   project.getRepositorySession() );
 
             pluginManager.setupPluginRealm( pluginDescriptor, session, null, null, null );
         }
@@ -230,12 +234,10 @@ public class DefaultPluginManager
         InvalidVersionSpecificationException, InvalidPluginException, PluginManagerException, PluginNotFoundException,
         PluginVersionNotFoundException
     {
-        MavenSession session = legacySupport.getSession();
-
         if ( plugin.getVersion() == null )
         {
             PluginVersionRequest versionRequest =
-                new DefaultPluginVersionRequest( plugin, session.getRepositorySession(),
+                new DefaultPluginVersionRequest( plugin, project.getRepositorySession(),
                                                  project.getRemotePluginRepositories() );
             plugin.setVersion( pluginVersionResolver.resolve( versionRequest ).getVersion() );
         }
@@ -243,7 +245,7 @@ public class DefaultPluginManager
         try
         {
             return pluginManager.getPluginDescriptor( plugin, project.getRemotePluginRepositories(),
-                                                      session.getRepositorySession() );
+                                                      project.getRepositorySession() );
         }
         catch ( PluginResolutionException e )
         {

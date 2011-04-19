@@ -163,7 +163,7 @@ public class LifecycleDependencyResolver
         try
         {
             DefaultDependencyResolutionRequest request =
-                new DefaultDependencyResolutionRequest( project, session.getRepositorySession() );
+                new DefaultDependencyResolutionRequest( project, project.getRepositorySession() );
             request.setResolutionFilter( resolutionFilter );
 
             eventSpyDispatcher.onEvent( request );

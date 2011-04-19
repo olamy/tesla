@@ -25,6 +25,7 @@ import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Repository;
+import org.apache.maven.model.building.ModelProblemCollector;
 import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.version.PluginVersionResolutionException;
 
@@ -76,5 +77,14 @@ public interface ProjectBuildingHelper
      * @param project The project whose class realm should be selected, must not be {@code null}.
      */
     void selectProjectRealm( MavenProject project );
+
+    /**
+     * Calls any builder delegate for the specified project.
+     * 
+     * @param project The project whose builder delegates should be called, must not be {@code null}.
+     * @param request The request from which the project was built, must not be {@code null}.
+     * @param problems The container used to collect problems that were encountered, must not be {@code null}.
+     */
+    void callDelegates( MavenProject project, ProjectBuildingRequest request, ModelProblemCollector problems );
 
 }

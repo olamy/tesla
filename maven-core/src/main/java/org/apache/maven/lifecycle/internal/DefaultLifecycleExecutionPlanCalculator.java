@@ -152,7 +152,7 @@ public class DefaultLifecycleExecutionPlanCalculator
             mojoDescriptor =
                 pluginManager.getMojoDescriptor( mojoExecution.getPlugin(), mojoExecution.getGoal(),
                                                  project.getRemotePluginRepositories(),
-                                                 session.getRepositorySession() );
+                                                 project.getRepositorySession() );
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
         }
@@ -279,7 +279,7 @@ public class DefaultLifecycleExecutionPlanCalculator
                     {
                         MojoDescriptor mojoDescriptor =
                             pluginManager.getMojoDescriptor( plugin, goal, project.getRemotePluginRepositories(),
-                                                             session.getRepositorySession() );
+                                                             project.getRepositorySession() );
 
                         Map<Integer, List<MojoExecution>> phaseBindings = mappings.get( mojoDescriptor.getPhase() );
                         if ( phaseBindings != null )
@@ -529,7 +529,7 @@ public class DefaultLifecycleExecutionPlanCalculator
                     MojoDescriptor forkedMojoDescriptor =
                         pluginManager.getMojoDescriptor( forkedExecution.getPlugin(), forkedExecution.getGoal(),
                                                          project.getRemotePluginRepositories(),
-                                                         session.getRepositorySession() );
+                                                         project.getRepositorySession() );
 
                     forkedExecution.setMojoDescriptor( forkedMojoDescriptor );
                 }

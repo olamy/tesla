@@ -231,7 +231,14 @@ public class PluginParameterExpressionEvaluator
         }
         else if ( expression.equals( "repositorySystemSession" ) )
         {
-            value = session.getRepositorySession();
+            if ( project != null )
+            {
+                value = project.getRepositorySession();
+            }
+            if ( value == null )
+            {
+                value = session.getRepositorySession();
+            }
         }
         else if ( expression.equals( "mojo" ) )
         {

@@ -72,6 +72,7 @@ public class DefaultPluginPrefixRequest
         MavenProject project = session.getCurrentProject();
         if ( project != null )
         {
+            setRepositorySession( project.getRepositorySession() );
             setRepositories( project.getRemotePluginRepositories() );
             setPom( project.getModel() );
         }
