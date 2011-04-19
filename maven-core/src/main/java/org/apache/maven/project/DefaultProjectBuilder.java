@@ -609,7 +609,10 @@ public class DefaultProjectBuilder
                           null );
         }
 
-        projectBuildingHelper.callDelegates( project, project.getProjectBuildingRequest(), problems );
+        if ( project.getFile() != null )
+        {
+            projectBuildingHelper.callDelegates( project, project.getProjectBuildingRequest(), problems );
+        }
     }
 
     private String findProfilesXml( ModelBuildingResult result, Map<File, Boolean> profilesXmls )
