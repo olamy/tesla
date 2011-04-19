@@ -233,7 +233,7 @@ public class MojoDescriptorCreator
         }
 
         return pluginManager.getMojoDescriptor( plugin, goal, project.getRemotePluginRepositories(),
-                                                session.getRepositorySession() );
+                                                project.getRepositorySession() );
     }
 
     // TODO: take repo mans into account as one may be aggregating prefixes of many
@@ -272,7 +272,7 @@ public class MojoDescriptorCreator
         throws PluginVersionResolutionException
     {
         PluginVersionRequest versionRequest =
-            new DefaultPluginVersionRequest( plugin, session.getRepositorySession(),
+            new DefaultPluginVersionRequest( plugin, project.getRepositorySession(),
                                              project.getRemotePluginRepositories() );
         plugin.setVersion( pluginVersionResolver.resolve( versionRequest ).getVersion() );
     }

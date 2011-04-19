@@ -72,6 +72,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.repository.RemoteRepository;
 
@@ -185,6 +186,8 @@ public class MavenProject
 
     private final Set<String> lifecyclePhases = Collections.synchronizedSet( new LinkedHashSet<String>() );
 
+    private RepositorySystemSession repositorySession;
+
     private Logger logger;
 
     public MavenProject()
@@ -251,6 +254,7 @@ public class MavenProject
 
         this.mavenProjectBuilder = mavenProjectBuilder;
         this.projectBuilderConfiguration = projectBuilderConfiguration;
+        this.repositorySession = projectBuilderConfiguration.getRepositorySession();
         this.repositorySystem = repositorySystem;
         this.logger = logger;
     }
@@ -2183,6 +2187,30 @@ public class MavenProject
         {
             throw new IllegalStateException( "project building request missing" );
         }
+    }
+
+    /**
+     * Gets the repositoy system session to use for dependency resolution in context of this project.
+     * <strong>Warning:</strong> This is an utility method that is meant to assist integrators of Maven, it must not be
+     * used by Maven plugins.
+     * 
+     * @return The repository system session or {@code null}.
+     */
+    public RepositorySystemSession getRepositorySession()
+    {
+        return repositorySession;
+    }
+
+    /**
+     * Sets the repositoy system session to use for dependency resolution in context of this project.
+     * <strong>Warning:</strong> This is an utility method that is meant to assist integrators of Maven, it must not be
+     * used by Maven plugins.
+     * 
+     * @param repositorySession The repository system session, may be {@code null}.
+     */
+    public void setRepositorySession( RepositorySystemSession repositorySession )
+    {
+        this.repositorySession = repositorySession;
     }
 
 }

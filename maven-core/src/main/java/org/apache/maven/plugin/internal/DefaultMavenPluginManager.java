@@ -303,7 +303,7 @@ public class DefaultMavenPluginManager
 
         PluginRealmCache.Key cacheKey =
             pluginRealmCache.createKey( plugin, parent, foreignImports, filter, project.getRemotePluginRepositories(),
-                                        session.getRepositorySession() );
+                                        project.getRepositorySession() );
 
         PluginRealmCache.CacheRecord cacheRecord = pluginRealmCache.get( cacheKey );
 
@@ -352,7 +352,7 @@ public class DefaultMavenPluginManager
 
         DependencyNode root =
             pluginDependenciesResolver.resolve( plugin, RepositoryUtils.toArtifact( pluginArtifact ), dependencyFilter,
-                                                project.getRemotePluginRepositories(), session.getRepositorySession() );
+                                                project.getRemotePluginRepositories(), project.getRepositorySession() );
 
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
         root.accept( nlg );

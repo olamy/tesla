@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -38,6 +39,7 @@ import org.apache.maven.model.Extension;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Repository;
+import org.apache.maven.model.building.ModelProblemCollector;
 import org.apache.maven.plugin.ExtensionRealmCache;
 import org.apache.maven.plugin.PluginArtifactsCache;
 import org.apache.maven.plugin.PluginResolutionException;
@@ -51,6 +53,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.logging.Logger;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.graph.DependencyFilter;
@@ -393,6 +396,33 @@ public class DefaultProjectBuildingHelper
         }
 
         Thread.currentThread().setContextClassLoader( projectRealm );
+    }
+
+    private List<ProjectBuilderDelegate> getDelegates()
+    {
+        try
+        {
+            return container.lookupList( ProjectBuilderDelegate.class );
+        }
+        catch ( ComponentLookupException e )
+        {
+            logger.error( "Failed to lookup project builder delegates: " + e.getMessage(), e );
+
+            return Collections.emptyList();
+        }
+    }
+
+    public void callDelegates( MavenProject project, ProjectBuildingRequest request, ModelProblemCollector problems )
+    {
+        List<ProjectBuilderDelegate> delegates = getDelegates();
+
+        if ( !delegates.isEmpty() )
+        {
+            for ( ProjectBuilderDelegate delegate : delegates )
+            {
+                delegate.initProject( project, request, problems );
+            }
+        }
     }
 
 }

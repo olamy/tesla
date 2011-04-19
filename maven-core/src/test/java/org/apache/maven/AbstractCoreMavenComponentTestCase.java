@@ -138,6 +138,8 @@ public abstract class AbstractCoreMavenComponentTestCase
 
         MavenProject project = null;
 
+        initRepoSession( configuration );
+
         if ( pom != null )
         {
             project = projectBuilder.build( pom, configuration ).getProject();
@@ -147,9 +149,8 @@ public abstract class AbstractCoreMavenComponentTestCase
             project = createStubMavenProject();
             project.setRemoteArtifactRepositories( request.getRemoteRepositories() );
             project.setPluginArtifactRepositories( request.getPluginArtifactRepositories() );
+            project.setRepositorySession( configuration.getRepositorySession() );
         }
-
-        initRepoSession( configuration );
 
         MavenSession session =
             new MavenSession( getContainer(), configuration.getRepositorySession(), request,

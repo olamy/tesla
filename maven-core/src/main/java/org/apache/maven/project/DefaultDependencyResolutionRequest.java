@@ -40,6 +40,11 @@ public class DefaultDependencyResolutionRequest
         // enables default constructor
     }
 
+    public DefaultDependencyResolutionRequest( MavenProject project )
+    {
+        this( project, project.getRepositorySession() );
+    }
+
     public DefaultDependencyResolutionRequest( MavenProject project, RepositorySystemSession session )
     {
         setMavenProject( project );

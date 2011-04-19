@@ -21,6 +21,7 @@ package org.apache.maven.plugin.internal;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.LegacySupport;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.aether.RepositorySystemSession;
 
@@ -64,8 +65,21 @@ public class DefaultLegacySupport
 
     public RepositorySystemSession getRepositorySession()
     {
+        RepositorySystemSession repoSession = null;
         MavenSession session = getSession();
-        return ( session != null ) ? session.getRepositorySession() : null;
+        if ( session != null )
+        {
+            MavenProject project = session.getCurrentProject();
+            if ( project != null )
+            {
+                repoSession = project.getRepositorySession();
+            }
+            if ( repoSession == null )
+            {
+                repoSession = session.getRepositorySession();
+            }
+        }
+        return repoSession;
     }
 
 }

@@ -73,6 +73,7 @@ public class DefaultPluginVersionRequest
         MavenProject project = session.getCurrentProject();
         if ( project != null )
         {
+            setRepositorySession( project.getRepositorySession() );
             setRepositories( project.getRemotePluginRepositories() );
         }
     }
