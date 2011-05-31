@@ -84,6 +84,8 @@ public class DefaultMavenExecutionRequest
 
     private File userToolchainsFile;
 
+    private File extensionDirectory;
+
     // ----------------------------------------------------------------------------
     // Request
     // ----------------------------------------------------------------------------
@@ -185,6 +187,7 @@ public class DefaultMavenExecutionRequest
         copy.setWorkspaceReader( original.getWorkspaceReader() );
         copy.setNoSnapshotUpdates( original.isNoSnapshotUpdates() );
         copy.setExecutionListener( original.getExecutionListener() );
+        copy.setExtensionDirectory( original.getExtensionDirectory() );
         return copy;
     }
 
@@ -901,6 +904,18 @@ public class DefaultMavenExecutionRequest
     public MavenExecutionRequest setUserToolchainsFile( File userToolchainsFile )
     {
         this.userToolchainsFile = userToolchainsFile;
+
+        return this;
+    }
+
+    public File getExtensionDirectory()
+    {
+        return extensionDirectory;
+    }
+
+    public MavenExecutionRequest setExtensionDirectory( File extensionDirectory )
+    {
+        this.extensionDirectory = extensionDirectory;
 
         return this;
     }

@@ -123,6 +123,7 @@
           <version>1.0.0</version>
           <models>
             <model>src/main/mdo/toolchains.mdo</model>
+            <model>src/main/mdo/core-extension.mdo</model>
           </models>
         </configuration>
       </plugin>

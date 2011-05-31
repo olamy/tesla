@@ -253,7 +253,8 @@ public class DefaultProjectBuildingHelper
             ClassRealm extensionRealm;
             ExtensionDescriptor extensionDescriptor = null;
 
-            ExtensionRealmCache.CacheRecord recordRealm = extensionRealmCache.get( artifacts );
+            ExtensionRealmCache.Key recordKey = extensionRealmCache.createKey( artifacts, request.getSessionRealm() );
+            ExtensionRealmCache.CacheRecord recordRealm = extensionRealmCache.get( recordKey );
 
             if ( recordRealm != null )
             {
@@ -262,7 +263,7 @@ public class DefaultProjectBuildingHelper
             }
             else
             {
-                extensionRealm = classRealmManager.createExtensionRealm( plugin, artifacts );
+                extensionRealm = classRealmManager.createExtensionRealm( plugin, artifacts, request.getSessionRealm() );
 
                 try
                 {
@@ -292,7 +293,7 @@ public class DefaultProjectBuildingHelper
                     }
                 }
 
-                recordRealm = extensionRealmCache.put( artifacts, extensionRealm, extensionDescriptor );
+                recordRealm = extensionRealmCache.put( recordKey, extensionRealm, extensionDescriptor );
             }
 
             extensionRealmCache.register( project, recordRealm );
@@ -325,7 +326,7 @@ public class DefaultProjectBuildingHelper
 
         if ( record == null )
         {
-            projectRealm = classRealmManager.createProjectRealm( model, publicArtifacts );
+            projectRealm = classRealmManager.createProjectRealm( model, publicArtifacts, request.getSessionRealm() );
 
             Set<String> exclusions = new LinkedHashSet<String>();
 
@@ -383,13 +384,18 @@ public class DefaultProjectBuildingHelper
         return nlg.getArtifacts( false );
     }
 
-    public void selectProjectRealm( MavenProject project )
+    public void selectProjectRealm( MavenProject project, ClassLoader sessionRealm )
     {
         ClassLoader projectRealm = project.getClassRealm();
 
         if ( projectRealm == null )
         {
-            projectRealm = classRealmManager.getCoreRealm();
+            projectRealm = sessionRealm;
+
+            if ( projectRealm == null )
+            {
+                projectRealm = classRealmManager.getCoreRealm();
+            }
         }
 
         Thread.currentThread().setContextClassLoader( projectRealm );

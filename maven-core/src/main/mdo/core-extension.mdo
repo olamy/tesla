@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model xmlns="http://modello.codehaus.org/MODELLO/1.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <id>CoreExtension</id>
+  <name>CoreExtension</name>
+
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.maven.extension</value>
+    </default>
+  </defaults>
+
+  <classes>
+    <class rootElement="true" xml.tagName="extension">
+      <name>CoreExtension</name>
+      <version>1.0.0+</version>
+      <fields>
+
+        <field>
+          <name>prerequisites</name>
+          <version>1.0.0+</version>
+          <association>
+            <type>Prerequisites</type>
+          </association>
+        </field>
+
+        <field>
+          <name>groupId</name>
+          <version>1.0.0+</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>artifactId</name>
+          <version>1.0.0+</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>version</name>
+          <version>1.0.0+</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+
+        <field>
+          <name>servers</name>
+          <version>1.0.0+</version>
+          <association>
+            <type>Server</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+
+        <field>
+          <name>pluginRepositories</name>
+          <version>1.0.0+</version>
+          <association>
+            <type>Repository</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+
+        <field>
+          <name>properties</name>
+          <version>1.0.0+</version>
+          <type>Properties</type>
+          <association xml.mapStyle="inline">
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+
+      </fields>
+    </class>
+
+
+
+    <class java.clone="deep">
+      <name>Prerequisites</name>
+      <version>1.0.0+</version>
+      <description>Describes the prerequisites a project can have.</description>
+      <fields>
+        <field>
+          <name>maven</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+          <defaultValue>3.0.4</defaultValue>
+          <description>The minimum version of Maven required by this core extension module.</description>
+          <required>false</required>
+        </field>
+      </fields>
+    </class>
+
+
+    <!-- TODO: reproduced from maven-settings/settings.mdo, instead should inherit code and link to external docs -->
+    <class>
+      <name>Server</name>
+      <version>1.0.0+</version>
+      <description>
+        <![CDATA[
+        The <code>&lt;server&gt;</code> element contains informations required to a server settings.
+        ]]></description>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+          <defaultValue>default</defaultValue>
+          <required>true</required>
+        </field>
+        <field>
+          <name>username</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            The username used to authenticate.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>password</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            The password used in conjunction with the username to authenticate.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>privateKey</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            The private key location used to authenticate.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>passphrase</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            The passphrase used in conjunction with the privateKey to authenticate.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+
+
+    <!-- TODO: reproduced from maven-model/maven.mdo, instead should inherit code and link to external docs -->
+    <class java.clone="deep">
+      <name>RepositoryBase</name>
+      <version>1.0.0+</version>
+      <description>
+        <![CDATA[
+        Repository contains the information needed
+        for establishing connections with remote repoistory
+        ]]>
+      </description>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            A unique identifier for a repository.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            Human readable name of the repository.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>url</name>
+          <version>1.0.0+</version>
+          <description>
+            <![CDATA[
+            The url of the repository.
+            ]]>
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>layout</name>
+          <version>1.0.0+</version>
+          <description>
+            The type of layout this repository uses for locating and
+            storing artifacts - can be "legacy" or "default".
+          </description>
+          <type>String</type>
+          <defaultValue>default</defaultValue>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.0+</version>
+          <code>
+            <![CDATA[
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals( Object obj )
+    {
+        RepositoryBase other =  (RepositoryBase) obj;
+
+        boolean retValue = false;
+
+        if ( id != null )
+        {
+            retValue = id.equals( other.id );
+        }
+
+        return retValue;
+    }
+            ]]>
+          </code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>Repository</name>
+      <superClass>RepositoryBase</superClass>
+      <version>1.0.0+</version>
+      <description>
+        Repository contains the information needed for establishing
+        connections with remote repoistory
+      </description>
+      <fields>
+        <field>
+          <name>releases</name>
+          <version>1.0.0+</version>
+          <description>
+            How to handle downloading of releases from this repository
+          </description>
+          <association>
+            <type>RepositoryPolicy</type>
+          </association>
+        </field>
+        <field>
+          <name>snapshots</name>
+          <version>1.0.0+</version>
+          <description>
+            How to handle downloading of snapshots from this repository
+          </description>
+          <association>
+            <type>RepositoryPolicy</type>
+          </association>
+        </field>
+      </fields>
+      <!-- prevent modello generation of an incorrect equals method. Could be avoided by using <identity/> tags to mark ID as the only identity field -->
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.0+</version>
+          <code>
+            <![CDATA[
+    /**
+     * @see org.apache.maven.settings.RepositoryBase#equals(java.lang.Object)
+     */
+    public boolean equals( Object obj )
+    {
+        return super.equals( obj );
+    }
+            ]]>
+          </code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class java.clone="deep">
+      <name>RepositoryPolicy</name>
+      <version>1.0.0+</version>
+      <description>Download policy</description>
+      <fields>
+        <field>
+          <name>enabled</name>
+          <version>1.0.0+</version>
+          <description>
+            Whether to use this repository for downloading this type of
+            artifact.
+          </description>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>updatePolicy</name>
+          <version>1.0.0+</version>
+          <description>
+            The frequency for downloading updates - can be "always",
+            "daily" (default), "interval:XXX" (in minutes) or "never"
+            (only if it doesn't exist locally).
+          </description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>checksumPolicy</name>
+          <version>1.0.0+</version>
+          <description>
+            What to do when verification of an artifact checksum fails -
+            warn, fail, etc. Valid values are "fail" or "warn".
+          </description>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+
+  </classes>
+</model>

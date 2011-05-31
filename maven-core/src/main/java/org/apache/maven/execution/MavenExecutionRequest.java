@@ -278,6 +278,9 @@ public interface MavenExecutionRequest
     File getUserToolchainsFile();
     MavenExecutionRequest setUserToolchainsFile( File userToolchainsFile );
 
+    File getExtensionDirectory();
+    MavenExecutionRequest setExtensionDirectory( File extensionDirectory );
+
     ExecutionListener getExecutionListener();
     MavenExecutionRequest setExecutionListener( ExecutionListener executionListener );
 

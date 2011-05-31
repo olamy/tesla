@@ -37,6 +37,14 @@ import org.sonatype.aether.artifact.Artifact;
 public interface ExtensionRealmCache
 {
 
+    /**
+     * A cache key.
+     */
+    interface Key
+    {
+        // marker interface for cache keys
+    }
+
     public static class CacheRecord
     {
 
@@ -52,10 +60,11 @@ public interface ExtensionRealmCache
 
     }
 
-    CacheRecord get( List<? extends Artifact> extensionArtifacts );
+    Key createKey( List<? extends Artifact> extensionArtifacts, ClassLoader sessionRealm );
 
-    CacheRecord put( List<? extends Artifact> extensionArtifacts, ClassRealm extensionRealm,
-                     ExtensionDescriptor extensionDescriptor );
+    CacheRecord get( Key key );
+
+    CacheRecord put( Key key, ClassRealm extensionRealm, ExtensionDescriptor extensionDescriptor );
 
     void flush();
 

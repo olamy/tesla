@@ -118,7 +118,7 @@ class DefaultModelBuildingListener
                 event.getProblems().add( Severity.ERROR, "Unresolveable build extension: " + e.getMessage(), null, e );
             }
 
-            projectBuildingHelper.selectProjectRealm( project );
+            projectBuildingHelper.selectProjectRealm( project, projectBuildingRequest.getSessionRealm() );
         }
 
         // build the regular repos after extensions are loaded to allow for custom layouts

@@ -75,6 +75,6 @@ public interface ProjectBuildingHelper
      *
      * @param project The project whose class realm should be selected, must not be {@code null}.
      */
-    void selectProjectRealm( MavenProject project );
+    void selectProjectRealm( MavenProject project, ClassLoader sessionRealm );
 
 }

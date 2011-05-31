@@ -926,6 +926,7 @@ public class MavenCli
             .setUpdateSnapshots( updateSnapshots ) // default: false
             .setNoSnapshotUpdates( noSnapshotUpdates ) // default: false
             .setGlobalChecksumPolicy( globalChecksumPolicy ) // default: warn
+            .setExtensionDirectory( new File( MavenCli.userMavenConfigurationHome, "ext" ) )
             .setUserToolchainsFile( userToolchainsFile );
 
         if ( alternatePomFile != null )
