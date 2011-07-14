@@ -29,6 +29,7 @@ under the License.
       <outputDirectory>boot</outputDirectory>
       <includes>
         <include>org.codehaus.plexus:plexus-classworlds</include>
+        <include>org.sonatype.maven.shell:mvnsh-bootstrap</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -38,8 +39,10 @@ under the License.
         <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
         <exclude>junit:junit</exclude>
         <exclude>log4j:log4j</exclude>
-        <exclude>commons-logging:commons-logging-api</exclude>
-      
+        <exclude>commons-logging:commons-logging-api</exclude>  
+        <exclude>org.sonatype.maven.shell:mvnsh-bootstrap</exclude>
+        <exclude>org.sonatype.maven.shell:mvnsh-personality</exclude>
+        <exclude>org.sonatype.maven.shell:mvnsh-maven</exclude>            
         <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
         <exclude>org.codehaus.plexus:plexus-component-api</exclude>
         <exclude>classworlds:classworlds</exclude>
@@ -63,6 +66,16 @@ under the License.
         <exclude>org.apache.maven.mercury:mercury-crypto-basic</exclude-->        
       </excludes>
     </dependencySet>
+    <!--
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>lib/mvnsh</outputDirectory>
+      <excludes>
+        <exclude>org.sonatype.maven.shell:mvnsh-personality</exclude>
+        <exclude>org.sonatype.maven.shell:mvnsh-maven</exclude>                   
+      </excludes>
+    </dependencySet>    
+    -->
   </dependencySets>
   <fileSets>
     <fileSet>
@@ -101,6 +114,10 @@ under the License.
     <fileSet>
       <directory>src/lib</directory>
       <outputDirectory>lib</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/mvnsh</directory>
+      <outputDirectory>lib/mvnsh</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>

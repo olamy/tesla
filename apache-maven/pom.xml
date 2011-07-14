@@ -66,6 +66,24 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
     </dependency>
+    <!-- Shell -->
+    <dependency>
+      <groupId>org.sonatype.maven.shell</groupId>
+      <artifactId>mvnsh-bootstrap</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <!--
+    <dependency>
+      <groupId>org.sonatype.maven.shell</groupId>
+      <artifactId>mvnsh-maven</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.maven.shell</groupId>
+      <artifactId>mvnsh-personality</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    -->
   </dependencies>
 
   <build>
@@ -103,6 +121,24 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.eclipse.tesla.plugins</groupId>
+        <artifactId>tesla-proviso-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>provision</id>
+            <phase>package</phase>
+            <goals>
+              <goal>provision</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/mvnsh</outputDirectory>
+              <artifact>org.sonatype.maven.shell:mvnsh-personality:3.0.4-SNAPSHOT</artifact>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>            
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
@@ -119,7 +155,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>      
     </plugins>
   </build>
 
