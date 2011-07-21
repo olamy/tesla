@@ -72,7 +72,6 @@
       <artifactId>mvnsh-bootstrap</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
-    <!--
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
       <artifactId>mvnsh-maven</artifactId>
@@ -83,7 +82,6 @@
       <artifactId>mvnsh-personality</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
-    -->
   </dependencies>
 
   <build>
@@ -132,12 +130,40 @@
               <goal>provision</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/mvnsh</outputDirectory>
-              <artifact>org.sonatype.maven.shell:mvnsh-personality:3.0.4-SNAPSHOT</artifact>
+              <assembly>
+                <directory>${basedir}/target/assembly</directory>
+                <fileSets>
+                  <fileSet>
+                    <directory>/</directory>
+                    <artifacts>
+                      <artifact>org.apache.maven:maven-embedder</artifact>                      
+                    </artifacts>                    
+                    <excludes>
+                      <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
+                    </excludes>
+                    <fileSets>
+                      <fileSet>
+                        <directory>boot</directory>
+                        <artifacts>
+                          <artifact>org.codehaus.plexus:plexus-classworlds</artifact>
+                        </artifacts>
+                      </fileSet>
+                      <fileSet>
+                        <directory>mvnsh</directory>
+                        <artifacts>
+                          <artifact>org.sonatype.maven.shell:mvnsh-personality</artifact>
+                          <artifact>org.sonatype.maven.shell:mvnsh-maven</artifact>
+                        </artifacts>
+                      </fileSet>
+                    </fileSets>                  
+                  </fileSet>
+                </fileSets>
+              </assembly>
             </configuration>
           </execution>
         </executions>
-      </plugin>            
+      </plugin> 
+      <!--           
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -156,6 +182,7 @@
           </execution>
         </executions>
       </plugin>      
+      -->
     </plugins>
   </build>
 
