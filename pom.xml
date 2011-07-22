@@ -40,7 +40,7 @@
     <classWorldsVersion>2.4</classWorldsVersion>
     <commonsCliVersion>1.2</commonsCliVersion>
     <easyMockVersion>1.2_Java1.3</easyMockVersion>
-    <junitVersion>4.8.2</junitVersion>
+    <junitVersion>3.8.2</junitVersion>
     <plexusVersion>1.5.5</plexusVersion>
     <plexusInterpolationVersion>1.14</plexusInterpolationVersion>
     <plexusUtilsVersion>2.0.6</plexusUtilsVersion>
@@ -320,7 +320,7 @@
       </dependency>
       <dependency>
         <groupId>org.sonatype.aether</groupId>
-        <artifactId>aether-connector-wagon</artifactId>
+        <artifactId>aether-connector-asynchttpclient</artifactId>
         <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
@@ -328,6 +328,22 @@
             <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-connector-file</artifactId>
+        <version>${aetherVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.maven</groupId>
+        <artifactId>wagon-ahc</artifactId>
+        <version>1.2.0</version>
       </dependency>
       <!--  Commons -->
       <dependency>
@@ -478,6 +494,42 @@
           <artifactId>maven-site-plugin</artifactId>
           <version>2.1</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <version>2.6</version>
+         </plugin>
+         <plugin>
+           <groupId>org.sonatype.plugins</groupId>
+           <artifactId>sisu-maven-plugin</artifactId>
+           <version>1.1</version>
+         </plugin>
+         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+         <plugin>
+           <groupId>org.eclipse.m2e</groupId>
+           <artifactId>lifecycle-mapping</artifactId>
+           <version>1.0.0</version>
+           <configuration>
+             <lifecycleMappingMetadata>
+               <pluginExecutions>
+                 <pluginExecution>
+                   <pluginExecutionFilter>
+                     <groupId>org.sonatype.plugins</groupId>
+                     <artifactId>sisu-maven-plugin</artifactId>
+                     <versionRange>[1.1,)</versionRange>
+                     <goals>
+                       <goal>main-index</goal>
+                       <goal>test-index</goal>
+                     </goals>
+                   </pluginExecutionFilter>
+                   <action>
+                     <ignore></ignore>
+                   </action>
+                 </pluginExecution>
+               </pluginExecutions>
+             </lifecycleMappingMetadata>
+           </configuration>
+         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -502,6 +554,18 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>sisu-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>main-index</goal>
+              <goal>test-index</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>      
     </plugins>
   </build>
 

@@ -51,16 +51,20 @@
       <artifactId>commons-cli</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-http-lightweight</artifactId>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-connector-asynchttpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-connector-file</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.maven</groupId>
+      <artifactId>wagon-ahc</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-file</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-wagon</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -134,28 +138,48 @@
                 <directory>${basedir}/target/assembly</directory>
                 <fileSets>
                   <fileSet>
-                    <directory>/</directory>
+                    <directory>lib</directory>
                     <artifacts>
-                      <artifact>org.apache.maven:maven-embedder</artifact>                      
+                      <artifact>org.apache.maven:maven-embedder</artifact>       
+                      <artifact>org.apache.maven.wagon:wagon-file</artifact>       
+                      <artifact>org.sonatype.aether:aether-connector-file</artifact>                      
                     </artifacts>                    
                     <excludes>
                       <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
+                      <exclude>org.slf4j:slf4j-api</exclude>
                     </excludes>
                     <fileSets>
-                      <fileSet>
-                        <directory>boot</directory>
-                        <artifacts>
-                          <artifact>org.codehaus.plexus:plexus-classworlds</artifact>
-                        </artifacts>
-                      </fileSet>
                       <fileSet>
                         <directory>mvnsh</directory>
                         <artifacts>
                           <artifact>org.sonatype.maven.shell:mvnsh-personality</artifact>
                           <artifact>org.sonatype.maven.shell:mvnsh-maven</artifact>
                         </artifacts>
+                        <excludes>
+                          <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      
+                          <exclude>org.sonatype.gossip:gossip-core</exclude>                      
+                          <exclude>org.sonatype.gossip:gossip-slf4j</exclude>                                              
+                        </excludes>
                       </fileSet>
+                      <fileSet>
+                        <directory>ext</directory>
+                        <artifacts>
+                          <artifact>org.sonatype.maven:wagon-ahc</artifact>       
+                          <artifact>org.sonatype.aether:aether-connector-asynchttpclient</artifact>                      
+                          <artifact>org.sonatype.gossip:gossip-bootstrap</artifact>                      
+                          <artifact>org.sonatype.gossip:gossip-core</artifact>                      
+                          <artifact>org.sonatype.gossip:gossip-slf4j</artifact>                      
+                          <artifact>org.slf4j:slf4j-api</artifact>                                                           
+                        </artifacts>
+                      </fileSet>                                                              
                     </fileSets>                  
+                  </fileSet>
+                  <fileSet>
+                    <directory>boot</directory>
+                    <artifacts>
+                      <artifact>org.codehaus.plexus:plexus-classworlds</artifact>
+                      <artifact>org.sonatype.maven.shell:mvnsh-bootstrap</artifact>                      
+                    </artifacts>
                   </fileSet>
                 </fileSets>
               </assembly>
@@ -163,7 +187,6 @@
           </execution>
         </executions>
       </plugin> 
-      <!--           
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -182,7 +205,6 @@
           </execution>
         </executions>
       </plugin>      
-      -->
     </plugins>
   </build>
 

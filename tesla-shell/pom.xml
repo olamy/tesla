@@ -1,393 +1,385 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
- ~ Copyright (c) 2009-2011 Sonatype, Inc.
- ~ All rights reserved. This program and the accompanying materials
- ~ are made available under the terms of the Eclipse Public License v1.0
- ~ and Apache License v2.0 which accompanies this distribution.
- ~ The Eclipse Public License is available at 
- ~   http://www.eclipse.org/legal/epl-v10.html
- ~ The Apache License v2.0 is available at
- ~   http://www.apache.org/licenses/LICENSE-2.0.html
- ~ You may elect to redistribute this code under either of these licenses. 
--->
+<!-- ~ Copyright (c) 2009-2011 Sonatype, Inc. ~ All rights reserved. This program and the accompanying materials ~ are made available under the 
+  terms of the Eclipse Public License v1.0 ~ and Apache License v2.0 which accompanies this distribution. ~ The Eclipse Public License is available 
+  at ~ http://www.eclipse.org/legal/epl-v10.html ~ The Apache License v2.0 is available at ~ http://www.apache.org/licenses/LICENSE-2.0.html ~ 
+  You may elect to redistribute this code under either of these licenses. -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
-  
-    <groupId>org.sonatype.maven.shell</groupId>
-    <artifactId>mvnsh</artifactId>
-    <name>Maven Shell</name>
-    <packaging>pom</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <gshellVersion>2.6.5-SNAPSHOT</gshellVersion>
-        <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
-        <forgeReleaseUrl>https://repository.sonatype.org/service/local/staging/deploy/maven2</forgeReleaseUrl>
-    </properties>
-    
-    <dependencyManagement>
-        <dependencies>
+  <groupId>org.sonatype.maven.shell</groupId>
+  <artifactId>mvnsh</artifactId>
+  <name>Maven Shell</name>
+  <packaging>pom</packaging>
 
-            <dependency>
-                <groupId>org.sonatype.gossip</groupId>
-                <artifactId>gossip-bootstrap</artifactId>
-                <version>1.7</version>
-            </dependency>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <gshellVersion>2.6.5-SNAPSHOT</gshellVersion>
+    <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
+    <forgeReleaseUrl>https://repository.sonatype.org/service/local/staging/deploy/maven2</forgeReleaseUrl>
+  </properties>
 
-            <dependency>
-                <groupId>org.sonatype.gossip</groupId>
-                <artifactId>gossip-slf4j</artifactId>
-                <version>1.7</version>
-            </dependency>
+  <dependencyManagement>
+    <dependencies>
 
-            <dependency>
-                <groupId>org.sonatype.gossip</groupId>
-                <artifactId>gossip-support</artifactId>
-                <version>1.7</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-bootstrap</artifactId>
+        <version>1.7</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-embedder</artifactId>
-                <version>${mavenVersion}</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-slf4j</artifactId>
+        <version>1.7</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-model</artifactId>
-                <version>${mavenVersion}</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-support</artifactId>
+        <version>1.7</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.aether</groupId>
-                <artifactId>aether-connector-asynchttpclient</artifactId>
-                <version>1.11</version>
-            </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-embedder</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.aether</groupId>
-                <artifactId>aether-connector-wagon</artifactId>
-                <version>1.11</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-container-default</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.grrrowl</groupId>
-                <artifactId>grrrowl</artifactId>
-                <version>1.1.1</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-connector-asynchttpclient</artifactId>
+        <version>1.11</version>
+      </dependency>
 
-            <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>1.3.1</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-connector-wagon</artifactId>
+        <version>1.11</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>1.4</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.grrrowl</groupId>
+        <artifactId>grrrowl</artifactId>
+        <version>1.1.1</version>
+      </dependency>
 
-            <!-- GShell -->
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.3.1</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.gshell</groupId>
-                <artifactId>gshell-core</artifactId>
-                <version>${gshellVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.inject</groupId>
-                        <artifactId>guice</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.4</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.gshell</groupId>
-                <artifactId>gshell-core</artifactId>
-                <classifier>tests</classifier>
-                <version>${gshellVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.google.inject</groupId>
-                        <artifactId>guice</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+      <!-- GShell -->
 
-            <dependency>
-                <groupId>org.sonatype.gshell</groupId>
-                <artifactId>gshell-launcher</artifactId>
-                <version>${gshellVersion}</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gshell</groupId>
+        <artifactId>gshell-core</artifactId>
+        <version>${gshellVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.gshell.ext</groupId>
-                <artifactId>gshell-gossip</artifactId>
-                <version>${gshellVersion}</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gshell</groupId>
+        <artifactId>gshell-core</artifactId>
+        <classifier>tests</classifier>
+        <version>${gshellVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.gshell.ext</groupId>
-                <artifactId>gshell-plexus</artifactId>
-                <version>${gshellVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-container-default</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            
-            <!-- INTERNAL -->
+      <dependency>
+        <groupId>org.sonatype.gshell</groupId>
+        <artifactId>gshell-launcher</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.maven.shell</groupId>
-                <artifactId>mvnsh-bootstrap</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gshell.ext</groupId>
+        <artifactId>gshell-gossip</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.maven.shell</groupId>
-                <artifactId>mvnsh-maven</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
+      <dependency>
+        <groupId>org.sonatype.gshell.ext</groupId>
+        <artifactId>gshell-plexus</artifactId>
+        <version>${gshellVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-            <dependency>
-                <groupId>org.sonatype.maven.shell</groupId>
-                <artifactId>mvnsh-personality</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+      <!-- INTERNAL -->
 
-    <modules>
-        <module>mvnsh-commands</module>
-        <module>mvnsh-bootstrap</module>
-        <module>mvnsh-personality</module>
-    </modules>
+      <dependency>
+        <groupId>org.sonatype.maven.shell</groupId>
+        <artifactId>mvnsh-bootstrap</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+      </dependency>
 
-    <build>
-        <defaultGoal>install</defaultGoal>
+      <dependency>
+        <groupId>org.sonatype.maven.shell</groupId>
+        <artifactId>mvnsh-maven</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+      </dependency>
 
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
+      <dependency>
+        <groupId>org.sonatype.maven.shell</groupId>
+        <artifactId>mvnsh-personality</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-            <resource>
-                <directory>${project.basedir}/src/main/filtered-resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-        </resources>
+  <modules>
+    <module>mvnsh-commands</module>
+    <module>mvnsh-bootstrap</module>
+    <module>mvnsh-personality</module>
+    <module>gshell</module>
+  </modules>
 
-        <testResources>
-            <testResource>
-                <directory>${project.basedir}/src/test/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </testResource>
+  <build>
+    <defaultGoal>install</defaultGoal>
 
-            <testResource>
-                <directory>${project.basedir}/src/test/filtered-resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </testResource>
-        </testResources>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <forkMode>once</forkMode>
-                        <argLine>-ea</argLine>
-                        <failIfNoTests>false</failIfNoTests>
-                        <workingDirectory>${project.build.directory}</workingDirectory>
-                        <excludes>
-                            <exclude>**/Abstract*.java</exclude>
-                            <exclude>**/Test*.java</exclude>
-                        </excludes>
-                        <includes>
-                            <include>**/*Test.java</include>
-                        </includes>
-                    </configuration>
-                </plugin>
+      <resource>
+        <directory>${project.basedir}/src/main/filtered-resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.5</source>
-                        <target>1.5</target>
-                    </configuration>
-                </plugin>
+    <testResources>
+      <testResource>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </testResource>
 
-                <plugin>
-                    <groupId>org.sonatype.maven.plugins</groupId>
-                    <artifactId>maven-sisu-assembler-plugin</artifactId>
-                    <version>1.0.7</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+      <testResource>
+        <directory>${project.basedir}/src/test/filtered-resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </testResource>
+    </testResources>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.0,)</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>[1.5,)</version>
-                                </requireJavaVersion>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>org.codehaus.plexus:plexus-container-default</exclude>
-                                        <exclude>org.sonatype.spice:spice-inject-plexus</exclude>
-                                        <exclude>com.google.inject:guice</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <forkMode>once</forkMode>
+            <argLine>-ea</argLine>
+            <failIfNoTests>false</failIfNoTests>
+            <workingDirectory>${project.build.directory}</workingDirectory>
+            <excludes>
+              <exclude>**/Abstract*.java</exclude>
+              <exclude>**/Test*.java</exclude>
+            </excludes>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+          </configuration>
+        </plugin>
 
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>sisu-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>main-index</goal>
-                            <goal>test-index</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+        </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-component-metadata</artifactId>
-                <version>1.5.4</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-metadata</goal>
-                            <goal>generate-test-metadata</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+        <plugin>
+          <groupId>org.sonatype.maven.plugins</groupId>
+          <artifactId>maven-sisu-assembler-plugin</artifactId>
+          <version>1.0.7</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 
-            <!--
-            mvn license:format -N
-            If its a new year, update the year range in the header.txt file
-            -->
-            <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.9.0</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <strictCheck>true</strictCheck>
-                    <header>${project.basedir}/header.txt</header>
-                    <useDefaultExcludes>false</useDefaultExcludes>
-                    <includes>
-                        <include>**/pom.xml</include>
-                        <include>**/*.xml</include>
-                        <include>**/*.xsd</include>
-                        <include>**/*.xjb</include>
-                        <include>**/*.mdo</include>
-                        <include>**/*.properties</include>
-                        <include>**/*.java</include>
-                        <include>**/*.groovy</include>
-                        <include>**/*.scala</include>
-                        <include>**/*.aj</include>
-                        <include>**/*.js</include>
-                        <include>**/*.css</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/target/**</exclude>
-                    </excludes>
-                    <mapping>
-                        <scala>JAVADOC_STYLE</scala>
-                        <xjb>XML_STYLE</xjb>
-                        <mdo>XML_STYLE</mdo>
-                    </mapping>
-                </configuration>
-            </plugin>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.0,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[1.5,)</version>
+                </requireJavaVersion>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.codehaus.plexus:plexus-container-default</exclude>
+                    <exclude>org.sonatype.spice:spice-inject-plexus</exclude>
+                    <exclude>com.google.inject:guice</exclude>
+                  </excludes>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <signature>
-                                <groupId>org.codehaus.mojo.signature</groupId>
-                                <artifactId>java15</artifactId>
-                                <version>1.0</version>
-                            </signature>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>sisu-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>main-index</goal>
+              <goal>test-index</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <goals>deploy</goals>
-                    <arguments>-B -Prelease</arguments>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-component-metadata</artifactId>
+        <version>1.5.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-metadata</goal>
+              <goal>generate-test-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- mvn license:format -N If its a new year, update the year range in the header.txt file -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <strictCheck>true</strictCheck>
+          <header>${project.basedir}/header.txt</header>
+          <useDefaultExcludes>false</useDefaultExcludes>
+          <includes>
+            <include>**/pom.xml</include>
+            <include>**/*.xml</include>
+            <include>**/*.xsd</include>
+            <include>**/*.xjb</include>
+            <include>**/*.mdo</include>
+            <include>**/*.properties</include>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+            <include>**/*.scala</include>
+            <include>**/*.aj</include>
+            <include>**/*.js</include>
+            <include>**/*.css</include>
+          </includes>
+          <excludes>
+            <exclude>**/target/**</exclude>
+          </excludes>
+          <mapping>
+            <scala>JAVADOC_STYLE</scala>
+            <xjb>XML_STYLE</xjb>
+            <mdo>XML_STYLE</mdo>
+          </mapping>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java15</artifactId>
+                <version>1.0</version>
+              </signature>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <goals>deploy</goals>
+          <arguments>-B -Prelease</arguments>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 
 </project>

@@ -23,13 +23,13 @@ under the License.
     <format>zip</format>
     <format>tar.gz</format>
   </formats>
+  <!--
   <dependencySets>
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
       <outputDirectory>boot</outputDirectory>
       <includes>
         <include>org.codehaus.plexus:plexus-classworlds</include>
-        <include>org.sonatype.maven.shell:mvnsh-bootstrap</include>
       </includes>
     </dependencySet>
     <dependencySet>
@@ -39,44 +39,11 @@ under the License.
         <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
         <exclude>junit:junit</exclude>
         <exclude>log4j:log4j</exclude>
-        <exclude>commons-logging:commons-logging-api</exclude>  
-        <exclude>org.sonatype.maven.shell:mvnsh-bootstrap</exclude>
-        <exclude>org.sonatype.maven.shell:mvnsh-personality</exclude>
-        <exclude>org.sonatype.maven.shell:mvnsh-maven</exclude>            
-        <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
-        <exclude>org.codehaus.plexus:plexus-component-api</exclude>
-        <exclude>classworlds:classworlds</exclude>
-        <exclude>junit:junit</exclude>
-        <exclude>jmock:jmock</exclude>
-        <exclude>xml-apis:xml-apis</exclude>
-        <exclude>org.apache.maven:apache-maven</exclude>
-        <exclude>org.apache.maven:maven-artifact</exclude>
-        <exclude>org.apache.maven:maven-monitor</exclude>
-        <exclude>org.apache.maven:maven-plugin-descriptor</exclude>
-        <exclude>jdom:jdom</exclude>
-        <exclude>org.apache.maven:apache-maven</exclude>
-        <exclude>bouncycastle:bcprov-jdk15</exclude>
-        <exclude>bouncycastle:bcpg-jdk15</exclude>
-        <exclude>log4j:log4j</exclude>
-        <exclude>org.sonatype.mercury:mercury-mp3-cli</exclude>
         <exclude>commons-logging:commons-logging-api</exclude>
-        <exclude>org.slf4j:slf4j-api</exclude>
-        <exclude>org.slf4j:slf4j-jdk14</exclude>
-        <exclude>org.apache.maven.mercury:mercury-crypto-api</exclude>
-        <exclude>org.apache.maven.mercury:mercury-crypto-basic</exclude-->        
       </excludes>
     </dependencySet>
-    <!--
-    <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
-      <outputDirectory>lib/mvnsh</outputDirectory>
-      <excludes>
-        <exclude>org.sonatype.maven.shell:mvnsh-personality</exclude>
-        <exclude>org.sonatype.maven.shell:mvnsh-maven</exclude>                   
-      </excludes>
-    </dependencySet>    
-    -->
   </dependencySets>
+  --> 
   <fileSets>
     <fileSet>
       <includes>
@@ -100,6 +67,8 @@ under the License.
       <includes>
         <include>m2</include>
         <include>mvn</include>
+        <include>mvnsh</include>
+        <include>mvnx</include>
         <include>mvnDebug</include>
         <!-- This is so that CI systems can periodically run the profiler -->
         <include>mvnyjp</include>
@@ -116,8 +85,8 @@ under the License.
       <outputDirectory>lib</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>target/mvnsh</directory>
-      <outputDirectory>lib/mvnsh</outputDirectory>
-    </fileSet>
+      <directory>target/assembly</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>    
   </fileSets>
 </assembly>
