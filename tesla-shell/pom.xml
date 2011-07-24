@@ -18,7 +18,7 @@
 
   <groupId>org.sonatype.maven.shell</groupId>
   <artifactId>mvnsh</artifactId>
-  <name>Maven Shell</name>
+  <name>Tesla Shell</name>
   <packaging>pom</packaging>
 
   <properties>
@@ -237,21 +237,6 @@
             </includes>
           </configuration>
         </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.sonatype.maven.plugins</groupId>
-          <artifactId>maven-sisu-assembler-plugin</artifactId>
-          <version>1.0.7</version>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -289,64 +274,6 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>main-index</goal>
-              <goal>test-index</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-component-metadata</artifactId>
-        <version>1.5.4</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-metadata</goal>
-              <goal>generate-test-metadata</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- mvn license:format -N If its a new year, update the year range in the header.txt file -->
-      <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <version>1.9.0</version>
-        <configuration>
-          <aggregate>true</aggregate>
-          <strictCheck>true</strictCheck>
-          <header>${project.basedir}/header.txt</header>
-          <useDefaultExcludes>false</useDefaultExcludes>
-          <includes>
-            <include>**/pom.xml</include>
-            <include>**/*.xml</include>
-            <include>**/*.xsd</include>
-            <include>**/*.xjb</include>
-            <include>**/*.mdo</include>
-            <include>**/*.properties</include>
-            <include>**/*.java</include>
-            <include>**/*.groovy</include>
-            <include>**/*.scala</include>
-            <include>**/*.aj</include>
-            <include>**/*.js</include>
-            <include>**/*.css</include>
-          </includes>
-          <excludes>
-            <exclude>**/target/**</exclude>
-          </excludes>
-          <mapping>
-            <scala>JAVADOC_STYLE</scala>
-            <xjb>XML_STYLE</xjb>
-            <mdo>XML_STYLE</mdo>
-          </mapping>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -366,17 +293,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <useReleaseProfile>false</useReleaseProfile>
-          <goals>deploy</goals>
-          <arguments>-B -Prelease</arguments>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-        </configuration>
       </plugin>
     </plugins>
   </build>

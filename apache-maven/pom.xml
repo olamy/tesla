@@ -26,7 +26,7 @@
 
   <artifactId>tesla</artifactId>
   <packaging>pom</packaging>
-  <name>Maven Distribution</name>
+  <name>Tesla :: Distribution</name>
 
   <dependencies>
     <dependency>

@@ -17,7 +17,7 @@
   </parent>
 
   <artifactId>mvnsh-maven</artifactId>
-  <name>Maven Shell Commands :: Maven</name>
+  <name>Tesla Shell :: Commands :: Maven</name>
 
   <dependencies>
     <dependency>

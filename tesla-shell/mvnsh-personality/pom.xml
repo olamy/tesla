@@ -17,7 +17,7 @@
   </parent>
 
   <artifactId>mvnsh-personality</artifactId>
-  <name>Maven Shell :: Personality</name>
+  <name>Tesla Shell :: Personality</name>
 
   <dependencies>
     <dependency>

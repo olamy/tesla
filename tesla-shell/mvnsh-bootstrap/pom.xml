@@ -17,7 +17,7 @@
   </parent>
 
   <artifactId>mvnsh-bootstrap</artifactId>
-  <name>Maven Shell :: Bootstrap</name>
+  <name>Tesla Shell :: Bootstrap</name>
 
   <properties>
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
