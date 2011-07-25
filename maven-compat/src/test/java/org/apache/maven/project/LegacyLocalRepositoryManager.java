@@ -21,8 +21,11 @@ package org.apache.maven.project;
 
 import java.io.File;
 
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.impl.internal.SimpleLocalRepositoryManager;
+import org.sonatype.aether.repository.LocalArtifactRequest;
+import org.sonatype.aether.repository.LocalArtifactResult;
 
 /**
  * @author Benjamin Bentmann
@@ -54,6 +57,21 @@ public class LegacyLocalRepositoryManager
         path.append( '.' ).append( artifact.getExtension() );
 
         return path.toString();
+    }
+
+    public LocalArtifactResult find( RepositorySystemSession session, LocalArtifactRequest request )
+    {
+        String path = getPathForLocalArtifact( request.getArtifact() );
+        File file = new File( getRepository().getBasedir(), path );
+
+        LocalArtifactResult result = new LocalArtifactResult( request );
+        if ( file.isFile() )
+        {
+            result.setFile( file );
+            result.setAvailable( true );
+        }
+
+        return result;
     }
 
 }
