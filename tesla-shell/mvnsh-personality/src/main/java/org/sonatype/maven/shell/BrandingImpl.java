@@ -12,6 +12,7 @@
 
 package org.sonatype.maven.shell;
 
+import org.fusesource.jansi.Ansi;
 import org.sonatype.gshell.branding.BrandingSupport;
 import org.sonatype.gshell.branding.License;
 import org.sonatype.gshell.branding.LicenseSupport;
@@ -29,6 +30,17 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
  * @since 0.7
  */
 public class BrandingImpl extends BrandingSupport {
+  
+  private static final String[] BANNER = {
+    " _______        _       ",    
+    "|__   __|      | |      ",
+    "   | | ___  ___| | __ _ ",
+    "   | |/ _ \\/ __| |/ _` |",
+    "   | |  __/\\__ \\ | (_| |",
+    "   |_|\\___||___/_|\\__,_|",
+};
+  
+  
   @Override
   public String getDisplayName() {
     return getMessages().format("displayName");
@@ -37,7 +49,10 @@ public class BrandingImpl extends BrandingSupport {
   @Override
   public String getWelcomeMessage() {
     PrintBuffer buff = new PrintBuffer();
-
+    for (String line : BANNER) {
+      buff.println(Ansi.ansi().fg(Ansi.Color.CYAN).a(line).reset());
+    }
+    buff.println();
     buff.format("%s (%s)", getDisplayName(), getVersion()).println();
     buff.println();
     buff.println("Type '@|bold help|@' for more information.");
