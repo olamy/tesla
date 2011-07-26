@@ -23,27 +23,6 @@ under the License.
     <format>zip</format>
     <format>tar.gz</format>
   </formats>
-  <!--
-  <dependencySets>
-    <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
-      <outputDirectory>boot</outputDirectory>
-      <includes>
-        <include>org.codehaus.plexus:plexus-classworlds</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <useProjectArtifact>false</useProjectArtifact>
-      <outputDirectory>lib</outputDirectory>
-      <excludes>
-        <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
-        <exclude>junit:junit</exclude>
-        <exclude>log4j:log4j</exclude>
-        <exclude>commons-logging:commons-logging-api</exclude>
-      </excludes>
-    </dependencySet>
-  </dependencySets>
-  --> 
   <fileSets>
     <fileSet>
       <includes>
@@ -67,8 +46,8 @@ under the License.
       <includes>
         <include>m2</include>
         <include>mvn</include>
-        <include>mvnsh</include>
-        <include>mvnx</include>
+        <include>tsh</include>
+        <include>tshd</include>
         <include>mvnDebug</include>
         <!-- This is so that CI systems can periodically run the profiler -->
         <include>mvnyjp</include>

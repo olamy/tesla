@@ -86,6 +86,41 @@
       <artifactId>mvnsh-personality</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.ext</groupId>
+      <artifactId>gshell-gossip</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.ext</groupId>
+      <artifactId>gshell-plexus</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.commands</groupId>
+      <artifactId>gshell-logging</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.commands</groupId>
+      <artifactId>gshell-pref</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.commands</groupId>
+      <artifactId>gshell-standard</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell.commands</groupId>
+      <artifactId>gshell-network</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.sonatype.gshell.commands</groupId>
+      <artifactId>gshell-file</artifactId>
+      <version>3.0.4-SNAPSHOT</version>
+    </dependency>    
   </dependencies>
 
   <build>
@@ -154,6 +189,13 @@
                         <artifacts>
                           <artifact>org.sonatype.maven.shell:mvnsh-personality</artifact>
                           <artifact>org.sonatype.maven.shell:mvnsh-maven</artifact>
+                          <artifact>org.sonatype.gshell.ext:gshell-gossip</artifact>
+                          <artifact>org.sonatype.gshell.ext:gshell-plexus</artifact>
+                          <artifact>org.sonatype.gshell.commands:gshell-logging</artifact>
+                          <artifact>org.sonatype.gshell.commands:gshell-network</artifact>
+                          <artifact>org.sonatype.gshell.commands:gshell-pref</artifact>
+                          <artifact>org.sonatype.gshell.commands:gshell-standard</artifact>                          
+                          <artifact>org.sonatype.gshell.commands:gshell-file</artifact>                          
                         </artifacts>
                         <excludes>
                           <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      

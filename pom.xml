@@ -147,6 +147,20 @@
     <module>tesla-shell</module>
   </modules>
 
+  <repositories>                                                                                                                                                   
+    <repository>                                                                                                                                                 
+      <id>sonatype-public-grid</id>                                                                                                                            
+      <url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>                                                                            
+    </repository>                                                                                                                                                
+  </repositories>                                                                                                                                                  
+                                                                                                                                                                     
+  <pluginRepositories>                                                                                                                                             
+    <pluginRepository>                                                                                                                                           
+      <id>sonatype-public-grid</id>                                                                                                                            
+      <url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>                                                                            
+    </pluginRepository>                                                                                                                                          
+  </pluginRepositories>        
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/maven-3/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/maven-3/trunk</developerConnection>

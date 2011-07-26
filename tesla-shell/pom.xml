@@ -24,8 +24,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <gshellVersion>2.6.5-SNAPSHOT</gshellVersion>
+    <gshellVersion>3.0.4-SNAPSHOT</gshellVersion>
     <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
+    <gossipVersion>1.7</gossipVersion>
     <forgeReleaseUrl>https://repository.sonatype.org/service/local/staging/deploy/maven2</forgeReleaseUrl>
   </properties>
 
@@ -35,19 +36,19 @@
       <dependency>
         <groupId>org.sonatype.gossip</groupId>
         <artifactId>gossip-bootstrap</artifactId>
-        <version>1.7</version>
+        <version>${gossipVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gossip</groupId>
         <artifactId>gossip-slf4j</artifactId>
-        <version>1.7</version>
+        <version>${gossipVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gossip</groupId>
         <artifactId>gossip-support</artifactId>
-        <version>1.7</version>
+        <version>${gossipVersion}</version>
       </dependency>
 
       <dependency>
@@ -65,13 +66,13 @@
       <dependency>
         <groupId>org.sonatype.aether</groupId>
         <artifactId>aether-connector-asynchttpclient</artifactId>
-        <version>1.11</version>
+        <version>${aetherVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.aether</groupId>
         <artifactId>aether-connector-wagon</artifactId>
-        <version>1.11</version>
+        <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
             <groupId>org.codehaus.plexus</groupId>
@@ -154,19 +155,19 @@
       <dependency>
         <groupId>org.sonatype.maven.shell</groupId>
         <artifactId>mvnsh-bootstrap</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${mavenVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.maven.shell</groupId>
         <artifactId>mvnsh-maven</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${mavenVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.maven.shell</groupId>
         <artifactId>mvnsh-personality</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${mavenVersion}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

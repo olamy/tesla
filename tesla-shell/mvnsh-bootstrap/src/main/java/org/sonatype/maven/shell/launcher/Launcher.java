@@ -72,7 +72,7 @@ public class Launcher {
         Log.debug("Invoking: ", method, ", with args: ", Arrays.asList(args));
 
         try {
-            method.invoke(null, new Object[] { args });
+            method.invoke(null, new Object[] { args }); 
         } catch (InvocationTargetException e) {
             Log.debug("Invoke failed", e);
 

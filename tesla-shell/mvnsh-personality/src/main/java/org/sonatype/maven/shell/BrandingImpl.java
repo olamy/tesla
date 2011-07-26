@@ -28,44 +28,43 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.7
  */
-public class BrandingImpl
-    extends BrandingSupport
-{
-    @Override
-    public String getDisplayName() {
-        return getMessages().format("displayName");
-    }
- 
-    @Override
-    public String getWelcomeMessage() {
-        PrintBuffer buff = new PrintBuffer();
+public class BrandingImpl extends BrandingSupport {
+  @Override
+  public String getDisplayName() {
+    return "Tesla Shell";
+    // return getMessages().format("displayName");
+  }
 
-        buff.format("%s (%s)", getDisplayName(), getVersion()).println();
-        buff.println();
-        buff.println("Type '@|bold help|@' for more information.");
-        buff.print(line());
-        buff.flush();
+  @Override
+  public String getWelcomeMessage() {
+    PrintBuffer buff = new PrintBuffer();
 
-        return buff.toString();
-    }
+    buff.format("%s (%s)", getDisplayName(), getVersion()).println();
+    buff.println();
+    buff.println("Type '@|bold help|@' for more information.");
+    buff.print(line());
+    buff.flush();
 
-    @Override
-    public String getGoodbyeMessage() {
-        return getMessages().format("goodbye");
-    }
+    return buff.toString();
+  }
 
-    @Override
-    public String getPrompt() {
-        return String.format("@|bold %s|@(${%s}):${%s}> ", getProgramName(), SHELL_GROUP, SHELL_USER_DIR + "~.");
-    }
+  @Override
+  public String getGoodbyeMessage() {
+    return getMessages().format("goodbye");
+  }
 
-    @Override
-    public File getUserContextDir() {
-        return new File(getUserHomeDir(), ".m2");
-    }
+  @Override
+  public String getPrompt() {
+    return String.format("@|bold %s|@(${%s}):${%s}> ", getProgramName(), SHELL_GROUP, SHELL_USER_DIR + "~.");
+  }
 
-    @Override
-    public License getLicense() {
-        return new LicenseSupport("Eclipse Public License, 1.0", getClass().getResource("license.txt"));
-    }
+  @Override
+  public File getUserContextDir() {
+    return new File(getUserHomeDir(), ".m2");
+  }
+
+  @Override
+  public License getLicense() {
+    return new LicenseSupport("Eclipse Public License, 1.0", getClass().getResource("license.txt"));
+  }
 }
