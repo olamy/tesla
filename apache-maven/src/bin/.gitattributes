@@ -1,5 +1,5 @@
 mvn                eol=lf crlf=input
-mvnsh              eol=lf crlf=input
-mvnx               eol=lf crlf=input
+tsh                eol=lf crlf=input
+tshd               eol=lf crlf=input
 mvnDebug           eol=lf crlf=input
 mvnyjp             eol=lf crlf=input
