@@ -31,8 +31,7 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
 public class BrandingImpl extends BrandingSupport {
   @Override
   public String getDisplayName() {
-    return "Tesla Shell";
-    // return getMessages().format("displayName");
+    return getMessages().format("displayName");
   }
 
   @Override
