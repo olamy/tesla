@@ -10,7 +10,7 @@
 
   <parent>
     <groupId>org.sonatype.maven.shell</groupId>
-    <artifactId>mvnsh</artifactId>
+    <artifactId>tesla-shell</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 

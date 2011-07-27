@@ -73,11 +73,6 @@
     <!-- Shell -->
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
-      <artifactId>mvnsh-bootstrap</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.sonatype.maven.shell</groupId>
       <artifactId>mvnsh-maven</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
@@ -220,7 +215,6 @@
                     <directory>boot</directory>
                     <artifacts>
                       <artifact>org.codehaus.plexus:plexus-classworlds</artifact>
-                      <artifact>org.sonatype.maven.shell:mvnsh-bootstrap</artifact>                      
                     </artifacts>
                   </fileSet>
                 </fileSets>

@@ -22,7 +22,7 @@
 
   <parent>
     <groupId>org.sonatype.maven.shell</groupId>
-    <artifactId>mvnsh</artifactId>
+    <artifactId>tesla-shell</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
@@ -85,16 +85,12 @@
         <module>gshell-standard</module>
         <module>gshell-logging</module>
         <module>gshell-pref</module>
-        <!--<module>gshell-text</module>-->
         <module>gshell-network</module>
-        <!--<module>gshell-shell</module>-->
         <module>gshell-file</module>
-        <!--<module>gshell-admin</module>-->
-        <!--<module>gshell-vfs</module>-->
+        <!--<module>gshell-shell</module>-->
+        <!--<module>gshell-text</module>-->
         <!--<module>gshell-ssh</module>-->
-        <!--<module>gshell-bsf</module>-->
         <!--<module>gshell-artifact</module>-->
-        <!--<module>gshell-scm</module>-->
     </modules>
 
 </project>
