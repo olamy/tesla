@@ -21,7 +21,7 @@
   </parent>
 
   <artifactId>maven</artifactId>
-  <version>3.0.4-SNAPSHOT</version>
+  <version>3.0.4-SONATYPE-20110727</version>
   <packaging>pom</packaging>
 
   <name>Apache Maven</name>
