@@ -37,7 +37,7 @@ public class BrandingImpl extends BrandingSupport {
     "   | | ___  ___| | __ _ ",
     "   | |/ _ \\/ __| |/ _` |",
     "   | |  __/\\__ \\ | (_| |",
-    "   |_|\\___||___/_|\\__,_|",
+    "   |_|\\___||___/_|\\__,_|  BECAUSE MAVEN IS FOR OLD GRANNIES",
 };
   
   

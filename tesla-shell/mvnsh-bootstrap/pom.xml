@@ -7,71 +7,13 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.sonatype.maven.shell</groupId>
     <artifactId>mvnsh</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
-
   <artifactId>mvnsh-bootstrap</artifactId>
   <name>Tesla Shell :: Bootstrap</name>
-
-  <properties>
-    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-    <build.timestamp>${maven.build.timestamp}</build.timestamp>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.sonatype.gshell</groupId>
-      <artifactId>gshell-launcher</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <!-- 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.sonatype.gshell</groupId>
-                  <artifactId>gshell-launcher</artifactId>
-                </artifactItem>
-              </artifactItems>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <excludes>META-INF/maven/**</excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>org.sonatype.maven.shell.launcher.Launcher</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
 
