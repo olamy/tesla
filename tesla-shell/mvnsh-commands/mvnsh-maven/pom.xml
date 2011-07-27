@@ -40,18 +40,9 @@
       <artifactId>maven-embedder</artifactId>
     </dependency>
 
-    <!-- <dependency> <groupId>junit</groupId> <artifactId>junit</artifactId> <scope>test</scope> </dependency> -->
-
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-asynchttpclient</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
       <scope>test</scope>      
     </dependency>
     
