@@ -199,12 +199,13 @@
         <groupId>org.sonatype.maven.shell</groupId>
         <artifactId>mvnsh-personality</artifactId>
         <version>${mavenVersion}</version>
-      </dependency>
+      </dependency>           
+      
     </dependencies>
   </dependencyManagement>
 
   <modules>
-    <module>mvnsh-commands</module>
+    <module>mvnsh-maven</module>
     <module>mvnsh-bootstrap</module>
     <module>mvnsh-personality</module>
     <module>gshell-util</module>
