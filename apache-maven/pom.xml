@@ -73,12 +73,12 @@
     <!-- Shell -->
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
-      <artifactId>mvnsh-maven</artifactId>
+      <artifactId>tesla-shell-maven</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
-      <artifactId>mvnsh-personality</artifactId>
+      <artifactId>tesla-shell-personality</artifactId>
       <version>3.0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -182,8 +182,8 @@
                       <fileSet>
                         <directory>mvnsh</directory>
                         <artifacts>
-                          <artifact>org.sonatype.maven.shell:mvnsh-personality</artifact>
-                          <artifact>org.sonatype.maven.shell:mvnsh-maven</artifact>
+                          <artifact>org.sonatype.maven.shell:tesla-shell-personality</artifact>
+                          <artifact>org.sonatype.maven.shell:tesla-shell-maven</artifact>
                           <artifact>org.sonatype.gshell.ext:gshell-gossip</artifact>
                           <artifact>org.sonatype.gshell.ext:gshell-plexus</artifact>
                           <artifact>org.sonatype.gshell.commands:gshell-logging</artifact>

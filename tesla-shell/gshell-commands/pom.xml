@@ -17,81 +17,37 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.sonatype.maven.shell</groupId>
     <artifactId>tesla-shell</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-    <groupId>org.sonatype.gshell.commands</groupId>
-    <artifactId>gshell-commands</artifactId>
-    <name>Tesla Shell :: Commands</name>
-    <packaging>pom</packaging>
+  <groupId>org.sonatype.gshell.commands</groupId>
+  <artifactId>gshell-commands</artifactId>
+  <name>Tesla Shell :: Commands</name>
+  <packaging>pom</packaging>
     
-    <dependencyManagement>
-        <dependencies>
-            <!-- INTERNAL -->
+  <dependencies>
+    <dependency>
+      <groupId>org.sonatype.gshell</groupId>
+      <artifactId>gshell-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.gshell</groupId>
+      <artifactId>gshell-core</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-            <dependency>
-                <groupId>org.sonatype.gshell.commands</groupId>
-                <artifactId>gshell-standard</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.sonatype.gshell.commands</groupId>
-                <artifactId>gshell-logging</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.sonatype.gshell.commands</groupId>
-                <artifactId>gshell-pref</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.sonatype.gshell.commands</groupId>
-                <artifactId>gshell-network</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.sonatype.gshell.commands</groupId>
-                <artifactId>gshell-file</artifactId>
-                <version>3.0.4-SNAPSHOT</version>
-            </dependency>            
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.sonatype.gshell</groupId>
-            <artifactId>gshell-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.sonatype.gshell</groupId>
-            <artifactId>gshell-core</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <modules>
-        <module>gshell-standard</module>
-        <module>gshell-logging</module>
-        <module>gshell-pref</module>
-        <module>gshell-network</module>
-        <module>gshell-file</module>
-        <!--<module>gshell-shell</module>-->
-        <!--<module>gshell-text</module>-->
-        <!--<module>gshell-ssh</module>-->
-        <!--<module>gshell-artifact</module>-->
-    </modules>
-
+  <modules>
+    <module>gshell-standard</module>
+    <module>gshell-logging</module>
+    <module>gshell-pref</module>
+    <module>gshell-network</module>
+    <module>gshell-file</module>
+  </modules>
 </project>
 

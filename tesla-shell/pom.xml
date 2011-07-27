@@ -185,13 +185,13 @@
 
       <dependency>
         <groupId>org.sonatype.maven.shell</groupId>
-        <artifactId>mvnsh-maven</artifactId>
+        <artifactId>tesla-shell-maven</artifactId>
         <version>${mavenVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.maven.shell</groupId>
-        <artifactId>mvnsh-personality</artifactId>
+        <artifactId>tesla-shell-personality</artifactId>
         <version>${mavenVersion}</version>
       </dependency>           
       
@@ -199,8 +199,8 @@
   </dependencyManagement>
 
   <modules>
-    <module>mvnsh-maven</module>
-    <module>mvnsh-personality</module>
+    <module>tesla-shell-maven</module>
+    <module>tesla-shell-personality</module>
     <module>gshell-util</module>
     <module>gshell-ext</module>
     <module>gshell-core</module>
