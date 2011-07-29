@@ -16,7 +16,7 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.sonatype.maven.shell</groupId>
+  <groupId>org.eclipse.tesla.shell</groupId>
   <artifactId>tesla-shell</artifactId>
   <name>Tesla Shell :: Aggregator</name>
   <packaging>pom</packaging>
@@ -62,32 +62,32 @@
       <!-- GShell -->
 
       <dependency>
-        <groupId>org.sonatype.gshell</groupId>
+        <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-core</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell</groupId>
+        <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-core</artifactId>
         <classifier>tests</classifier>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell</groupId>
+        <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-util</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.ext</groupId>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
         <artifactId>tesla-shell-gossip</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.ext</groupId>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
         <artifactId>tesla-shell-plexus</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
@@ -146,37 +146,37 @@
       <!-- HACK: Duplicating for now, due to release plugin issue with scope=import -->
 
       <dependency>
-        <groupId>org.sonatype.gshell.ext</groupId>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
         <artifactId>tesla-shell-logback</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.commands</groupId>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
         <artifactId>tesla-shell-standard</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.commands</groupId>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
         <artifactId>tesla-shell-logging</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.commands</groupId>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
         <artifactId>tesla-shell-pref</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.commands</groupId>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
         <artifactId>tesla-shell-network</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.gshell.commands</groupId>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
         <artifactId>tesla-shell-file</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
@@ -184,13 +184,13 @@
       <!-- INTERNAL -->
 
       <dependency>
-        <groupId>org.sonatype.maven.shell</groupId>
+        <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-maven</artifactId>
         <version>${mavenVersion}</version>
       </dependency>
 
       <dependency>
-        <groupId>org.sonatype.maven.shell</groupId>
+        <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-personality</artifactId>
         <version>${mavenVersion}</version>
       </dependency>           

@@ -11,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.maven.shell</groupId>
+    <groupId>org.eclipse.tesla.shell</groupId>
     <artifactId>tesla-shell</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
@@ -21,17 +21,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.sonatype.gshell</groupId>
+      <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-core</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.sonatype.gshell.ext</groupId>
+      <groupId>org.eclipse.tesla.shell.ext</groupId>
       <artifactId>tesla-shell-gossip</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.sonatype.gshell.ext</groupId>
+      <groupId>org.eclipse.tesla.shell.ext</groupId>
       <artifactId>tesla-shell-plexus</artifactId>
     </dependency>
   </dependencies>

@@ -76,52 +76,52 @@
     </dependency>
     <!-- Shell -->
     <dependency>
-      <groupId>org.sonatype.maven.shell</groupId>
+      <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-maven</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.maven.shell</groupId>
+      <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-personality</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.ext</groupId>
+      <groupId>org.eclipse.tesla.shell.ext</groupId>
       <artifactId>tesla-shell-gossip</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.ext</groupId>
+      <groupId>org.eclipse.tesla.shell.ext</groupId>
       <artifactId>tesla-shell-plexus</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.commands</groupId>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
       <artifactId>tesla-shell-logging</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.commands</groupId>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
       <artifactId>tesla-shell-pref</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.commands</groupId>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
       <artifactId>tesla-shell-standard</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.gshell.commands</groupId>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
       <artifactId>tesla-shell-network</artifactId>
       <version>${mavenVersion}</version>
     </dependency>    
     <dependency>
-      <groupId>org.sonatype.gshell.commands</groupId>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
       <artifactId>tesla-shell-file</artifactId>
       <version>${mavenVersion}</version>
     </dependency>    
     <dependency>
-      <groupId>org.sonatype.gshell</groupId>
+      <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-core</artifactId>
       <version>${mavenVersion}</version>
     </dependency>    
@@ -192,15 +192,15 @@
                       <fileSet>
                         <directory>mvnsh</directory>
                         <artifacts>
-                          <artifact>org.sonatype.maven.shell:tesla-shell-personality</artifact>
-                          <artifact>org.sonatype.maven.shell:tesla-shell-maven</artifact>
-                          <artifact>org.sonatype.gshell.ext:tesla-shell-gossip</artifact>
-                          <artifact>org.sonatype.gshell.ext:tesla-shell-plexus</artifact>
-                          <artifact>org.sonatype.gshell.commands:tesla-shell-logging</artifact>
-                          <artifact>org.sonatype.gshell.commands:tesla-shell-network</artifact>
-                          <artifact>org.sonatype.gshell.commands:tesla-shell-pref</artifact>
-                          <artifact>org.sonatype.gshell.commands:tesla-shell-standard</artifact>                          
-                          <artifact>org.sonatype.gshell.commands:tesla-shell-file</artifact>                          
+                          <artifact>org.eclipse.tesla.shell:tesla-shell-personality</artifact>
+                          <artifact>org.eclipse.tesla.shell:tesla-shell-maven</artifact>
+                          <artifact>org.eclipse.tesla.shell.ext:tesla-shell-gossip</artifact>
+                          <artifact>org.eclipse.tesla.shell.ext:tesla-shell-plexus</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-logging</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-network</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pref</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-standard</artifact>                          
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-file</artifact>                          
                         </artifacts>
                         <excludes>
                           <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      

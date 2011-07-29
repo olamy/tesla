@@ -9,12 +9,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.sonatype.maven.shell</groupId>
+    <groupId>org.eclipse.tesla.shell</groupId>
     <artifactId>tesla-shell</artifactId>
     <version>3.0.4-SNAPSHOT</version>
   </parent>
   
-  <groupId>org.sonatype.gshell</groupId>
   <artifactId>tesla-shell-util</artifactId>
   <name>Tesla Shell :: Util</name>
 
