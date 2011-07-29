@@ -63,32 +63,32 @@
 
       <dependency>
         <groupId>org.sonatype.gshell</groupId>
-        <artifactId>gshell-core</artifactId>
+        <artifactId>tesla-shell-core</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell</groupId>
-        <artifactId>gshell-core</artifactId>
+        <artifactId>tesla-shell-core</artifactId>
         <classifier>tests</classifier>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell</groupId>
-        <artifactId>gshell-util</artifactId>
+        <artifactId>tesla-shell-util</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.ext</groupId>
-        <artifactId>gshell-gossip</artifactId>
+        <artifactId>tesla-shell-gossip</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.ext</groupId>
-        <artifactId>gshell-plexus</artifactId>
+        <artifactId>tesla-shell-plexus</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
@@ -147,37 +147,37 @@
 
       <dependency>
         <groupId>org.sonatype.gshell.ext</groupId>
-        <artifactId>gshell-logback</artifactId>
+        <artifactId>tesla-shell-logback</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.commands</groupId>
-        <artifactId>gshell-standard</artifactId>
+        <artifactId>tesla-shell-standard</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.commands</groupId>
-        <artifactId>gshell-logging</artifactId>
+        <artifactId>tesla-shell-logging</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.commands</groupId>
-        <artifactId>gshell-pref</artifactId>
+        <artifactId>tesla-shell-pref</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.commands</groupId>
-        <artifactId>gshell-network</artifactId>
+        <artifactId>tesla-shell-network</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
       <dependency>
         <groupId>org.sonatype.gshell.commands</groupId>
-        <artifactId>gshell-file</artifactId>
+        <artifactId>tesla-shell-file</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
 
@@ -201,10 +201,10 @@
   <modules>
     <module>tesla-shell-maven</module>
     <module>tesla-shell-personality</module>
-    <module>gshell-util</module>
-    <module>gshell-ext</module>
-    <module>gshell-core</module>
-    <module>gshell-commands</module>
+    <module>tesla-shell-util</module>
+    <module>tesla-shell-ext</module>
+    <module>tesla-shell-core</module>
+    <module>tesla-shell-commands</module>
   </modules>
 
   <build>

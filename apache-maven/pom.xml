@@ -24,9 +24,13 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla</artifactId>
+  <artifactId>apache-maven</artifactId>
   <packaging>pom</packaging>
   <name>Tesla :: Distribution</name>
+
+  <properties>
+    <distributionId>tesla</distributionId>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -74,51 +78,57 @@
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
       <artifactId>tesla-shell-maven</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.maven.shell</groupId>
       <artifactId>tesla-shell-personality</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.ext</groupId>
-      <artifactId>gshell-gossip</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-gossip</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.ext</groupId>
-      <artifactId>gshell-plexus</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-plexus</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.commands</groupId>
-      <artifactId>gshell-logging</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-logging</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.commands</groupId>
-      <artifactId>gshell-pref</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-pref</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.commands</groupId>
-      <artifactId>gshell-standard</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-standard</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.sonatype.gshell.commands</groupId>
-      <artifactId>gshell-network</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-network</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>    
     <dependency>
       <groupId>org.sonatype.gshell.commands</groupId>
-      <artifactId>gshell-file</artifactId>
-      <version>3.0.4-SNAPSHOT</version>
+      <artifactId>tesla-shell-file</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.sonatype.gshell</groupId>
+      <artifactId>tesla-shell-core</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>    
   </dependencies>
 
   <build>
+    <finalName>${distributionId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -184,13 +194,13 @@
                         <artifacts>
                           <artifact>org.sonatype.maven.shell:tesla-shell-personality</artifact>
                           <artifact>org.sonatype.maven.shell:tesla-shell-maven</artifact>
-                          <artifact>org.sonatype.gshell.ext:gshell-gossip</artifact>
-                          <artifact>org.sonatype.gshell.ext:gshell-plexus</artifact>
-                          <artifact>org.sonatype.gshell.commands:gshell-logging</artifact>
-                          <artifact>org.sonatype.gshell.commands:gshell-network</artifact>
-                          <artifact>org.sonatype.gshell.commands:gshell-pref</artifact>
-                          <artifact>org.sonatype.gshell.commands:gshell-standard</artifact>                          
-                          <artifact>org.sonatype.gshell.commands:gshell-file</artifact>                          
+                          <artifact>org.sonatype.gshell.ext:tesla-shell-gossip</artifact>
+                          <artifact>org.sonatype.gshell.ext:tesla-shell-plexus</artifact>
+                          <artifact>org.sonatype.gshell.commands:tesla-shell-logging</artifact>
+                          <artifact>org.sonatype.gshell.commands:tesla-shell-network</artifact>
+                          <artifact>org.sonatype.gshell.commands:tesla-shell-pref</artifact>
+                          <artifact>org.sonatype.gshell.commands:tesla-shell-standard</artifact>                          
+                          <artifact>org.sonatype.gshell.commands:tesla-shell-file</artifact>                          
                         </artifacts>
                         <excludes>
                           <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      

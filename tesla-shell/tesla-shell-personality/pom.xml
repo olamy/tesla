@@ -22,17 +22,17 @@
   <dependencies>
     <dependency>
       <groupId>org.sonatype.gshell</groupId>
-      <artifactId>gshell-core</artifactId>
+      <artifactId>tesla-shell-core</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.sonatype.gshell.ext</groupId>
-      <artifactId>gshell-gossip</artifactId>
+      <artifactId>tesla-shell-gossip</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.sonatype.gshell.ext</groupId>
-      <artifactId>gshell-plexus</artifactId>
+      <artifactId>tesla-shell-plexus</artifactId>
     </dependency>
   </dependencies>
 

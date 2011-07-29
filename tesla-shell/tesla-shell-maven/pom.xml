@@ -22,7 +22,7 @@
   <dependencies>
     <dependency>
       <groupId>org.sonatype.gshell.ext</groupId>
-      <artifactId>gshell-plexus</artifactId>
+      <artifactId>tesla-shell-plexus</artifactId>
     </dependency>
 
     <dependency>
@@ -48,13 +48,13 @@
     
     <dependency>
       <groupId>org.sonatype.gshell</groupId>
-      <artifactId>gshell-core</artifactId>
+      <artifactId>tesla-shell-core</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.sonatype.gshell</groupId>
-      <artifactId>gshell-core</artifactId>
+      <artifactId>tesla-shell-core</artifactId>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
