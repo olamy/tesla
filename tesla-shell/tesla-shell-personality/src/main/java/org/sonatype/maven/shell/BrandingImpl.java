@@ -32,14 +32,13 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
 public class BrandingImpl extends BrandingSupport {
   
   private static final String[] BANNER = {
-    " _______        _       ",    
-    "|__   __|      | |      ",
-    "   | | ___  ___| | __ _ ",
-    "   | |/ _ \\/ __| |/ _` |",
-    "   | |  __/\\__ \\ | (_| |",
-    "   |_|\\___||___/_|\\__,_|  BECAUSE MAVEN IS FOR OLD GRANNIES",
-};
-  
+    " _______        _       _  ",
+    "|__   __|      | |     | | ",
+    "   | | ___  ___| | __ _| | ",
+    "   | |/ _ \\/ __| |/ _` | | ",
+    "   | |  __/\\__ \\ | (_| |_| ",
+    "   |_|\\___||___/_|\\__,_(_)  THE FUTURE BUILDS WITH TESLA!",
+  };
   
   @Override
   public String getDisplayName() {

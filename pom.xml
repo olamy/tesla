@@ -40,7 +40,7 @@
     <classWorldsVersion>2.4</classWorldsVersion>
     <commonsCliVersion>1.2</commonsCliVersion>
     <easyMockVersion>1.2_Java1.3</easyMockVersion>
-    <junitVersion>3.8.2</junitVersion>
+    <junitVersion>4.8.2</junitVersion>
     <plexusVersion>1.5.5</plexusVersion>
     <plexusInterpolationVersion>1.14</plexusInterpolationVersion>
     <plexusUtilsVersion>2.0.6</plexusUtilsVersion>
@@ -422,6 +422,150 @@
         <artifactId>plexus-cipher</artifactId>
         <version>${cipherVersion}</version>
       </dependency>
+      <!-- Shell -->
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-core</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-bootstrap</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-slf4j</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-support</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.grrrowl</groupId>
+        <artifactId>grrrowl</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <!-- GShell -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-core</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-core</artifactId>
+        <classifier>tests</classifier>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-util</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-gossip</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-plexus</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>0.9.29</version>
+      </dependency>
+      <!-- FIXME: Need to resolve differences in latest jline2 uses so we can pick up the latest version. some differences in how indexs work 
+        or something, I forget -->
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>2.3</version>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>commons-jexl</groupId>
+        <artifactId>commons-jexl</artifactId>
+        <version>1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- INTERNAL -->
+      <!-- HACK: Duplicating for now, due to release plugin issue with scope=import -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-logback</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-standard</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-logging</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-pref</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-network</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-file</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <!-- INTERNAL -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-maven</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-personality</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>                
       <!--bootstrap-start-comment-->
       <dependency>
         <groupId>easymock</groupId>
