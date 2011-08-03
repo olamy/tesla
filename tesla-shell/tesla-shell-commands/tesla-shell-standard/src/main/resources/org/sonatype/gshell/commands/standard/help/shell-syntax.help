@@ -1,0 +1,64 @@
+#
+# Copyright (C) 2009 the original author(s).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+@|bold VARIABLE REFERENCE|@
+
+    Variables can be referenced using ${variable} syntax.
+
+@|bold QUOTING|@
+
+    Single quotes are opaque.
+
+    Example:
+
+        set foo bar
+        echo '${foo}'
+
+    Result:
+
+        ${foo}
+
+    Double quotes are evaluated using variable expansion.
+
+    Example:
+
+        set foo bar
+        echo "${foo}"
+
+    Result:
+
+        bar
+
+    Single or double quotes may be escaped with a preceding '\' char.
+
+@|bold COMMENTS|@
+
+    A line that begins with '#' is considered to be a comment; all
+    content until a new-line is ignored.
+
+@|bold COMPOUND COMMANDS|@
+
+    Multiple commands can be executed on the same line by separating each
+    command (and it's options and arguments) with ';':
+
+        command; [command; ...]
+
+    Example:
+
+        echo -n "hi"; echo " there"
+
+    Result:
+
+        hi there
