@@ -287,7 +287,7 @@ public class DefaultMaven
         }
         return session;
     }
-
+    
     @SuppressWarnings({"ResultOfMethodCallIgnored"})
     private void validateLocalRepository( MavenExecutionRequest request )
         throws LocalRepositoryNotAccessibleException
