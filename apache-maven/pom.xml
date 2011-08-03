@@ -24,8 +24,9 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla</artifactId>
+  <artifactId>apache-maven</artifactId>
   <packaging>pom</packaging>
+
   <name>Maven Distribution</name>
 
   <dependencies>
@@ -64,7 +65,7 @@
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
+      <artifactId>slf4j-nop</artifactId>
     </dependency>
   </dependencies>
 
