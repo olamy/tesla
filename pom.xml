@@ -33,14 +33,14 @@
     number of other development tools for reporting or the build
     process.
   </description>
-  <url>http://maven.apache.org/ref/${project.version}/</url>
+  <url>http://maven.apache.org/</url>
   <inceptionYear>2001</inceptionYear>
 
   <properties>
     <classWorldsVersion>2.4</classWorldsVersion>
     <commonsCliVersion>1.2</commonsCliVersion>
     <easyMockVersion>1.2_Java1.3</easyMockVersion>
-    <junitVersion>3.8.2</junitVersion>
+    <junitVersion>4.8.2</junitVersion>
     <plexusVersion>1.5.5</plexusVersion>
     <plexusInterpolationVersion>1.14</plexusInterpolationVersion>
     <plexusUtilsVersion>2.0.6</plexusUtilsVersion>
@@ -51,12 +51,19 @@
     <modelloVersion>1.4.1</modelloVersion>
     <jxpathVersion>1.3</jxpathVersion>
     <aetherVersion>1.12</aetherVersion>
-    <slf4jVersion>1.6.1</slf4jVersion>
+    <slf4jVersion>1.6.1</slf4jVersion>    
+    <gshellVersion>3.0.4-SNAPSHOT</gshellVersion>
+    <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
+    <gossipVersion>1.7</gossipVersion>
+    <jlineVersion>2.3</jlineVersion>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-    <!-- Control the name of the distribtion and information output by mvn -->
-    <distributionId>apache-maven</distributionId>
-    <distributionShortName>Maven</distributionShortName>
-    <distributionName>Apache Maven</distributionName>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+    <build.timestamp>${maven.build.timestamp}</build.timestamp>
+    <distributionId>eclipse-tesla</distributionId>
+    <distributionShortName>Tesla</distributionShortName>
+    <distributionName>Eclipse Tesla</distributionName>   
   </properties>
 
   <mailingLists>
@@ -135,6 +142,33 @@
     </mailingList>
   </mailingLists>
 
+  <developers>
+    <developer>
+      <id>jdillon</id>
+      <name>Jason Dillon</name>
+      <email>jason@planet57.com</email>
+      <roles>
+        <role>Build Master</role>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>adreghiciu</id>
+      <name>Alin Dreghiciu</name>
+      <email>adreghiciu@gmail.com</email>
+      <roles>
+        <role>Distribution Master</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>fusesource</id>
+      <url>http://repo.fusesource.com/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
+
   <modules>
     <module>maven-core</module>
     <module>apache-maven</module>
@@ -148,6 +182,7 @@
     <module>maven-model-builder</module>
     <module>maven-embedder</module>
     <module>maven-compat</module>
+    <module>tesla-shell</module>
   </modules>
 
   <scm>
@@ -159,10 +194,6 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MNG</url>
   </issueManagement>
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://builds.apache.org/hudson/job/maven-3.0.x/</url>
-  </ciManagement>
   <distributionManagement>
     <site>
       <id>apache.website</id>
@@ -251,6 +282,11 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>org.sonatype.sisu</groupId>
+        <artifactId>sisu-inject-bean</artifactId>
+        <version>2.2.1</version>
+      </dependency>
+      <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-annotations</artifactId>
         <version>${plexusVersion}</version>
@@ -278,7 +314,7 @@
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-nop</artifactId>
+        <artifactId>slf4j-simple</artifactId>
         <version>${slf4jVersion}</version>
         <scope>runtime</scope>
       </dependency>
@@ -327,7 +363,7 @@
       </dependency>
       <dependency>
         <groupId>org.sonatype.aether</groupId>
-        <artifactId>aether-connector-wagon</artifactId>
+        <artifactId>aether-connector-asynchttpclient</artifactId>
         <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
@@ -335,6 +371,22 @@
             <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.aether</groupId>
+        <artifactId>aether-connector-file</artifactId>
+        <version>${aetherVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.maven</groupId>
+        <artifactId>wagon-ahc</artifactId>
+        <version>1.2.0</version>
       </dependency>
       <!--  Commons -->
       <dependency>
@@ -367,6 +419,150 @@
         <artifactId>plexus-cipher</artifactId>
         <version>${cipherVersion}</version>
       </dependency>
+      <!-- Shell -->
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-core</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-bootstrap</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-slf4j</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-support</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.grrrowl</groupId>
+        <artifactId>grrrowl</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.4</version>
+      </dependency>
+      <!-- GShell -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-core</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-core</artifactId>
+        <classifier>tests</classifier>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-util</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-gossip</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-plexus</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>0.9.29</version>
+      </dependency>
+      <!-- FIXME: Need to resolve differences in latest jline2 uses so we can pick up the latest version. some differences in how indexs work 
+        or something, I forget -->
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jlineVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jlineVersion}</version>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>commons-jexl</groupId>
+        <artifactId>commons-jexl</artifactId>
+        <version>1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- INTERNAL -->
+      <!-- HACK: Duplicating for now, due to release plugin issue with scope=import -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.ext</groupId>
+        <artifactId>tesla-shell-logback</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-standard</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-logging</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-pref</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-network</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell.commands</groupId>
+        <artifactId>tesla-shell-file</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <!-- INTERNAL -->
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-maven</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla.shell</groupId>
+        <artifactId>tesla-shell-personality</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>                
       <!--bootstrap-start-comment-->
       <dependency>
         <groupId>easymock</groupId>
@@ -416,7 +612,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/maven/maven-3/tags</tagBase>
@@ -424,7 +619,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.8.1</version>
           <configuration>
@@ -470,7 +664,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.8</version>
+          <version>2.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -485,15 +679,44 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.0</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.wagon</groupId>
-              <artifactId>wagon-ssh</artifactId>
-              <version>1.0</version>
-            </dependency>
-          </dependencies>
+          <version>2.1</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <version>2.6</version>
+         </plugin>
+         <plugin>
+           <groupId>org.sonatype.plugins</groupId>
+           <artifactId>sisu-maven-plugin</artifactId>
+           <version>1.1</version>
+         </plugin>
+         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+         <plugin>
+           <groupId>org.eclipse.m2e</groupId>
+           <artifactId>lifecycle-mapping</artifactId>
+           <version>1.0.0</version>
+           <configuration>
+             <lifecycleMappingMetadata>
+               <pluginExecutions>
+                 <pluginExecution>
+                   <pluginExecutionFilter>
+                     <groupId>org.sonatype.plugins</groupId>
+                     <artifactId>sisu-maven-plugin</artifactId>
+                     <versionRange>[1.1,)</versionRange>
+                     <goals>
+                       <goal>main-index</goal>
+                       <goal>test-index</goal>
+                     </goals>
+                   </pluginExecutionFilter>
+                   <action>
+                     <ignore></ignore>
+                   </action>
+                 </pluginExecution>
+               </pluginExecutions>
+             </lifecycleMappingMetadata>
+           </configuration>
+         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -518,6 +741,52 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>sisu-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>main-index</goal>
+              <goal>test-index</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- mvn license:format -N If its a new year, update the year range in the header.txt file -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <strictCheck>true</strictCheck>
+          <header>${project.basedir}/header.txt</header>
+          <useDefaultExcludes>false</useDefaultExcludes>
+          <includes>
+            <include>**/pom.xml</include>
+            <include>**/*.xml</include>
+            <include>**/*.xsd</include>
+            <include>**/*.xjb</include>
+            <include>**/*.mdo</include>
+            <include>**/*.properties</include>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+            <include>**/*.scala</include>
+            <include>**/*.aj</include>
+            <include>**/*.js</include>
+            <include>**/*.css</include>
+          </includes>
+          <excludes>
+            <exclude>**/target/**</exclude>
+          </excludes>
+          <mapping>
+            <scala>JAVADOC_STYLE</scala>
+            <xjb>XML_STYLE</xjb>
+            <mdo>XML_STYLE</mdo>
+          </mapping>
+        </configuration>
+      </plugin>         
     </plugins>
   </build>
 
@@ -546,51 +815,10 @@
       <reporting>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.8</version>
-            <configuration>
-              <linksource>true</linksource>
-              <links combine.children="append">
-                <link>http://sonatype.github.com/sonatype-aether/apidocs/</link>
-              </links>
-            </configuration>
-            <reportSets>
-              <reportSet>
-                <id>non-aggregate</id>
-                <reports>
-                  <report>javadoc</report>
-                </reports>
-              </reportSet>
-              <reportSet>
-                <id>aggregate</id>
-                <reports>
-                  <report>aggregate</report>
-                </reports>
-              </reportSet>
-            </reportSets>
+            <version>2.5</version>
           </plugin>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>2.3</version>
-            <reportSets>
-              <reportSet>
-                <id>non-aggregate</id>
-                <reports>
-                  <report>jxr</report>
-                </reports>
-              </reportSet>
-              <reportSet>
-                <id>aggregate</id>
-                <reports>
-                  <report>aggregate</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
             <configuration>
               <targetJdk>1.5</targetJdk>
@@ -620,7 +848,6 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <systemProperties combine.children="append">
