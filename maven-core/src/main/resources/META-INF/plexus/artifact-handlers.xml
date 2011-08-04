@@ -562,14 +562,14 @@ problem.
     <!-- New Artifact Handlers for Tesla -->
     
     <!--
-     | TESLA PLUGIN
+     | TESLA JAR
      |-->
     <component>
       <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-      <role-hint>tesla-plugin</role-hint>
+      <role-hint>tesla-jar</role-hint>
       <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
       <configuration>
-        <type>tesla-plugin</type>
+        <type>tesla-jar</type>
         <extension>jar</extension>
         <language>java</language>
         <addedToClasspath>true</addedToClasspath>
@@ -577,13 +577,13 @@ problem.
     </component>
     <component>
       <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-      <role-hint>tesla-plugin</role-hint>
+      <role-hint>tesla-jar</role-hint>
       <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
       <configuration>
         <lifecycles>
           <lifecycle>
             <id>default</id>
-            <!-- START SNIPPET: maven-plugin-lifecycle -->
+            <!-- START SNIPPET: tesla-jar-lifecycle -->
             <phases>
               <process-resources>
                 org.apache.maven.plugins:maven-resources-plugin:2.4.3:resources
@@ -618,7 +618,70 @@ problem.
                 org.apache.maven.plugins:maven-deploy-plugin:2.5:deploy
               </deploy>
             </phases>
-            <!-- END SNIPPET: maven-plugin-lifecycle -->
+            <!-- END SNIPPET: tesla-jar-lifecycle -->
+          </lifecycle>
+        </lifecycles>
+      </configuration>
+    </component>        
+    
+    <!--
+     | TESLA PLUGIN
+     |-->
+    <component>
+      <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+      <role-hint>tesla-plugin</role-hint>
+      <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
+      <configuration>
+        <type>tesla-plugin</type>
+        <extension>jar</extension>
+        <language>java</language>
+        <addedToClasspath>true</addedToClasspath>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+      <role-hint>tesla-plugin</role-hint>
+      <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+      <configuration>
+        <lifecycles>
+          <lifecycle>
+            <id>default</id>
+            <!-- START SNIPPET: tesla-plugin-lifecycle -->
+            <phases>
+              <process-resources>
+                org.apache.maven.plugins:maven-resources-plugin:2.4.3:resources
+              </process-resources>
+              <compile>
+                org.apache.maven.plugins:maven-compiler-plugin:2.3.2:compile
+              </compile>
+              <process-classes>
+                org.eclipse.tesla.plugin:tesla-plugin-plugin:0.0.1-SNAPSHOT:descriptor,
+                org.sonatype.plugins:sisu-maven-plugin:1.1:main-index
+              </process-classes>
+              <process-test-resources>
+                org.apache.maven.plugins:maven-resources-plugin:2.4.3:testResources
+              </process-test-resources>
+              <test-compile>
+                org.apache.maven.plugins:maven-compiler-plugin:2.3.2:testCompile
+              </test-compile>
+              <process-test-classes>
+                org.sonatype.plugins:sisu-maven-plugin:1.1:test-index
+              </process-test-classes>
+              <test>
+                org.apache.maven.plugins:maven-surefire-plugin:2.7.2:test
+              </test>
+              <package>
+                org.apache.maven.plugins:maven-jar-plugin:2.3.1:jar,
+                org.apache.maven.plugins:maven-plugin-plugin:2.7:addPluginArtifactMetadata
+              </package>
+              <install>
+                org.apache.maven.plugins:maven-install-plugin:2.3.1:install
+              </install>
+              <deploy>
+                org.apache.maven.plugins:maven-deploy-plugin:2.5:deploy
+              </deploy>
+            </phases>
+            <!-- END SNIPPET: tesla-plugin-lifecycle -->
           </lifecycle>
         </lifecycles>
       </configuration>
