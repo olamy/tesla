@@ -654,7 +654,7 @@ problem.
                 org.apache.maven.plugins:maven-compiler-plugin:2.3.2:compile
               </compile>
               <process-classes>
-                org.eclipse.tesla.plugin:tesla-plugin-plugin:0.0.1-SNAPSHOT:descriptor,
+                org.eclipse.tesla.plugin:tesla-plugin-plugin:0.0.1:descriptor,
                 org.sonatype.plugins:sisu-maven-plugin:1.1:main-index
               </process-classes>
               <process-test-resources>
