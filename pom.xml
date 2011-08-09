@@ -16,6 +16,7 @@
     <version>1</version>
   </parent>
   
+  <groupId>org.apache.maven</groupId>
   <artifactId>maven</artifactId>
   <version>3.0.4-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -182,20 +183,15 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/maven-3/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/maven-3/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/maven-3/trunk</url>
+    <connection>scm:git:git@github.com/etesla/tesla.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/etesla/tesla.git</developerConnection>
+    <url>http://github.com/etesla/tesla</url>
   </scm>
+
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MNG</url>
   </issueManagement>
-  <distributionManagement>
-    <site>
-      <id>apache.website</id>
-      <url>scp://people.apache.org/www/maven.apache.org/ref/${project.version}/</url>
-    </site>
-  </distributionManagement>
 
   <!--bootstrap-start-comment-->
   <dependencyManagement>
