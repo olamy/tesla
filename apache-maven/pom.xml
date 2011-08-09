@@ -24,7 +24,7 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>apache-maven</artifactId>
+  <artifactId>tesla</artifactId>
   <packaging>pom</packaging>
   <name>Tesla :: Distribution</name>
 
@@ -128,6 +128,11 @@
                       <fileSet>
                         <directory>ext</directory>
                         <artifacts>
+                          <!--
+                          <artifact>org.apache.maven.wagon:wagon-http-shared</artifact>       
+                          <artifact>org.apache.maven.wagon:wagon-http-lightweight</artifact>       
+                          <artifact>org.sonatype.aether:aether-connector-wagon</artifact>                      
+                          -->
                           <artifact>org.sonatype.maven:wagon-ahc</artifact>       
                           <artifact>org.sonatype.aether:aether-connector-asynchttpclient</artifact>                      
                           <artifact>org.sonatype.gossip:gossip-bootstrap</artifact>                      
