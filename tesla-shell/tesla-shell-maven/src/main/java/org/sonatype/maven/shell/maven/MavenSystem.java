@@ -16,29 +16,28 @@ import java.io.File;
 
 /**
  * Maven system.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
-public interface MavenSystem
-{
-    // FIXME: Use _PATH and _DIR to sep from property name constants
-    
-    String MAVEN_HOME = "maven.home";
+public interface MavenSystem {
+  // FIXME: Use _PATH and _DIR to sep from property name constants
 
-    String LOCAL_REPO = "maven.repo.local";
+  String MAVEN_HOME = "maven.home";
 
-    String USER_HOME = System.getProperty("user.home");
+  String LOCAL_REPO = "maven.repo.local";
 
-    File USER_MAVEN_CONF_HOME = new File(USER_HOME, ".m2");
+  String USER_HOME = System.getProperty("user.home");
 
-    File DEFAULT_USER_SETTINGS_FILE = new File(USER_MAVEN_CONF_HOME, "settings.xml");
+  File USER_MAVEN_CONF_HOME = new File(USER_HOME, ".m2");
 
-    File DEFAULT_GLOBAL_SETTINGS_FILE = new File(System.getProperty(MAVEN_HOME, System.getProperty("user.dir", "")), "conf/settings.xml");
+  File DEFAULT_USER_SETTINGS_FILE = new File(USER_MAVEN_CONF_HOME, "settings.xml");
 
-    File DEFAULT_USER_TOOLCHAINS_FILE = new File(USER_MAVEN_CONF_HOME, "toolchains.xml");
+  File DEFAULT_GLOBAL_SETTINGS_FILE = new File(System.getProperty(MAVEN_HOME, System.getProperty("user.dir", "")), "conf/settings.xml");
 
-    String getVersion();
+  File DEFAULT_USER_TOOLCHAINS_FILE = new File(USER_MAVEN_CONF_HOME, "toolchains.xml");
 
-    MavenRuntime create(MavenRuntimeConfiguration config) throws Exception;
+  String getVersion();
+
+  MavenRuntime create(MavenRuntimeConfiguration config) throws Exception;
 }

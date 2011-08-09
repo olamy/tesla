@@ -16,3 +16,4 @@
  * @since 0.7
  */
 package org.sonatype.maven.shell.commands.maven;
+

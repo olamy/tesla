@@ -32,89 +32,86 @@ import java.util.Properties;
 
 /**
  * Encrypt passwords.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
 @Command(name = "encrypt-password")
 @Preferences(path = "commands/encrypt-password")
-public class EncryptPasswordCommand
-    extends CommandActionSupport
-{
-    // FIXME: This may not be the correct configuration, pull out the container setup form MavenCommand and use that?
-    private final PlexusRuntime plexus;
+public class EncryptPasswordCommand extends CommandActionSupport {
+  // FIXME: This may not be the correct configuration, pull out the container setup form MavenCommand and use that?
+  private final PlexusRuntime plexus;
 
-    private Properties props;
+  private Properties props;
 
-    @Option(name="D", longName="define")
-    protected void setProperty(final String input) {
-        assert input != null;
+  @Option(name = "D", longName = "define")
+  protected void setProperty(final String input) {
+    assert input != null;
 
-        if (props == null) {
-            props = new Properties();
-        }
-
-        NameValue nv = NameValue.parse(input);
-        props.setProperty(nv.name, nv.value);
+    if (props == null) {
+      props = new Properties();
     }
 
-    @Option(name="m", longName="master")
-    private boolean master;
+    NameValue nv = NameValue.parse(input);
+    props.setProperty(nv.name, nv.value);
+  }
 
-    @Argument(required=true)
-    private String password;
+  @Option(name = "m", longName = "master")
+  private boolean master;
 
-    @Inject
-    public EncryptPasswordCommand(final PlexusRuntime plexus) {
-        assert plexus != null;
-        this.plexus = plexus;
+  @Argument(required = true)
+  private String password;
+
+  @Inject
+  public EncryptPasswordCommand(final PlexusRuntime plexus) {
+    assert plexus != null;
+    this.plexus = plexus;
+  }
+
+  public Object execute(final CommandContext context) throws Exception {
+    assert context != null;
+    IO io = context.getIo();
+
+    // HACK: Put all props into System, the security muck needs it
+    if (props != null) {
+      System.getProperties().putAll(props);
     }
 
-    public Object execute(final CommandContext context) throws Exception {
-        assert context != null;
-        IO io = context.getIo();
+    DefaultSecDispatcher dispatcher = (DefaultSecDispatcher) plexus.lookup(SecDispatcher.class, "maven");
+    String result;
 
-        // HACK: Put all props into System, the security muck needs it
-        if (props != null) {
-            System.getProperties().putAll(props);
-        }
+    if (master) {
+      DefaultPlexusCipher cipher = new DefaultPlexusCipher();
+      result = cipher.encryptAndDecorate(password, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
+    } else {
+      String configurationFile = dispatcher.getConfigurationFile();
 
-        DefaultSecDispatcher dispatcher = (DefaultSecDispatcher) plexus.lookup(SecDispatcher.class, "maven");
-        String result;
+      if (configurationFile.startsWith("~")) {
+        configurationFile = System.getProperty("user.home") + configurationFile.substring(1);
+      }
 
-        if (master) {
-            DefaultPlexusCipher cipher = new DefaultPlexusCipher();
-            result = cipher.encryptAndDecorate(password, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
-        }
-        else {
-            String configurationFile = dispatcher.getConfigurationFile();
+      String file = System.getProperty(DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION, configurationFile);
 
-            if (configurationFile.startsWith("~")) {
-                configurationFile = System.getProperty("user.home") + configurationFile.substring(1);
-            }
+      String master = null;
 
-            String file = System.getProperty(DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION, configurationFile);
+      SettingsSecurity sec = SecUtil.read(file, true);
+      if (sec != null) {
+        master = sec.getMaster();
+      }
 
-            String master = null;
+      if (master == null) {
+        throw new IllegalStateException("Master password is not set in the setting security file: " + file);
+      }
 
-            SettingsSecurity sec = SecUtil.read(file, true);
-            if (sec != null) {
-                master = sec.getMaster();
-            }
+      DefaultPlexusCipher cipher = new DefaultPlexusCipher();
+      String masterPasswd = cipher.decryptDecorated(master, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
 
-            if (master == null) {
-                throw new IllegalStateException("Master password is not set in the setting security file: " + file);
-            }
-
-            DefaultPlexusCipher cipher = new DefaultPlexusCipher();
-            String masterPasswd = cipher.decryptDecorated(master, DefaultSecDispatcher.SYSTEM_PROPERTY_SEC_LOCATION);
-
-            result = cipher.encryptAndDecorate(password, masterPasswd);
-        }
-
-        io.out.println(result);
-
-        // HACK: Maven core-its need 0 for success
-        return Result.SUCCESS;
+      result = cipher.encryptAndDecorate(password, masterPasswd);
     }
+
+    io.out.println(result);
+
+    // HACK: Maven core-its need 0 for success
+    return Result.SUCCESS;
+  }
 }

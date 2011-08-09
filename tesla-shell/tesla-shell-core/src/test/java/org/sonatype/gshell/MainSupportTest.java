@@ -17,6 +17,7 @@ package org.sonatype.gshell;
 
 import java.net.URLClassLoader;
 
+import org.codehaus.plexus.classworlds.ClassWorld;
 import org.fusesource.jansi.Ansi;
 import org.junit.After;
 import org.junit.Before;
@@ -74,7 +75,7 @@ public class MainSupportTest
         }
 
         @Override
-        protected Shell createShell(URLClassLoader classLoader) throws Exception {
+        protected Shell createShell(ClassWorld classWorld) throws Exception {
             return new DummyShell();
         }
 

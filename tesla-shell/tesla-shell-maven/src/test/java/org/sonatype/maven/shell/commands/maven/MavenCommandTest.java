@@ -26,44 +26,39 @@ import static org.junit.Assert.*;
 
 /**
  * Tests for the {@link MavenCommand}.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class MavenCommandTest
-    extends CommandTestSupport
-{
-    public MavenCommandTest() {
-        super(MavenCommand.class);
-    }
+public class MavenCommandTest extends CommandTestSupport {
+  public MavenCommandTest() {
+    super(MavenCommand.class);
+  }
 
-    @Override
-    @Test
-    @Ignore
-    public void testDefault() throws Exception {
-        // disabled
-    }
+  @Override
+  @Test
+  @Ignore
+  public void testDefault() throws Exception {
+    // disabled
+  }
 
-    @Test
-    public void test1() throws Exception {
-        String settings = new File(getClass().getResource("settings.xml").toURI()).toString();
-        System.out.println("Settings: " + settings);
+  @Test
+  public void test1() throws Exception {
+    String settings = new File(getClass().getResource("settings.xml").toURI()).toString();
+    System.out.println("Settings: " + settings);
 
-        String pom = new File(getClass().getResource("test1.pom").toURI()).toString();
-        System.out.println("POM: " + pom);
+    String pom = new File(getClass().getResource("test1.pom").toURI()).toString();
+    System.out.println("POM: " + pom);
 
-        //File repoDir = new File(new File(System.getProperty("basedir")), "target/test-repo");
-        //System.out.println("Repo Dir: " + repoDir);
+    // File repoDir = new File(new File(System.getProperty("basedir")), "target/test-repo");
+    // System.out.println("Repo Dir: " + repoDir);
 
-        Object result = executeWithArgs(
-            "-B", "-e", "-V",
-            "-f", pom,
-            "-s", settings,
-            //"-Dmaven.repo.local=" + repoDir,
-            "package");
+    Object result = executeWithArgs("-B", "-e", "-V", "-f", pom, "-s", settings,
+    // "-Dmaven.repo.local=" + repoDir,
+        "package");
 
-        System.out.println("OUT: " + getIo().getOutputString());
-        System.out.println("ERR: " + getIo().getErrorString());
+    System.out.println("OUT: " + getIo().getOutputString());
+    System.out.println("ERR: " + getIo().getErrorString());
 
-        assertEquals(0, result);
-    }
+    assertEquals(0, result);
+  }
 }

@@ -18,16 +18,14 @@ import javax.inject.Named;
 
 /**
  * Maven module.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
 @Named
-public class MavenModule
-    extends AbstractModule
-{
-    @Override
-    protected void configure() {
-        bind(MavenSystem.class).to(MavenSystemImpl.class);
-    }
+public class MavenModule extends AbstractModule {
+  @Override
+  protected void configure() {
+    bind(MavenSystem.class).to(MavenSystemImpl.class);
+  }
 }

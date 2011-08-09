@@ -16,13 +16,11 @@ import java.io.PrintStream;
 
 /**
  * Batch console transfer listener.
- *
+ * 
  * @since 0.9
  */
-public class BatchModeMavenTransferListener
-    extends AbstractMavenTransferListener
-{
-    public BatchModeMavenTransferListener(final PrintStream out) {
-        super(out);
-    }
+public class BatchModeMavenTransferListener extends AbstractMavenTransferListener {
+  public BatchModeMavenTransferListener(final PrintStream out) {
+    super(out);
+  }
 }

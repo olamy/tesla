@@ -55,11 +55,7 @@ public class Main extends GuiceMainSupport {
     modules.add(custom);
   }
 
-  // public static void main(final String[] args) throws Exception {
-  // new Main().boot(args);
-  // }
-
   public static void main(final String[] args, ClassWorld classWorld) throws Exception {
-    new Main().boot(args, classWorld.getClassRealm("plexus.core"));
+    new Main().boot(args, classWorld);
   }
 }

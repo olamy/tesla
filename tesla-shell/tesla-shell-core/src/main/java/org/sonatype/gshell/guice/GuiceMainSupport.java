@@ -21,6 +21,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
 import org.sonatype.gshell.MainSupport;
 import org.sonatype.gshell.branding.Branding;
 import org.sonatype.gshell.command.IO;
@@ -53,7 +55,7 @@ public abstract class GuiceMainSupport
     protected final DefaultBeanLocator container = new DefaultBeanLocator();
 
     @Override
-    protected Shell createShell(URLClassLoader classLoader) throws Exception {
+    protected Shell createShell(ClassWorld classWorld) throws Exception {
         List<Module> modules = new ArrayList<Module>();
         configure(modules);
 
@@ -61,7 +63,7 @@ public abstract class GuiceMainSupport
         container.add(injector, 0);
 
         ShellImpl shell = injector.getInstance(ShellImpl.class);
-        injector.getInstance(CommandRegistrar.class).registerCommands(classLoader);
+        injector.getInstance(CommandRegistrar.class).registerCommands(classWorld.getClassRealm("plexus.core"));
 
         return shell;
     }

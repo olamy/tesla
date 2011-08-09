@@ -16,15 +16,14 @@ import org.apache.maven.execution.MavenExecutionRequest;
 
 /**
  * Maven runtime.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
-public interface MavenRuntime
-{
-    MavenRuntimeConfiguration getConfiguration();
+public interface MavenRuntime {
+  MavenRuntimeConfiguration getConfiguration();
 
-    MavenExecutionRequest create() throws Exception;
+  MavenExecutionRequest create() throws Exception;
 
-    int execute(MavenExecutionRequest request) throws Exception;
+  int execute(MavenExecutionRequest request) throws Exception;
 }

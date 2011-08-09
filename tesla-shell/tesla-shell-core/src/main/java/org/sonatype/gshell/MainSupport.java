@@ -19,6 +19,8 @@ package org.sonatype.gshell;
 import jline.AnsiWindowsTerminal;
 import jline.NoInterruptUnixTerminal;
 import jline.TerminalFactory;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
 import org.fusesource.jansi.Ansi;
 import org.slf4j.Logger;
 import org.sonatype.gossip.Log;
@@ -197,10 +199,12 @@ public abstract class MainSupport
     }
 
     public void boot(String[] args) throws Exception {
-      boot(args, new URLClassLoader(new URL[]{}, Thread.currentThread().getContextClassLoader()));
+      ClassWorld classWorld = new ClassWorld();
+      classWorld.newRealm("plexus.core", Thread.currentThread().getContextClassLoader());
+      boot(args, classWorld);
     }
-
-    public void boot(String[] args, URLClassLoader classLoader) throws Exception {
+    
+    public void boot(String[] args, ClassWorld classWorld) throws Exception {
         assert args != null;
 
         args = Arguments.clean(args);
@@ -279,7 +283,7 @@ public abstract class MainSupport
         try {
             vars.set(SHELL_ERRORS, showErrorTraces);
 
-            Shell shell = createShell(classLoader);
+            Shell shell = createShell(classWorld);
             ShellHolder.set(shell);
 
             if (command != null) {
@@ -326,5 +330,5 @@ public abstract class MainSupport
 
     protected abstract Branding createBranding();
 
-    protected abstract Shell createShell(URLClassLoader classLoader) throws Exception;
+    protected abstract Shell createShell(ClassWorld classWorld) throws Exception;
 }

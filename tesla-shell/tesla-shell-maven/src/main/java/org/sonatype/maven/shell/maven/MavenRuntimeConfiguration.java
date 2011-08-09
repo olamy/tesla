@@ -24,152 +24,150 @@ import java.util.Properties;
 
 /**
  * Maven runtime configuration.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
-public class MavenRuntimeConfiguration
-{
-    private StreamSet streams = StreamSet.system();
+public class MavenRuntimeConfiguration {
+  private StreamSet streams = StreamSet.system();
 
-    private ClassWorld classWorld;
+  private ClassWorld classWorld;
 
-    private Delegate delegate;
+  private Delegate delegate;
 
-    private File baseDirectory = new File(System.getProperty("user.dir"));
+  private File baseDirectory = new File(System.getProperty("user.dir"));
 
-    // TODO: Should use a Verbosity enum here for quiet/debug
+  // TODO: Should use a Verbosity enum here for quiet/debug
 
-    private boolean quiet;
+  private boolean quiet;
 
-    private boolean debug;
+  private boolean debug;
 
-    private Properties properties = new Properties();
+  private Properties properties = new Properties();
 
-    private List<String> profiles = new ArrayList<String>();
+  private List<String> profiles = new ArrayList<String>();
 
-    private File pomFile;
+  private File pomFile;
 
-    private File settingsFile;
+  private File settingsFile;
 
-    private File globalSettingsFile;
+  private File globalSettingsFile;
 
-    private File logFile;
+  private File logFile;
 
-    private PrintStreamLogger logger;
+  private PrintStreamLogger logger;
 
-    private boolean showVersion;
+  private boolean showVersion;
 
-    public StreamSet getStreams() {
-        return streams;
-    }
+  public StreamSet getStreams() {
+    return streams;
+  }
 
-    public void setStreams(StreamSet streams) {
-        this.streams = streams;
-    }
+  public void setStreams(StreamSet streams) {
+    this.streams = streams;
+  }
 
-    public ClassWorld getClassWorld() {
-        return classWorld;
-    }
+  public ClassWorld getClassWorld() {
+    return classWorld;
+  }
 
-    public void setClassWorld(ClassWorld classWorld) {
-        this.classWorld = classWorld;
-    }
+  public void setClassWorld(ClassWorld classWorld) {
+    this.classWorld = classWorld;
+  }
 
-    public Delegate getDelegate() {
-        return delegate;
-    }
+  public Delegate getDelegate() {
+    return delegate;
+  }
 
-    public void setDelegate(Delegate delegate) {
-        this.delegate = delegate;
-    }
+  public void setDelegate(Delegate delegate) {
+    this.delegate = delegate;
+  }
 
-    public File getBaseDirectory() {
-        return baseDirectory;
-    }
+  public File getBaseDirectory() {
+    return baseDirectory;
+  }
 
-    public void setBaseDirectory(File dir) {
-        this.baseDirectory = dir;
-    }
+  public void setBaseDirectory(File dir) {
+    this.baseDirectory = dir;
+  }
 
-    public boolean isQuiet() {
-        return quiet;
-    }
+  public boolean isQuiet() {
+    return quiet;
+  }
 
-    public void setQuiet(boolean quiet) {
-        this.quiet = quiet;
-    }
+  public void setQuiet(boolean quiet) {
+    this.quiet = quiet;
+  }
 
-    public boolean isDebug() {
-        return debug;
-    }
+  public boolean isDebug() {
+    return debug;
+  }
 
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
 
-    public Properties getProperties() {
-        return properties;
-    }
+  public Properties getProperties() {
+    return properties;
+  }
 
-    public List<String> getProfiles() {
-        return profiles;
-    }
+  public List<String> getProfiles() {
+    return profiles;
+  }
 
-    public File getPomFile() {
-        return pomFile;
-    }
+  public File getPomFile() {
+    return pomFile;
+  }
 
-    public void setPomFile(File pomFile) {
-        this.pomFile = pomFile;
-    }
+  public void setPomFile(File pomFile) {
+    this.pomFile = pomFile;
+  }
 
-    public File getSettingsFile() {
-        return settingsFile;
-    }
+  public File getSettingsFile() {
+    return settingsFile;
+  }
 
-    public void setSettingsFile(File file) {
-        this.settingsFile = file;
-    }
+  public void setSettingsFile(File file) {
+    this.settingsFile = file;
+  }
 
-    public File getGlobalSettingsFile() {
-        return globalSettingsFile;
-    }
+  public File getGlobalSettingsFile() {
+    return globalSettingsFile;
+  }
 
-    public void setGlobalSettingsFile(File file) {
-        this.globalSettingsFile = file;
-    }
+  public void setGlobalSettingsFile(File file) {
+    this.globalSettingsFile = file;
+  }
 
-    public File getLogFile() {
-        return logFile;
-    }
+  public File getLogFile() {
+    return logFile;
+  }
 
-    public void setLogFile(File logFile) {
-        this.logFile = logFile;
-    }
+  public void setLogFile(File logFile) {
+    this.logFile = logFile;
+  }
 
-    public PrintStreamLogger getLogger() {
-        return logger;
-    }
+  public PrintStreamLogger getLogger() {
+    return logger;
+  }
 
-    public void setLogger(PrintStreamLogger logger) {
-        this.logger = logger;
-    }
+  public void setLogger(PrintStreamLogger logger) {
+    this.logger = logger;
+  }
 
-    public boolean isShowVersion() {
-        return showVersion;
-    }
+  public boolean isShowVersion() {
+    return showVersion;
+  }
 
-    public void setShowVersion(boolean showVersion) {
-        this.showVersion = showVersion;
-    }
+  public void setShowVersion(boolean showVersion) {
+    this.showVersion = showVersion;
+  }
 
-    //
-    // Delegate
-    //
+  //
+  // Delegate
+  //
 
-    public static interface Delegate
-    {
-        void configure(DefaultPlexusContainer container) throws Exception;
-    }
+  public static interface Delegate {
+    void configure(DefaultPlexusContainer container) throws Exception;
+  }
 }
