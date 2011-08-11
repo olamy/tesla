@@ -12,17 +12,13 @@
 
 package org.sonatype.maven.shell.commands.maven;
 
-import com.google.inject.Module;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.sonatype.gshell.command.support.CommandTestSupport;
-import org.sonatype.maven.shell.maven.MavenModule;
-
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for the {@link MavenCommand}.
@@ -43,18 +39,16 @@ public class MavenCommandTest extends CommandTestSupport {
 
   @Test
   public void test1() throws Exception {
-    String settings = new File(getClass().getResource("settings.xml").toURI()).toString();
+    String settings = System.getProperty("hostEnvSettings");
+    if (settings == null) {
+     settings = new File(getClass().getResource("settings.xml").toURI()).toString();
+    }
     System.out.println("Settings: " + settings);
 
     String pom = new File(getClass().getResource("test1.pom").toURI()).toString();
     System.out.println("POM: " + pom);
 
-    // File repoDir = new File(new File(System.getProperty("basedir")), "target/test-repo");
-    // System.out.println("Repo Dir: " + repoDir);
-
-    Object result = executeWithArgs("-B", "-e", "-V", "-f", pom, "-s", settings,
-    // "-Dmaven.repo.local=" + repoDir,
-        "package");
+    Object result = executeWithArgs("-B", "-e", "-V", "-f", pom, "-s", settings, "package");
 
     System.out.println("OUT: " + getIo().getOutputString());
     System.out.println("ERR: " + getIo().getErrorString());
