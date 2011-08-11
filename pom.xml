@@ -58,9 +58,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
-    <distributionId>eclipse-tesla</distributionId>
-    <distributionShortName>Tesla</distributionShortName>
-    <distributionName>Eclipse Tesla</distributionName>   
+    <!-- Identify of the distribution -->
+    <distributionId>apache-maven</distributionId>
+    <distributionShortName>Maven</distributionShortName>
+    <distributionName>Apache Maven</distributionName>   
   </properties>
 
   <mailingLists>
@@ -159,12 +160,14 @@
     </developer>
   </developers>
 
+  <!--
   <repositories>
     <repository>
       <id>fusesource</id>
       <url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
     </repository>
   </repositories>
+  -->
 
   <modules>
     <module>maven-core</module>
