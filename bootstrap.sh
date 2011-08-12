@@ -15,4 +15,5 @@ ${ANT} \
   -DdistributionId="${distributionId}" \
   -DdistributionShortName="${distributionShortName}" \
   -DdistributionName="${distributionName}" \
-  -DhostEnvSettings="${HOME}/.m2/settings.xml"
+  -DhostEnvSettings="${HOME}/.m2/settings.xml" \
+  -Dmaven.home.exists.continue=yes
