@@ -78,7 +78,7 @@
       <plugin>
         <groupId>org.eclipse.tesla.plugins</groupId>
         <artifactId>tesla-proviso-plugin</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
         <extensions>true</extensions>
         <executions>
           <execution>
