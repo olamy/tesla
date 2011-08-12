@@ -59,9 +59,9 @@
     <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <!-- Identify of the distribution -->
-    <distributionId>apache-maven</distributionId>
-    <distributionShortName>Maven</distributionShortName>
-    <distributionName>Apache Maven</distributionName>   
+    <distributionId>eclipse-tesla</distributionId>
+    <distributionShortName>Tesla</distributionShortName>
+    <distributionName>Eclipse Tesla</distributionName>   
   </properties>
 
   <mailingLists>
