@@ -40,8 +40,8 @@ public class MavenCommandTest extends CommandTestSupport {
   @Test
   public void test1() throws Exception {
     String settings = System.getProperty("hostEnvSettings");
-    if (settings == null) {
-     settings = new File(getClass().getResource("settings.xml").toURI()).toString();
+    if (settings == null || new File(settings).exists() == false) {
+      settings = new File(getClass().getResource("settings.xml").toURI()).toString();
     }
     System.out.println("Settings: " + settings);
 

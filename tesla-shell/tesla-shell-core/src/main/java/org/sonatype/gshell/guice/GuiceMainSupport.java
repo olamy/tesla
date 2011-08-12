@@ -16,11 +16,10 @@
 
 package org.sonatype.gshell.guice;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.Stage;
+import static com.google.inject.name.Names.named;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.sonatype.gshell.MainSupport;
@@ -37,11 +36,11 @@ import org.sonatype.guice.bean.locators.MutableBeanLocator;
 import org.sonatype.guice.bean.reflect.URLClassSpace;
 import org.sonatype.inject.BeanScanning;
 
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.inject.name.Names.named;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
 
 /**
  * Support for booting shell applications with Guice.

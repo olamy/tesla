@@ -37,6 +37,7 @@ import org.apache.maven.settings.building.SettingsProblem;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.Os;
@@ -202,15 +203,19 @@ public class MavenSystemImpl implements MavenSystem {
       Thread.currentThread().setContextClassLoader(container.getContainerRealm());
     }
 
+    //TODO - move the container creation in the GuiceMain
+    //TODO - figure out how to share the container if i need it or inject something else
+    //TODO - i can create another contruct as after i boot the container i can do plain injection
+    
     private DefaultPlexusContainer createContainer() throws Exception {
       
       ContainerConfiguration cc = new DefaultContainerConfiguration()
         .setClassWorld(config.getClassWorld())
+        .setAutoWiring(true)
+        .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
         .setName("maven");
 
       // NOTE: This causes wiring failures for jline.Terminal, investigate further
-      // .setAutoWiring(true)
-      // .setClassPathScanning(PlexusConstants.SCANNING_CACHE);
 
       DefaultPlexusContainer c = new DefaultPlexusContainer(cc);
       configureContainer(c);

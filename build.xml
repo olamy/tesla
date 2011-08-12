@@ -35,6 +35,7 @@ END SNIPPET: ant-bootstrap -->
   <property name="distributionId" value="apache-maven"/>
   <property name="distributionShortName" value="Maven"/>
   <property name="distributionName" value="Apache Maven"/>
+  <property name="hostEnvSettings" value=""/>
   <property name="it.workdir.version" value="3.0.x" />
 
   <target name="initTaskDefs">
@@ -263,6 +264,7 @@ Do you want to continue?</input>
       <arg value="-DdistributionId=${distributionId}" />
       <arg value="-DdistributionShortName=${distributionShortName}" />
       <arg value="-DdistributionName=${distributionName}" />
+      <arg value="-DhostEnvSettings=${hostEnvSettings}" />
     </java>
   </target>
 
