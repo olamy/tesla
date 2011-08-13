@@ -32,9 +32,9 @@ END SNIPPET: ant-bootstrap -->
 <project default="all" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 
   <property name="distributionDirectory" value="apache-maven"/>
-  <property name="distributionId" value="apache-maven"/>
-  <property name="distributionShortName" value="Maven"/>
-  <property name="distributionName" value="Apache Maven"/>
+  <property name="distributionId" value="eclipse-tesla"/>
+  <property name="distributionShortName" value="Tesla"/>
+  <property name="distributionName" value="Eclipse Tesla"/>
   <property name="hostEnvSettings" value=""/>
   <property name="it.workdir.version" value="3.0.x" />
 
@@ -292,6 +292,8 @@ This goal just validates the presence of that distribution.
     <chmod perm="+x">
       <fileset dir="${maven.home}/bin">
         <include name="mvn" />
+        <include name="tsh" />
+        <include name="tshd" />
       </fileset>
     </chmod>
   </target>

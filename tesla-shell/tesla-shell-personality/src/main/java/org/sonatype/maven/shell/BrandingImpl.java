@@ -20,6 +20,9 @@ import org.sonatype.gshell.util.PrintBuffer;
 
 import java.io.File;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import static org.sonatype.gshell.variables.VariableNames.SHELL_GROUP;
 import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
 
@@ -29,6 +32,8 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.7
  */
+@Named
+@Singleton
 public class BrandingImpl extends BrandingSupport {
   
   private static final String[] BANNER = {
