@@ -528,7 +528,6 @@
         <artifactId>tesla-shell-pom</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
-      <!-- INTERNAL -->
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-maven</artifactId>
