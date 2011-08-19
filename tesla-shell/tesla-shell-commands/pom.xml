@@ -55,6 +55,7 @@
     <module>tesla-shell-ssh</module>
     -->
     <module>tesla-shell-standard</module>
+    <module>tesla-shell-pom</module>
   </modules>
 </project>
 

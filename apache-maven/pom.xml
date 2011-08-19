@@ -116,8 +116,9 @@
                           <artifact>org.eclipse.tesla.shell.commands:tesla-shell-logging</artifact>
                           <artifact>org.eclipse.tesla.shell.commands:tesla-shell-network</artifact>
                           <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pref</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-standard</artifact>                          
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-file</artifact>                          
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-standard</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-file</artifact>
+                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pom</artifact>
                         </artifacts>
                         <excludes>
                           <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      
