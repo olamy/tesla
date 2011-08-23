@@ -17,6 +17,17 @@
       <version>1.0.0+</version>
       <fields>
 
+        <field xml.transient="true">
+          <name>id</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field xml.transient="true">
+          <name>location</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+
         <field>
           <name>prerequisites</name>
           <version>1.0.0+</version>
