@@ -21,6 +21,7 @@ package org.apache.maven.cli;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,6 +97,8 @@ public class MavenCli
     public static final File DEFAULT_USER_TOOLCHAINS_FILE = new File( userMavenConfigurationHome, "toolchains.xml" );
 
     private static final String EXT_CLASS_PATH = "maven.ext.class.path";
+
+    private static final String EXT_CONF_DIR = "maven.ext.conf.dir";
 
     private ClassWorld classWorld;
 
@@ -752,6 +755,7 @@ public class MavenCli
     }
 
     private MavenExecutionRequest populateRequest( CliRequest cliRequest )
+        throws IOException
     {
         MavenExecutionRequest request = cliRequest.request;
         CommandLine commandLine = cliRequest.commandLine;
@@ -913,6 +917,27 @@ public class MavenCli
             userToolchainsFile = MavenCli.DEFAULT_USER_TOOLCHAINS_FILE;
         }
 
+        String extConfDir = cliRequest.userProperties.getProperty( EXT_CONF_DIR );
+        if ( extConfDir == null )
+        {
+            extConfDir = cliRequest.systemProperties.getProperty( EXT_CONF_DIR );
+        }
+
+        File extensionDirectory;
+        if ( StringUtils.isNotEmpty( extConfDir ) )
+        {
+            extensionDirectory = new File( extConfDir ).getCanonicalFile();
+        }
+        else if ( cliRequest.userProperties.containsKey( EXT_CONF_DIR )
+            || cliRequest.systemProperties.containsKey( EXT_CONF_DIR ) )
+        {
+            extensionDirectory = null;
+        }
+        else
+        {
+            extensionDirectory = new File( MavenCli.userMavenConfigurationHome, "ext" );
+        }
+
         request.setBaseDirectory( baseDirectory ).setGoals( goals )
             .setSystemProperties( cliRequest.systemProperties )
             .setUserProperties( cliRequest.userProperties )
@@ -926,7 +951,7 @@ public class MavenCli
             .setUpdateSnapshots( updateSnapshots ) // default: false
             .setNoSnapshotUpdates( noSnapshotUpdates ) // default: false
             .setGlobalChecksumPolicy( globalChecksumPolicy ) // default: warn
-            .setExtensionDirectory( new File( MavenCli.userMavenConfigurationHome, "ext" ) )
+            .setExtensionDirectory( extensionDirectory )
             .setUserToolchainsFile( userToolchainsFile );
 
         if ( alternatePomFile != null )
