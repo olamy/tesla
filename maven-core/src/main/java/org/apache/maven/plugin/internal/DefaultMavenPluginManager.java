@@ -299,7 +299,7 @@ public class DefaultMavenPluginManager
 
         MavenProject project = session.getCurrentProject();
 
-        Map<String, ClassLoader> foreignImports = calcImports( project, parent, imports );
+        Map<String, ClassLoader> foreignImports = calcImports( session, project, parent, imports );
 
         PluginRealmCache.Key cacheKey =
             pluginRealmCache.createKey( plugin, parent, foreignImports, filter, project.getRemotePluginRepositories(),
@@ -399,19 +399,24 @@ public class DefaultMavenPluginManager
         }
     }
 
-    private Map<String, ClassLoader> calcImports( MavenProject project, ClassLoader parent, List<String> imports )
+    private Map<String, ClassLoader> calcImports( MavenSession session, MavenProject project, ClassLoader parent,
+                                                  List<String> imports )
     {
         Map<String, ClassLoader> foreignImports = new HashMap<String, ClassLoader>();
 
-        ClassLoader projectRealm = project.getClassRealm();
-        if ( projectRealm != null )
+        ClassLoader apiRealm = project.getClassRealm();
+
+        if ( apiRealm == null )
         {
-            foreignImports.put( "", projectRealm );
+            apiRealm = session.getClassRealm();
         }
-        else
+
+        if ( apiRealm == null )
         {
-            foreignImports.put( "", classRealmManager.getMavenApiRealm() );
+            apiRealm = classRealmManager.getMavenApiRealm();
         }
+
+        foreignImports.put( "", apiRealm );
 
         if ( parent != null && imports != null )
         {
