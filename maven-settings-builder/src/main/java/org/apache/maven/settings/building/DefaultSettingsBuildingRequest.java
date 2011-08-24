@@ -20,6 +20,8 @@ package org.apache.maven.settings.building;
  */
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -38,6 +40,8 @@ public class DefaultSettingsBuildingRequest
     private SettingsSource globalSettingsSource;
 
     private SettingsSource userSettingsSource;
+
+    private final List<SettingsSource> customSettingsSources = new ArrayList<SettingsSource>();
 
     private Properties systemProperties;
 
@@ -141,4 +145,18 @@ public class DefaultSettingsBuildingRequest
         return this;
     }
 
+    public SettingsBuildingRequest addCustomSettingsSource( SettingsSource customSettingsSource )
+    {
+        customSettingsSources.add( customSettingsSource );
+
+        return this;
+    }
+
+    /**
+     * Returns custom settings sources in the order they were added.
+     */
+    public List<SettingsSource> getCustomSettingsSources()
+    {
+        return customSettingsSources;
+    }
 }
