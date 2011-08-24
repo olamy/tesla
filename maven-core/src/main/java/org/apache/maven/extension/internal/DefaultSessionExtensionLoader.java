@@ -45,6 +45,7 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.PluginContainerException;
 import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
+import org.apache.maven.rtinfo.RuntimeInformation;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
@@ -106,6 +107,9 @@ public class DefaultSessionExtensionLoader
     @Requirement
     private SettingsWriter settingsWriter;
 
+    @Requirement
+    private RuntimeInformation runtimeInformation;
+
     public ClassLoader loadExtensions( MavenExecutionRequest request, RepositorySystemSession repoSession )
         throws PluginResolutionException, PluginContainerException
     {
@@ -145,6 +149,15 @@ public class DefaultSessionExtensionLoader
                     finally
                     {
                         IOUtil.close( is );
+                    }
+
+                    if ( extension.getPrerequisites() != null && extension.getPrerequisites().getMaven() != null )
+                    {
+                        if ( !runtimeInformation.isMavenVersion( extension.getPrerequisites().getMaven() ) )
+                        {
+                            log.debug( "Ignoring incompatible extension defined in " + extensionFile.getAbsolutePath() );
+                            continue;
+                        }
                     }
 
                     extension.setId( extensionFile.getName().substring( 0, extensionFile.getName().length() - 4 ) );
