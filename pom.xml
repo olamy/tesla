@@ -183,6 +183,7 @@
     <module>maven-embedder</module>
     <module>maven-compat</module>
     <module>tesla-shell</module>
+    <module>tesla-polyglot</module>    
   </modules>
 
   <scm>
@@ -536,6 +537,11 @@
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-personality</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>                      
+      <dependency>
+        <groupId>org.eclipse.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-common</artifactId>
         <version>${mavenVersion}</version>
       </dependency>                      
       <!--bootstrap-end-comment-->      
