@@ -1,4 +1,5 @@
 mvn                eol=lf crlf=input
+pmvn               eol=lf crlf=input
 mvnDebug           eol=lf crlf=input
 tsh                eol=lf crlf=input
 tshd               eol=lf crlf=input

@@ -299,6 +299,7 @@ This goal just validates the presence of that distribution.
         <include name="mvn" />
         <include name="tsh" />
         <include name="tshd" />
+        <include name="pmvn" />
       </fileset>
     </chmod>
   </target>

@@ -426,7 +426,7 @@ public class MavenCli
         executionRequestPopulator = container.lookup( MavenExecutionRequestPopulator.class );
 
         modelProcessor = createModelProcessor( container );
-
+        
         settingsBuilder = container.lookup( SettingsBuilder.class );
 
         dispatcher = (DefaultSecDispatcher) container.lookup( SecDispatcher.class, "maven" );
@@ -679,6 +679,7 @@ public class MavenCli
     protected ModelProcessor createModelProcessor( PlexusContainer container )
         throws ComponentLookupException
     {
+        System.out.println("MavenCli");
         return container.lookup( ModelProcessor.class );
     }
 

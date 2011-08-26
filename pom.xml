@@ -544,6 +544,11 @@
         <artifactId>tesla-polyglot-common</artifactId>
         <version>${mavenVersion}</version>
       </dependency>                      
+      <dependency>
+        <groupId>org.eclipse.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-atom</artifactId>
+        <version>${mavenVersion}</version>
+      </dependency>                      
       <!--bootstrap-end-comment-->      
       <dependency>
         <groupId>org.slf4j</groupId>

@@ -99,7 +99,9 @@
                     <artifacts>
                       <artifact>org.apache.maven:maven-embedder</artifact>       
                       <artifact>org.apache.maven.wagon:wagon-file</artifact>       
-                      <artifact>org.sonatype.aether:aether-connector-file</artifact>                      
+                      <artifact>org.sonatype.aether:aether-connector-file</artifact>
+                      <artifact>org.eclipse.tesla.polyglot:tesla-polyglot-common</artifact>
+                      <artifact>org.eclipse.tesla.polyglot:tesla-polyglot-atom</artifact>                      
                     </artifacts>                    
                     <excludes>
                       <exclude>org.codehaus.plexus:plexus-classworlds</exclude>

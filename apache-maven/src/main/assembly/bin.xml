@@ -47,6 +47,7 @@ under the License.
         <include>mvn</include>
         <include>tsh</include>
         <include>tshd</include>
+        <include>pmvn</include>
         <include>mvnDebug</include>
         <!-- This is so that CI systems can periodically run the profiler -->
         <include>mvnyjp</include>
