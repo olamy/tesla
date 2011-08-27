@@ -35,6 +35,7 @@ import java.util.Properties;
 import javax.inject.Inject;
 
 import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.classrealm.ClassRealmManager;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -45,10 +46,12 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.PluginContainerException;
 import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
+import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.rtinfo.RuntimeInformation;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.apache.maven.settings.SettingsUtils;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
@@ -67,7 +70,6 @@ import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.repository.RepositoryPolicy;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 import org.sonatype.guice.plexus.config.PlexusBeanConverter;
 import org.sonatype.guice.plexus.converters.PlexusXmlBeanConverter;
@@ -106,6 +108,9 @@ public class DefaultSessionExtensionLoader
 
     @Requirement
     private SettingsWriter settingsWriter;
+
+    @Requirement
+    private RepositorySystem repositorySystem;
 
     @Requirement
     private RuntimeInformation runtimeInformation;
@@ -220,17 +225,33 @@ public class DefaultSessionExtensionLoader
         return merged;
     }
 
-    private List<RemoteRepository> getMergedRepositores( MavenExecutionRequest request, CoreExtension extension )
+    private List<RemoteRepository> getMergedRepositores( MavenExecutionRequest request, Settings settings,
+                                                         CoreExtension extension )
+        throws InvalidRepositoryException
     {
-        Map<String, RemoteRepository> merged = new LinkedHashMap<String, RemoteRepository>();
+        List<ArtifactRepository> repositories = new ArrayList<ArtifactRepository>();
 
         for ( org.apache.maven.extension.Repository repository : extension.getPluginRepositories() )
         {
-            RemoteRepository repo = toRemoteRepository( repository );
-            merged.put( repo.getId(), repo );
+            repositories.add( toArtifactRepository( repository ) );
         }
 
-        for ( ArtifactRepository repository : request.getPluginArtifactRepositories() )
+        repositorySystem.injectMirror( repositories, request.getMirrors() );
+        repositorySystem.injectProxy( repositories, request.getProxies() );
+        repositorySystem.injectAuthentication( repositories, settings.getServers() );
+
+        Map<String, RemoteRepository> merged = new LinkedHashMap<String, RemoteRepository>();
+
+        toRemoteRepositories( merged, repositories );
+        toRemoteRepositories( merged, request.getPluginArtifactRepositories() );
+
+        return new ArrayList<RemoteRepository>( merged.values() );
+    }
+
+    public void toRemoteRepositories( Map<String, RemoteRepository> merged,
+                                      List<ArtifactRepository> pluginArtifactRepositories )
+    {
+        for ( ArtifactRepository repository : pluginArtifactRepositories )
         {
             RemoteRepository repo = RepositoryUtils.toRepo( repository );
             if ( !merged.containsKey( repo.getId() ) )
@@ -238,8 +259,6 @@ public class DefaultSessionExtensionLoader
                 merged.put( repo.getId(), repo );
             }
         }
-
-        return new ArrayList<RemoteRepository>( merged.values() );
     }
 
     private ClassRealm createExtensionRealm( MavenExecutionRequest request, final RepositorySystemSession repoSession,
@@ -251,7 +270,26 @@ public class DefaultSessionExtensionLoader
         plugin.setArtifactId( extension.getArtifactId() );
         plugin.setVersion( extension.getVersion() );
 
-        final List<RemoteRepository> repositories = getMergedRepositores( request, extension );
+        final Settings settings;
+        try
+        {
+            settings = getMergedSettings( request, extension );
+        }
+        catch ( SettingsBuildingException e )
+        {
+            // this is unlikely to happen because at this point settings should have been processed already
+            throw new PluginResolutionException( plugin, e );
+        }
+
+        List<RemoteRepository> repositories;
+        try
+        {
+            repositories = getMergedRepositores( request, settings, extension );
+        }
+        catch ( InvalidRepositoryException e )
+        {
+            throw new PluginResolutionException( plugin, e );
+        }
 
         DependencyNode root = pluginDependenciesResolver.resolve( plugin, null, null, repositories, repoSession );
         PreorderNodeListGenerator nlg = new PreorderNodeListGenerator();
@@ -265,17 +303,6 @@ public class DefaultSessionExtensionLoader
             if ( cacheRecord == null )
             {
                 ClassRealm realm = classRealmManager.createSessionExtensionRealm( plugin, artifacts );
-
-                final Settings settings;
-                try
-                {
-                    settings = getMergedSettings( request, extension );
-                }
-                catch ( SettingsBuildingException e )
-                {
-                    // this is unlikely to happen because at this point settings should have been processed already
-                    throw new PluginResolutionException( plugin, e );
-                }
 
                 final Properties properties = getMergedProperties( request, settings );
 
@@ -326,35 +353,13 @@ public class DefaultSessionExtensionLoader
         }
     }
 
-    private static RemoteRepository toRemoteRepository( Repository repository )
+    private ArtifactRepository toArtifactRepository( Repository repository )
+        throws InvalidRepositoryException
     {
-        RemoteRepository result =
-            new RemoteRepository( repository.getId(), repository.getLayout(), repository.getUrl() );
-        result.setPolicy( true, toRepositoryPolicy( repository.getSnapshots() ) );
-        result.setPolicy( false, toRepositoryPolicy( repository.getReleases() ) );
-        return result;
-    }
+        org.apache.maven.model.Repository modelRepository =
+            SettingsUtils.convertFromSettingsRepository( toSettingsRepository( repository ) );
 
-    private static RepositoryPolicy toRepositoryPolicy( org.apache.maven.extension.RepositoryPolicy policy )
-    {
-        boolean enabled = true;
-        String checksums = RepositoryPolicy.CHECKSUM_POLICY_WARN;
-        String updates = RepositoryPolicy.UPDATE_POLICY_DAILY;
-
-        if ( policy != null )
-        {
-            enabled = policy.isEnabled();
-            if ( policy.getUpdatePolicy() != null )
-            {
-                updates = policy.getUpdatePolicy();
-            }
-            if ( policy.getChecksumPolicy() != null )
-            {
-                checksums = policy.getChecksumPolicy();
-            }
-        }
-
-        return new RepositoryPolicy( enabled, updates, checksums );
+        return repositorySystem.buildArtifactRepository( modelRepository );
     }
 
     private Server toServer( org.apache.maven.extension.Server extServer )
@@ -381,6 +386,8 @@ public class DefaultSessionExtensionLoader
         settingsRequest.setUserProperties( mavenRequest.getUserProperties() );
 
         settingsRequest.addCustomSettingsSource( toSettingsSource( extension ) );
+
+        // TODO does this consider session activate profiles? should it?
 
         return settingsBuilder.build( settingsRequest ).getEffectiveSettings();
     }
