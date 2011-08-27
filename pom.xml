@@ -656,4 +656,14 @@
       </build>
     </profile>
   </profiles>
+
+  <repositories>
+    <repository>
+        <id>rso</id>
+        <url>https://repository.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>        
+     </repository>
+  </repositories>
 </project>
