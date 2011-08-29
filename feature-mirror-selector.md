@@ -80,83 +80,83 @@ is created as ~/.m2/ext/nexus-mirror-selector.xml
 * NexusMirrorSelector returns selected mirror along with credentials used to 
   access Nexus to Maven core
 
-	<!--
-	 Configuration file that defines Maven core extension. 
-	
-	 Maven will search for such files ~/.m2/*.xml. The idea is to be able to "install" core extensions simply by
-	 dropping corresponding *.xml file to ~/.m2/ext folder.
-	
-	 Each core extension is similar to Maven extensions plugin, except that core extension cannot define any goal, 
-	 only components.
-	 -->
-	
-	<extension>
-	
-	  <!--
-	    minimal maven version required by this extension, earlier versions simply ignore it 
-	  -->
-	  <prerequisites>
-	    <maven>3.0.4-SNAPSHOT</maven>
-	  </prerequisites>
-	
-	  <!--
-	   Coordinates of the main extension artifact
-	   -->
-	  <groupId>com.sonatype.nexus.plugins</groupId>
-	  <artifactId>nexus-mirror-selector</artifactId>
-	  <version>0.0.1-SNAPSHOT</version>
-	
-	  <!--
-	  Idea: In the future, we may want to be able to add <dependencies/> and <excludes/> elements like with regular plugins  
-	   -->
-	
-	  <!--
-	    Credentials information local to this extension. 
-	    Will be merged with <servers/> element from settings.xml
-	  -->
-	  <servers>
-	    <server>
-	      <id>nexus</id>
-	      <username>user</username>
-	      <password>password</password>
-	    </server>
-	    <server>
-	      <id>central</id>
-	      <username>user</username>
-	      <password>password</password>
-	    </server>
-	  </servers>
-	
-	  <!--
-	    Repositories to resolve extension and its dependencies from.
-	    Will be merged with <pluginRepositories/> from settings.xml.
-	   -->
-	  <pluginRepositories>
-	    <pluginRepository>
-	      <id>nexus</id> <!-- should be credentials id, but may want to maintain compatibility with settings.xml and pom.xml -->
-	      <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>  <!-- need to specify real repository here, so have to specify nexusUrl separately :-( -->
-	      <snapshots>
-	        <enabled>true</enabled>
-	      </snapshots>
-	    </pluginRepository>
-	    <pluginRepository>
-	      <id>central</id>
-	      <url>http://localhost:8081/nexus/content/repositories/central/</url>
-	    </pluginRepository>
-	  </pluginRepositories>
-	
-	  <!--
-	    Arbitrary configuration properties.
-	    Will be merged with <properties/> from settings.xml
-	    Can be referenced as ${property-name} component configuration value substitution.
-	  -->
-	  <properties>
-	    <nexusUrl>http://localhost:8081/nexus</nexusUrl>
-	    <serverId>nexus</serverId>
-	  </properties>
-	
-	  <!-- Idea: add <configuration/> element like in regular plugins -->
-	</extension>
+		<!--
+		 Configuration file that defines Maven core extension. 
+		
+		 Maven will search for such files ~/.m2/*.xml. The idea is to be able to "install" core extensions simply by
+		 dropping corresponding *.xml file to ~/.m2/ext folder.
+		
+		 Each core extension is similar to Maven extensions plugin, except that core extension cannot define any goal, 
+		 only components.
+		 -->
+		
+		<extension>
+		
+		  <!--
+		    minimal maven version required by this extension, earlier versions simply ignore it 
+		  -->
+		  <prerequisites>
+		    <maven>3.0.4-SNAPSHOT</maven>
+		  </prerequisites>
+		
+		  <!--
+		   Coordinates of the main extension artifact
+		   -->
+		  <groupId>com.sonatype.nexus.plugins</groupId>
+		  <artifactId>nexus-mirror-selector</artifactId>
+		  <version>0.0.1-SNAPSHOT</version>
+		
+		  <!--
+		  Idea: In the future, we may want to be able to add <dependencies/> and <excludes/> elements like with regular plugins  
+		   -->
+		
+		  <!--
+		    Credentials information local to this extension. 
+		    Will be merged with <servers/> element from settings.xml
+		  -->
+		  <servers>
+		    <server>
+		      <id>nexus</id>
+		      <username>user</username>
+		      <password>password</password>
+		    </server>
+		    <server>
+		      <id>central</id>
+		      <username>user</username>
+		      <password>password</password>
+		    </server>
+		  </servers>
+		
+		  <!--
+		    Repositories to resolve extension and its dependencies from.
+		    Will be merged with <pluginRepositories/> from settings.xml.
+		   -->
+		  <pluginRepositories>
+		    <pluginRepository>
+		      <id>nexus</id> <!-- should be credentials id, but may want to maintain compatibility with settings.xml and pom.xml -->
+		      <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>  <!-- need to specify real repository here, so have to specify nexusUrl separately :-( -->
+		      <snapshots>
+		        <enabled>true</enabled>
+		      </snapshots>
+		    </pluginRepository>
+		    <pluginRepository>
+		      <id>central</id>
+		      <url>http://localhost:8081/nexus/content/repositories/central/</url>
+		    </pluginRepository>
+		  </pluginRepositories>
+		
+		  <!--
+		    Arbitrary configuration properties.
+		    Will be merged with <properties/> from settings.xml
+		    Can be referenced as ${property-name} component configuration value substitution.
+		  -->
+		  <properties>
+		    <nexusUrl>http://localhost:8081/nexus</nexusUrl>
+		    <serverId>nexus</serverId>
+		  </properties>
+		
+		  <!-- Idea: add <configuration/> element like in regular plugins -->
+		</extension>
 
 ## Open questions
 
