@@ -29,11 +29,11 @@
   local repository. Switching between mirrorOf and direct access makes maven
   re-download remote artifacts.
 
-## Problems with specific mirrorOf=<repo>
+## Problems with specific mirrorOf=&lt;repo>
 
 * tedious to maintain
 * even without any mirrorOf (i.e. direct access) all password protected
-  repositories require separate <server/> element
+  repositories require separate &lt;server/> element
 
 ## Automatic mirror selection
 
@@ -66,9 +66,9 @@ is created as ~/.m2/ext/nexus-mirror-selector.xml
 * nexus-mirror-selector defines NexusMirrorSelector component, which is an 
   implementation of MirrorSelectorDelegate component interface.
 * for each repository and pluginRepository, Maven will
-* check if there is matching <mirror/> element in user or global settings.xml
+* check if there is matching &lt;mirror/> element in user or global settings.xml
   file. in this particular example, there is no user settings.xml, so there 
-  is no matching <mirror/>
+  is no matching &lt;mirror/>
 * invoke each available MirrorSelectorDelegate implementation, in this 
   particular example NexusMirrorSelector defined by nexus-mirror-selector
   extensions
