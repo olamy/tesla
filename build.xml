@@ -300,6 +300,7 @@ This goal just validates the presence of that distribution.
         <include name="tsh" />
         <include name="tshd" />
         <include name="pmvn" />
+        <include name="translate" />
       </fileset>
     </chmod>
   </target>
