@@ -551,6 +551,12 @@ public class LegacyRepositorySystem
 
             for ( ArtifactRepository repository : repositories )
             {
+                if (repository.getAuthentication() != null)
+                {
+                    // don't override authentication injected by #injectMirror
+                    continue;
+                }
+                
                 Server server = serversById.get( repository.getId() );
 
                 if ( server != null )

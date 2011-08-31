@@ -17,10 +17,13 @@ package org.apache.maven.repository.legacy;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.Authentication;
+import org.apache.maven.repository.MirrorSelectorDelegate;
 import org.apache.maven.repository.RepositorySystem;
+import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.PlexusTestCase;
 
@@ -34,12 +37,16 @@ public class LegacyRepositorySystemTest
 {
     private RepositorySystem repositorySystem;
 
+    private TestMirrorSelectorDelegate mirrorSelectorDelegate;
+
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
         repositorySystem = lookup( RepositorySystem.class, "default" );
+        mirrorSelectorDelegate =
+            (TestMirrorSelectorDelegate) lookup( MirrorSelectorDelegate.class, TestMirrorSelectorDelegate.HINT );
     }
 
     @Override
@@ -47,6 +54,8 @@ public class LegacyRepositorySystemTest
         throws Exception
     {
         repositorySystem = null;
+        mirrorSelectorDelegate.reset();
+        mirrorSelectorDelegate = null;
         super.tearDown();
     }
 
@@ -75,4 +84,22 @@ public class LegacyRepositorySystemTest
         assertEquals( "abc123", authentication.getPassword() );
     }
 
+    public void testMirrorSelectionDelegation()
+        throws Exception
+    {
+        ArtifactRepository repository =
+            repositorySystem.createArtifactRepository( "repository", "http://foo", null, null, null );
+
+        String mirrorUrl = "http://mirror:8008/mirror";
+        String mirrorUsername = "username";
+        String mirrorPassword = "password";
+        mirrorSelectorDelegate.setMirror( repository.getLayout().getId(), repository.getUrl(), mirrorUrl,
+                                          mirrorUsername, mirrorPassword );
+
+        repositorySystem.injectMirror( Collections.singletonList( repository ), Collections.<Mirror> emptyList() );
+
+        assertEquals( mirrorUrl, repository.getUrl() );
+        assertEquals( mirrorUsername, repository.getAuthentication().getUsername() );
+        assertEquals( mirrorPassword, repository.getAuthentication().getPassword() );
+    }
 }
