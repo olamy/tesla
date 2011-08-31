@@ -59,21 +59,28 @@ public abstract class AbstractModelInterpolatorTest
     }
 
 
-    protected void assertProblemFree(SimpleProblemCollector collector){
-
+    protected void assertProblemFree( SimpleProblemCollector collector )
+    {
         assertEquals( "Expected no errors", 0, collector.getErrors().size() );
         assertEquals( "Expected no warnings", 0, collector.getWarnings().size() );
         assertEquals( "Expected no fatals", 0, collector.getFatals().size() );
     }
-    protected void assertColllectorState(int numFatals, int numErrors, int numWarnings, SimpleProblemCollector collector){
+
+    protected void assertColllectorState( int numFatals, int numErrors, int numWarnings,
+                                          SimpleProblemCollector collector )
+    {
         assertEquals( "Errors",  numErrors, collector.getErrors().size() );
         assertEquals( "Warnings", numWarnings, collector.getWarnings().size() );
         assertEquals( "Fatals", numFatals, collector.getFatals().size() );
     }
 
-    private ModelBuildingRequest createModelBuildingRequest(Properties p) {
+    private ModelBuildingRequest createModelBuildingRequest( Properties p )
+    {
         ModelBuildingRequest config = new DefaultModelBuildingRequest();
-        if (p!= null) config.setSystemProperties( p);
+        if ( p != null )
+        {
+            config.setSystemProperties( p );
+        }
         return config;
     }
     
@@ -100,9 +107,10 @@ public abstract class AbstractModelInterpolatorTest
         
         Date secondTestDate = cal.getTime();
         
-        SimpleDateFormat format = new SimpleDateFormat( AbstractStringBasedModelInterpolator.DEFAULT_BUILD_TIMESTAMP_FORMAT );
-      assertEquals( "19761111-0016", format.format( firstTestDate ) );
-      assertEquals( "19761111-2316", format.format( secondTestDate ) );
+        SimpleDateFormat format =
+            new SimpleDateFormat( AbstractStringBasedModelInterpolator.DEFAULT_BUILD_TIMESTAMP_FORMAT );
+        assertEquals( "19761111-0016", format.format( firstTestDate ) );
+        assertEquals( "19761111-2316", format.format( secondTestDate ) );
     }
 
     public void testShouldNotThrowExceptionOnReferenceToNonExistentValue()
@@ -118,8 +126,8 @@ public abstract class AbstractModelInterpolatorTest
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
 
         assertProblemFree(  collector );
         assertEquals( "${test}/somepath", out.getScm().getConnection() );
@@ -140,7 +148,7 @@ public abstract class AbstractModelInterpolatorTest
             ModelInterpolator interpolator = createInterpolator();
 
             final SimpleProblemCollector collector = new SimpleProblemCollector();
-            interpolator.interpolateModel( model, null, createModelBuildingRequest(context), collector );
+            interpolator.interpolateModel( model, null, createModelBuildingRequest( context ), collector );
             assertColllectorState(  0, 1, 0, collector );
         }
         catch ( Exception e )
@@ -164,11 +172,10 @@ public abstract class AbstractModelInterpolatorTest
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
 
         assertProblemFree(  collector );
-
 
         assertEquals( "test/somepath", out.getScm().getConnection() );
     }
@@ -188,7 +195,9 @@ public abstract class AbstractModelInterpolatorTest
 
         ModelInterpolator interpolator = createInterpolator();
         
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context), new SimpleProblemCollector() );
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ),
+                                           new SimpleProblemCollector() );
 
         assertEquals( orgName + " Tools", out.getName() );
     }
@@ -207,11 +216,10 @@ public abstract class AbstractModelInterpolatorTest
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
         assertColllectorState(0, 0, 1, collector );
         
-
         assertEquals( "3.8.1", ( out.getDependencies().get( 0 ) ).getVersion() );
     }
 
@@ -244,10 +252,9 @@ public abstract class AbstractModelInterpolatorTest
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
-        assertProblemFree(  collector );
-        
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );        
         
         assertEquals( "${something}", ( out.getDependencies().get( 0 ) ).getVersion() );
     }
@@ -267,15 +274,14 @@ public abstract class AbstractModelInterpolatorTest
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
         assertColllectorState( 0, 0, 2, collector );
         
         assertEquals( "foo-3.8.1", ( out.getDependencies().get( 0 ) ).getVersion() );
-
     }
 
-public void testBasedir()
+    public void testBasedir()
         throws Exception
     {
         Model model = new Model();
@@ -291,9 +297,8 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest(context), collector );
-        assertProblemFree(  collector );
-        
+        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );        
 
         assertEquals( "file://localhost/myBasedir/temp-repo", ( out.getRepositories().get( 0 ) ).getUrl() );
     }
@@ -314,9 +319,8 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest(context), collector );
-        assertProblemFree(  collector );
-        
+        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );
 
         assertEquals( "myBaseUri/temp-repo", ( out.getRepositories().get( 0 ) ).getUrl() );
     }
@@ -339,10 +343,9 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
-        assertProblemFree(  collector );
-        
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );        
 
         assertEquals( "/path/to/home", out.getProperties().getProperty( "outputDirectory" ) );
     }
@@ -361,10 +364,9 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
-        assertProblemFree(  collector );
-        
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );        
 
         assertEquals( out.getProperties().getProperty( "outputDirectory" ), "${env.DOES_NOT_EXIST}" );
     }
@@ -383,10 +385,9 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, new File("."), createModelBuildingRequest(context),
-                                                   collector );
-        assertProblemFree(  collector );
-        
+        Model out =
+            interpolator.interpolateModel( model, new File( "." ), createModelBuildingRequest( context ), collector );
+        assertProblemFree( collector );        
         
         assertEquals( out.getProperties().getProperty( "outputDirectory" ), "${DOES_NOT_EXIST}" );
     }
@@ -419,7 +420,7 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest(context), collector );
+        Model out = interpolator.interpolateModel( model, null, createModelBuildingRequest( context ), collector );
         assertColllectorState( 0, 0, 2, collector );
         
         
@@ -444,7 +445,7 @@ public void testBasedir()
         ModelInterpolator interpolator = createInterpolator();
 
         final SimpleProblemCollector collector = new SimpleProblemCollector();
-        Model result = interpolator.interpolateModel( model, basedir, createModelBuildingRequest(context), collector );
+        Model result = interpolator.interpolateModel( model, basedir, createModelBuildingRequest( context ), collector );
         assertProblemFree(  collector );
         
 
@@ -460,6 +461,5 @@ public void testBasedir()
 
     protected abstract ModelInterpolator createInterpolator()
         throws Exception;
-
 
 }
