@@ -29,9 +29,11 @@ import java.util.Properties;
 
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.eventspy.internal.EventSpyDispatcher;
 import org.apache.maven.execution.MavenExecutionRequest;
-import org.apache.maven.settings.Mirror;
+import org.apache.maven.repository.AetherMirrorSelector;
+import org.apache.maven.repository.MirrorSelector;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.building.SettingsProblem;
@@ -70,7 +72,6 @@ import org.sonatype.aether.util.graph.transformer.JavaEffectiveScopeCalculator;
 import org.sonatype.aether.util.graph.transformer.NearestVersionConflictResolver;
 import org.sonatype.aether.util.graph.traverser.FatArtifactTraverser;
 import org.sonatype.aether.util.repository.DefaultAuthenticationSelector;
-import org.sonatype.aether.util.repository.DefaultMirrorSelector;
 import org.sonatype.aether.util.repository.DefaultProxySelector;
 
 /**
@@ -100,6 +101,12 @@ public class DefaultRepositorySystemSessionFactory
 
     @Requirement
     private EventSpyDispatcher eventSpyDispatcher;
+
+    @Requirement
+    private MirrorSelector mirrorSelector;
+
+    @Requirement( role = ArtifactRepositoryLayout.class )
+    private Map<String, ArtifactRepositoryLayout> repositoryLayouts;
 
     public RepositorySystemSession newRepositorySession( MavenExecutionRequest request )
     {
@@ -149,13 +156,7 @@ public class DefaultRepositorySystemSessionFactory
             }
         }
 
-        DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
-        for ( Mirror mirror : request.getMirrors() )
-        {
-            mirrorSelector.add( mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirror.getMirrorOf(),
-                                mirror.getMirrorOfLayouts() );
-        }
-        session.setMirrorSelector( mirrorSelector );
+        session.setMirrorSelector( new AetherMirrorSelector( mirrorSelector, repositoryLayouts, request.getMirrors() ) );
 
         DefaultProxySelector proxySelector = new DefaultProxySelector();
         for ( Proxy proxy : decrypted.getProxies() )
