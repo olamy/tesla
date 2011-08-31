@@ -137,7 +137,7 @@ public final class SettingsUtils
      * @param settingsRepo
      * @return a repository
      */
-    private static org.apache.maven.model.Repository convertFromSettingsRepository( Repository settingsRepo )
+    public static org.apache.maven.model.Repository convertFromSettingsRepository( Repository settingsRepo )
     {
         org.apache.maven.model.Repository repo = new org.apache.maven.model.Repository();
 

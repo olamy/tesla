@@ -37,6 +37,7 @@ import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.execution.ProjectDependencyGraph;
+import org.apache.maven.extension.internal.SessionExtensionLoader;
 import org.apache.maven.lifecycle.internal.ExecutionEventCatapult;
 import org.apache.maven.lifecycle.internal.LifecycleStarter;
 import org.apache.maven.model.building.ModelProblem;
@@ -97,6 +98,9 @@ public class DefaultMaven
     @Requirement
     private LegacySupport legacySupport;
 
+    @Requirement
+    private SessionExtensionLoader sessionExtensionLoader;
+
     public MavenExecutionResult execute( MavenExecutionRequest request )
     {
         MavenExecutionResult result;
@@ -156,7 +160,38 @@ public class DefaultMaven
 
         DefaultRepositorySystemSession repoSession = (DefaultRepositorySystemSession) newRepositorySession( request );
 
+        ClassLoader sessionRealm;
+        try
+        {
+            sessionRealm = sessionExtensionLoader.loadExtensions( request, repoSession );
+        }
+        catch ( Exception e )
+        {
+            return processResult( result, e );
+        }
+
         MavenSession session = new MavenSession( container, repoSession, request, result );
+        session.setClassRealm( sessionRealm );
+
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader( ( sessionRealm != null ) ? sessionRealm
+                                                                          : container.getContainerRealm() );
+
+            return doExecute( request, result, session );
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader( tccl );
+        }
+    }
+
+    private MavenExecutionResult doExecute( MavenExecutionRequest request, MavenExecutionResult result,
+                                            MavenSession session )
+    {
+        DefaultRepositorySystemSession repoSession = (DefaultRepositorySystemSession) session.getRepositorySession();
+
         legacySupport.setSession( session );
 
         try
@@ -175,12 +210,10 @@ public class DefaultMaven
 
         request.getProjectBuildingRequest().setRepositorySession( session.getRepositorySession() );
 
-        //TODO: optimize for the single project or no project
-        
         List<MavenProject> projects;
         try
         {
-            projects = getProjectsForMavenReactor( request );                                                
+            projects = getProjectsForMavenReactor( request, session.getClassRealm() );
         }
         catch ( ProjectBuildingException e )
         {
@@ -190,14 +223,14 @@ public class DefaultMaven
         session.setProjects( projects );
 
         result.setTopologicallySortedProjects( session.getProjects() );
-        
+
         result.setProject( session.getTopLevelProject() );
 
         try
         {
             Map<String, MavenProject> projectMap;
             projectMap = getProjectMap( session.getProjects() );
-    
+
             // Desired order of precedence for local artifact repositories
             //
             // Reactor
@@ -243,7 +276,7 @@ public class DefaultMaven
             session.setProjectDependencyGraph( projectDependencyGraph );
         }
         catch ( CycleDetectedException e )
-        {            
+        {
             String message = "The projects in the reactor contain a cyclic reference: " + e.getMessage();
 
             ProjectCycleException error = new ProjectCycleException( message, e );
@@ -362,26 +395,28 @@ public class DefaultMaven
         return result;
     }
     
-    private List<MavenProject> getProjectsForMavenReactor( MavenExecutionRequest request )
+    private List<MavenProject> getProjectsForMavenReactor( MavenExecutionRequest request, ClassLoader sessionRealm )
         throws ProjectBuildingException
     {
-        List<MavenProject> projects =  new ArrayList<MavenProject>();
+        ProjectBuildingRequest projectBuildingRequest = request.getProjectBuildingRequest();
+        projectBuildingRequest.setSessionRealm( sessionRealm );
+
+        List<MavenProject> projects = new ArrayList<MavenProject>();
 
         // We have no POM file.
         //
         if ( request.getPom() == null )
         {
             ModelSource modelSource = new UrlModelSource( DefaultMaven.class.getResource( "project/standalone.xml" ) );
-            MavenProject project =
-                projectBuilder.build( modelSource, request.getProjectBuildingRequest() ).getProject();
+            MavenProject project = projectBuilder.build( modelSource, projectBuildingRequest ).getProject();
             project.setExecutionRoot( true );
             projects.add( project );
             request.setProjectPresent( false );
             return projects;
         }
-        
-        List<File> files = Arrays.asList( request.getPom().getAbsoluteFile() );        
-        collectProjects( projects, files, request );
+
+        List<File> files = Arrays.asList( request.getPom().getAbsoluteFile() );
+        collectProjects( projects, files, projectBuildingRequest, request.isRecursive() );
         return projects;
     }
 
@@ -427,12 +462,10 @@ public class DefaultMaven
         return index;
     }
 
-    private void collectProjects( List<MavenProject> projects, List<File> files, MavenExecutionRequest request )
+    private void collectProjects( List<MavenProject> projects, List<File> files, ProjectBuildingRequest projectBuildingRequest, boolean recursive )
         throws ProjectBuildingException
     {
-        ProjectBuildingRequest projectBuildingRequest = request.getProjectBuildingRequest();
-
-        List<ProjectBuildingResult> results = projectBuilder.build( files, request.isRecursive(), projectBuildingRequest );
+        List<ProjectBuildingResult> results = projectBuilder.build( files, recursive, projectBuildingRequest );
 
         boolean problems = false;
 

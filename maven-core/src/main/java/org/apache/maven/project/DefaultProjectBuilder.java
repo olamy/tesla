@@ -151,7 +151,7 @@ public class DefaultProjectBuilder
             }
             else if ( configuration.isResolveDependencies() )
             {
-                projectBuildingHelper.selectProjectRealm( project );
+                projectBuildingHelper.selectProjectRealm( project, configuration.getSessionRealm() );
             }
 
             DependencyResolutionResult resolutionResult = null;

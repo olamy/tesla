@@ -73,6 +73,8 @@ public class MavenSession
     private final Map<String, Map<String, Map<String, Object>>> pluginContextsByProjectAndPluginKey =
         new ConcurrentHashMap<String, Map<String, Map<String, Object>>>();
 
+    private ClassLoader classRealm;
+
     @Deprecated
     public MavenSession( PlexusContainer container, MavenExecutionRequest request, MavenExecutionResult result,
                          MavenProject project )
@@ -391,6 +393,29 @@ public class MavenSession
     public RepositorySystemSession getRepositorySession()
     {
         return repositorySession;
+    }
+
+    /**
+     * <strong>Warning:</strong> This is an internal utility method that is only public for technical reasons, it is not
+     * part of the public API. In particular, this method can be changed or deleted without prior notice and must not be
+     * used by plugins.
+     */
+    public void setClassRealm( ClassLoader classRealm )
+    {
+        this.classRealm = classRealm;
+    }
+
+    /**
+     * Gets the session's class realm. This class realm hosts the build extensions of the build session.
+     * <strong>Warning:</strong> This is an internal utility method that is only public for technical reasons, it is not
+     * part of the public API. In particular, this method can be changed or deleted without prior notice and must not be
+     * used by plugins.
+     * 
+     * @return The project's class realm or {@code null}.
+     */
+    public ClassLoader getClassRealm()
+    {
+        return classRealm;
     }
 
 }

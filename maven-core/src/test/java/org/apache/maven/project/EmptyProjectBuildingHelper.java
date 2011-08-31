@@ -56,7 +56,7 @@ public class EmptyProjectBuildingHelper
         return new ProjectRealmCache.CacheRecord( null, null );
     }
 
-    public void selectProjectRealm( MavenProject project )
+    public void selectProjectRealm( MavenProject project, ClassLoader sessionRealm )
     {
     }
 

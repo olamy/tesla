@@ -41,6 +41,16 @@ public interface ClassRealmRequest
         Core,
 
         /**
+         * A class realm for a session extension.
+         */
+        SessionExtension,
+
+        /**
+         * A class realm for a session to aggregate its extensions.
+         */
+        Session,
+
+        /**
          * A class realm for a project to aggregates its build extensions.
          */
         Project,

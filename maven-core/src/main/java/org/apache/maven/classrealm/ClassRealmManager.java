@@ -52,6 +52,23 @@ public interface ClassRealmManager
     ClassRealm getMavenApiRealm();
 
     /**
+     * Creates a new class realm for the specified session extension.
+     * 
+     * @param plugin The extension plugin for which to create a realm, must not be {@code null}.
+     * @param artifacts The artifacts to add to the class realm, may be {@code null}. Unresolved artifacts (i.e. with a
+     *            missing file) will automatically be excluded from the realm.
+     * @return The new extension realm, never {@code null}.
+     */
+    ClassRealm createSessionExtensionRealm( Plugin extension, List<Artifact> artifacts );
+
+    /**
+     * Creates a new class realm for a session.
+     * 
+     * @return The new session realm, never {@code null}.
+     */
+    ClassRealm createSessionRealm();
+
+    /**
      * Creates a new class realm for the specified project and its build extensions.
      * 
      * @param model The model of the project for which to create a realm, must not be {@code null}.
@@ -59,7 +76,7 @@ public interface ClassRealmManager
      *            missing file) will automatically be excluded from the realm.
      * @return The new project realm, never {@code null}.
      */
-    ClassRealm createProjectRealm( Model model, List<Artifact> artifacts );
+    ClassRealm createProjectRealm( Model model, List<Artifact> artifacts, ClassLoader sessionRealm );
 
     /**
      * Creates a new class realm for the specified build extension.
@@ -69,7 +86,7 @@ public interface ClassRealmManager
      *            missing file) will automatically be excluded from the realm.
      * @return The new extension realm, never {@code null}.
      */
-    ClassRealm createExtensionRealm( Plugin extension, List<Artifact> artifacts );
+    ClassRealm createExtensionRealm( Plugin extension, List<Artifact> artifacts, ClassLoader sessionRealm );
 
     /**
      * Creates a new class realm for the specified plugin.
