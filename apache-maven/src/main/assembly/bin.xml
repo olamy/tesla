@@ -45,9 +45,10 @@ under the License.
       <outputDirectory>bin</outputDirectory>
       <includes>
         <include>mvn</include>
+        <include>pmvn</include>
         <include>tsh</include>
         <include>tshd</include>
-        <include>pmvn</include>
+        <include>translate</include>
         <include>mvnDebug</include>
         <!-- This is so that CI systems can periodically run the profiler -->
         <include>mvnyjp</include>

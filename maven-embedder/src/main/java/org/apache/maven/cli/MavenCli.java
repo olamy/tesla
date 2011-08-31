@@ -679,7 +679,6 @@ public class MavenCli
     protected ModelProcessor createModelProcessor( PlexusContainer container )
         throws ComponentLookupException
     {
-        System.out.println("MavenCli");
         return container.lookup( ModelProcessor.class );
     }
 
