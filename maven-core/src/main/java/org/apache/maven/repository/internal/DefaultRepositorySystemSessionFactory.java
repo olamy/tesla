@@ -124,7 +124,18 @@ public class DefaultRepositorySystemSessionFactory
 
         session.setOffline( request.isOffline() );
         session.setChecksumPolicy( request.getGlobalChecksumPolicy() );
-        session.setUpdatePolicy( request.isUpdateSnapshots() ? RepositoryPolicy.UPDATE_POLICY_ALWAYS : null );
+        if ( request.isNoSnapshotUpdates() )
+        {
+            session.setUpdatePolicy( RepositoryPolicy.UPDATE_POLICY_NEVER );
+        }
+        else if ( request.isUpdateSnapshots() )
+        {
+            session.setUpdatePolicy( RepositoryPolicy.UPDATE_POLICY_ALWAYS );
+        }
+        else
+        {
+            session.setUpdatePolicy( null );
+        }
 
         session.setNotFoundCachingEnabled( request.isCacheNotFound() );
         session.setTransferErrorCachingEnabled( request.isCacheTransferError() );
