@@ -14,7 +14,7 @@ public class TeslaCli extends MavenCli {
       // using the instance to add a component descriptor to the container it will have a higher
       // rank and be used by default.
       //
-      ModelProcessor modelProcessor = container.lookup(ModelProcessor.class, "polyglot");
+      ModelProcessor modelProcessor = container.lookup(ModelProcessor.class, "tesla");
       container.addComponent(modelProcessor, ModelProcessor.class, "default");
     } catch (ComponentLookupException e) {
       //
