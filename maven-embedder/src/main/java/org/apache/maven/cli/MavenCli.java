@@ -96,6 +96,8 @@ public class MavenCli
 
     public static final File DEFAULT_USER_TOOLCHAINS_FILE = new File( userMavenConfigurationHome, "toolchains.xml" );
 
+    public static final File DEFAULT_EXTENSION_CONF_DIR = new File( MavenCli.userMavenConfigurationHome, "ext" );
+    
     private static final String EXT_CLASS_PATH = "maven.ext.class.path";
 
     private static final String EXT_CONF_DIR = "maven.ext.conf.dir";
@@ -935,7 +937,7 @@ public class MavenCli
         }
         else
         {
-            extensionDirectory = new File( MavenCli.userMavenConfigurationHome, "ext" );
+            extensionDirectory = DEFAULT_EXTENSION_CONF_DIR;
         }
 
         request.setBaseDirectory( baseDirectory ).setGoals( goals )
