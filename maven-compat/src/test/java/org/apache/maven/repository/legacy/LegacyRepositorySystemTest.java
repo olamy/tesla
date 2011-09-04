@@ -18,14 +18,20 @@ package org.apache.maven.repository.legacy;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.Authentication;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
+import org.apache.maven.repository.AetherMirrorSelector;
+import org.apache.maven.repository.MirrorSelector;
 import org.apache.maven.repository.MirrorSelectorDelegate;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.PlexusTestCase;
+import org.sonatype.aether.util.DefaultRepositorySystemSession;
 
 /**
  * Tests {@link LegacyRepositorySystem}.
@@ -96,10 +102,40 @@ public class LegacyRepositorySystemTest
         mirrorSelectorDelegate.setMirror( repository.getLayout().getId(), repository.getUrl(), mirrorUrl,
                                           mirrorUsername, mirrorPassword );
 
-        repositorySystem.injectMirror( Collections.singletonList( repository ), Collections.<Mirror> emptyList() );
+        List<ArtifactRepository> repositories = Collections.singletonList( repository );
+        repositorySystem.injectMirror( repositories, Collections.<Mirror> emptyList() );
+        repositorySystem.injectAuthentication( repositories, Collections.<Server> emptyList() );
 
         assertEquals( mirrorUrl, repository.getUrl() );
         assertEquals( mirrorUsername, repository.getAuthentication().getUsername() );
         assertEquals( mirrorPassword, repository.getAuthentication().getPassword() );
+    }
+
+    public void testMirrorSelectionDelegate_repositorySystemSession()
+        throws Exception
+    {
+        ArtifactRepository repository =
+            repositorySystem.createArtifactRepository( "repository", "http://foo", null, null, null );
+
+        String mirrorUrl = "http://mirror:8008/mirror";
+        String mirrorUsername = "username";
+        String mirrorPassword = "password";
+        mirrorSelectorDelegate.setMirror( repository.getLayout().getId(), repository.getUrl(), mirrorUrl,
+                                          mirrorUsername, mirrorPassword );
+
+        MirrorSelector mirrorSelector = lookup( MirrorSelector.class );
+
+        DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
+        Map<String, ArtifactRepositoryLayout> layouts = getContainer().lookupMap( ArtifactRepositoryLayout.class );
+        session.setMirrorSelector( new AetherMirrorSelector( mirrorSelector, layouts, Collections.<Mirror> emptyList() ) );
+
+        List<ArtifactRepository> repositories = Collections.singletonList( repository );
+        repositorySystem.injectMirror( session, repositories );
+        repositorySystem.injectAuthentication( session, repositories ); // will use dummy/null auth selector
+
+        assertEquals( mirrorUrl, repository.getUrl() );
+        assertEquals( mirrorUsername, repository.getAuthentication().getUsername() );
+        assertEquals( mirrorPassword, repository.getAuthentication().getPassword() );
+
     }
 }

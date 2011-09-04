@@ -478,6 +478,8 @@ public class LegacyRepositorySystem
     {
         if ( session != null )
         {
+            // we use aether mirror selector here because it has information about mirrors
+            // maven mirror selector is stateless and cannot be used without access to List<Mirror>
             org.sonatype.aether.repository.MirrorSelector selector = session.getMirrorSelector();
             if ( selector != null )
             {
@@ -488,6 +490,14 @@ public class LegacyRepositorySystem
                     mirror.setId( repo.getId() );
                     mirror.setUrl( repo.getUrl() );
                     mirror.setLayout( repo.getContentType() );
+                    if (repo.getAuthentication() != null)
+                    {
+                        Server server = new Server();
+                        server.setUsername( repo.getAuthentication().getUsername() );
+                        server.setPassword( repo.getAuthentication().getPassword() );
+                        server.setPassphrase( repo.getAuthentication().getPassphrase() );
+                        mirror.setAuthentication( server );
+                    }
                     return mirror;
                 }
             }
@@ -594,6 +604,7 @@ public class LegacyRepositorySystem
 
     private Authentication getAuthentication( RepositorySystemSession session, ArtifactRepository repository )
     {
+        Authentication result = repository.getAuthentication();
         if ( session != null )
         {
             AuthenticationSelector selector = session.getAuthenticationSelector();
@@ -603,14 +614,13 @@ public class LegacyRepositorySystem
                     selector.getAuthentication( RepositoryUtils.toRepo( repository ) );
                 if ( auth != null )
                 {
-                    Authentication result = new Authentication( auth.getUsername(), auth.getPassword() );
+                    result = new Authentication( auth.getUsername(), auth.getPassword() );
                     result.setPrivateKey( auth.getPrivateKeyFile() );
                     result.setPassphrase( auth.getPassphrase() );
-                    return result;
                 }
             }
         }
-        return null;
+        return result;
     }
 
     public void injectAuthentication( RepositorySystemSession session, List<ArtifactRepository> repositories )
