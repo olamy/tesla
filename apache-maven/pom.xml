@@ -138,6 +138,7 @@
                           <artifact>org.sonatype.gossip:gossip-core</artifact>                      
                           <artifact>org.sonatype.gossip:gossip-slf4j</artifact>                      
                           <artifact>org.slf4j:slf4j-api</artifact>                                                           
+                          <artifact>org.eclipse.tesla:tesla-snapshot-purger</artifact>                                                           
                         </artifacts>
                       </fileSet>                                                              
                     </fileSets>                  
