@@ -32,4 +32,15 @@ public class TeslaCli extends MavenCli {
     TeslaCli cli = new TeslaCli();
     return cli.doMain(new CliRequest(args, classWorld));
   }
+
+    public TeslaCli()
+    {
+    }
+
+    // This supports painless invocation by the Verifier during embedded execution of the core ITs
+    public TeslaCli( ClassWorld classWorld )
+    {
+        super( classWorld );
+    }
+
 }
