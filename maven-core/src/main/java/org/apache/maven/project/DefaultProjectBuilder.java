@@ -297,7 +297,9 @@ public class DefaultProjectBuilder
         buffer.append( "<packaging>" ).append( artifact.getType() ).append( "</packaging>" );
         buffer.append( "</project>" );
 
-        return new StringModelSource( buffer, artifact.getId() );
+        String location = artifact.getArtifactId() + '-' + artifact.getVersion() + ".pom";
+
+        return new StringModelSource( buffer, location );
     }
 
     public List<ProjectBuildingResult> build( List<File> pomFiles, boolean recursive, ProjectBuildingRequest request )
