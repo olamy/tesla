@@ -47,7 +47,7 @@
     <cipherVersion>1.7</cipherVersion>
     <modelloVersion>1.4.1</modelloVersion>
     <jxpathVersion>1.3</jxpathVersion>
-    <aetherVersion>1.12</aetherVersion>
+    <aetherVersion>1.13-SNAPSHOT</aetherVersion>
     <slf4jVersion>1.6.2</slf4jVersion>    
     <gshellVersion>3.0.4-SNAPSHOT</gshellVersion>
     <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
@@ -400,7 +400,7 @@
       <dependency>
         <groupId>org.sonatype.maven</groupId>
         <artifactId>wagon-ahc</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
       </dependency>
       <dependency>
         <groupId>commons-cli</groupId>
