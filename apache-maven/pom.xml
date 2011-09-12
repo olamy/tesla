@@ -97,13 +97,13 @@
                   <fileSet>
                     <directory>lib</directory>
                     <artifacts>
-                      <artifact>org.apache.maven:maven-embedder</artifact>       
-                      <artifact>org.apache.maven.wagon:wagon-file</artifact>       
+                      <artifact>org.apache.maven:maven-embedder</artifact>
+                      <artifact>org.apache.maven.wagon:wagon-file</artifact>
                       <artifact>org.sonatype.aether:aether-connector-wagon</artifact>
                       <artifact>org.sonatype.aether:aether-connector-file</artifact>
                       <artifact>org.eclipse.tesla.polyglot:tesla-polyglot-common</artifact>
-                      <artifact>org.eclipse.tesla.polyglot:tesla-polyglot-atom</artifact>                      
-                    </artifacts>                    
+                      <artifact>org.eclipse.tesla.polyglot:tesla-polyglot-atom</artifact>
+                    </artifacts>
                     <excludes>
                       <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
                       <exclude>org.slf4j:slf4j-api</exclude>
@@ -124,24 +124,25 @@
                           <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pom</artifact>
                         </artifacts>
                         <excludes>
-                          <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>                      
-                          <exclude>org.sonatype.gossip:gossip-core</exclude>                      
-                          <exclude>org.sonatype.gossip:gossip-slf4j</exclude>                                              
+                          <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>
+                          <exclude>org.sonatype.gossip:gossip-core</exclude>
+                          <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
                         </excludes>
                       </fileSet>
                       <fileSet>
                         <directory>ext</directory>
                         <artifacts>
-                          <artifact>org.sonatype.maven:wagon-ahc</artifact>       
-                          <artifact>org.sonatype.aether:aether-connector-asynchttpclient</artifact>                      
-                          <artifact>org.sonatype.gossip:gossip-bootstrap</artifact>                      
-                          <artifact>org.sonatype.gossip:gossip-core</artifact>                      
-                          <artifact>org.sonatype.gossip:gossip-slf4j</artifact>                      
-                          <artifact>org.slf4j:slf4j-api</artifact>                                                           
-                          <artifact>org.eclipse.tesla:tesla-snapshot-purger</artifact>                                                           
+                          <artifact>org.sonatype.maven:wagon-ahc</artifact>
+                          <artifact>org.sonatype.aether:aether-connector-asynchttpclient</artifact>
+                          <artifact>org.sonatype.gossip:gossip-bootstrap</artifact>
+                          <artifact>org.sonatype.gossip:gossip-core</artifact>
+                          <artifact>org.sonatype.gossip:gossip-slf4j</artifact>
+                          <artifact>org.slf4j:slf4j-api</artifact>
+                          <artifact>org.eclipse.tesla:tesla-snapshot-purger</artifact>
+                          <artifact>org.eclipse.tesla:tesla-concurrent-localrepo</artifact>
                         </artifacts>
-                      </fileSet>                                                              
-                    </fileSets>                  
+                      </fileSet>
+                    </fileSets>
                   </fileSet>
                   <fileSet>
                     <directory>boot</directory>
@@ -154,7 +155,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin> 
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -172,7 +173,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
   <profiles>

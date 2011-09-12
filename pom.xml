@@ -472,6 +472,11 @@
         <artifactId>tesla-snapshot-purger</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla</groupId>
+        <artifactId>tesla-concurrent-localrepo</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
       <!--bootstrap-start-comment-->
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
