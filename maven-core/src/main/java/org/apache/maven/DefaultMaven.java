@@ -137,7 +137,8 @@ public class DefaultMaven
         //TODO: Need a general way to inject standard properties
         if ( request.getStartTime() != null )
         {
-            request.getSystemProperties().put( "${build.timestamp}", new SimpleDateFormat( "yyyyMMdd-hhmm" ).format( request.getStartTime() ) );
+            request.getSystemProperties().put( "${build.timestamp}",
+                                               new SimpleDateFormat( "yyyyMMdd-hhmm" ).format( request.getStartTime() ) );
         }        
         
         request.setStartTime( new Date() );
@@ -320,8 +321,7 @@ public class DefaultMaven
         }
         return session;
     }
-    
-    @SuppressWarnings({"ResultOfMethodCallIgnored"})
+
     private void validateLocalRepository( MavenExecutionRequest request )
         throws LocalRepositoryNotAccessibleException
     {
