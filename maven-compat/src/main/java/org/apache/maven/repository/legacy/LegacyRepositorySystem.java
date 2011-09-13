@@ -35,6 +35,7 @@ import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.repository.legacy.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.Authentication;
@@ -75,6 +76,8 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.AuthenticationSelector;
+import org.sonatype.aether.repository.LocalRepository;
+import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.repository.ProxySelector;
 import org.sonatype.aether.repository.RemoteRepository;
 
@@ -112,6 +115,12 @@ public class LegacyRepositorySystem
 
     @Requirement
     private SettingsDecrypter settingsDecrypter;
+
+    @Requirement
+    private org.sonatype.aether.RepositorySystem repoSystem;
+
+    @Requirement
+    private LegacySupport legacySupport;
 
     public Artifact createArtifact( String groupId, String artifactId, String version, String scope, String type )
     {
@@ -244,11 +253,15 @@ public class LegacyRepositorySystem
     public ArtifactRepository createLocalRepository( File localRepository )
         throws InvalidRepositoryException
     {
-        return createRepository( "file://" + localRepository.toURI().getRawPath(),
-                                 RepositorySystem.DEFAULT_LOCAL_REPO_ID, true,
-                                 ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS, true,
-                                 ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS,
-                                 ArtifactRepositoryPolicy.CHECKSUM_POLICY_IGNORE );
+        try
+        {
+            LocalRepositoryManager lrm = repoSystem.newLocalRepositoryManager( new LocalRepository( localRepository ) );
+            return new AetherLocalRepository( lrm, layouts.get( "default" ), legacySupport );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            throw (InvalidRepositoryException) new InvalidRepositoryException( e.getMessage(), "local" ).initCause( e );
+        }
     }
 
     public ArtifactRepository createDefaultRemoteRepository()
@@ -258,44 +271,6 @@ public class LegacyRepositorySystem
                                  true, ArtifactRepositoryPolicy.UPDATE_POLICY_DAILY, false,
                                  ArtifactRepositoryPolicy.UPDATE_POLICY_DAILY,
                                  ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN );
-    }
-
-    public ArtifactRepository createLocalRepository( String url, String repositoryId )
-        throws IOException
-    {
-        return createRepository( canonicalFileUrl( url ), repositoryId, true,
-                                 ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS, true,
-                                 ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS,
-                                 ArtifactRepositoryPolicy.CHECKSUM_POLICY_IGNORE );
-    }
-
-    private String canonicalFileUrl( String url )
-        throws IOException
-    {
-        if ( !url.startsWith( "file:" ) )
-        {
-            url = "file://" + url;
-        }
-        else if ( url.startsWith( "file:" ) && !url.startsWith( "file://" ) )
-        {
-            url = "file://" + url.substring( "file:".length() );
-        }
-
-        // So now we have an url of the form file://<path>
-
-        // We want to eliminate any relative path nonsense and lock down the path so we
-        // need to fully resolve it before any sub-modules use the path. This can happen
-        // when you are using a custom settings.xml that contains a relative path entry
-        // for the local repository setting.
-
-        File localRepository = new File( url.substring( "file://".length() ) );
-
-        if ( !localRepository.isAbsolute() )
-        {
-            url = "file://" + localRepository.getCanonicalPath();
-        }
-
-        return url;
     }
 
     public ArtifactResolutionResult resolve( ArtifactResolutionRequest request )
