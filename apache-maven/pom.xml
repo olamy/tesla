@@ -142,6 +142,12 @@
                           <artifact>org.eclipse.tesla:tesla-concurrent-localrepo</artifact>
                         </artifacts>
                       </fileSet>
+                      <fileSet>
+                        <directory>ext/disabled</directory>
+                        <artifacts>
+                          <artifact>org.eclipse.tesla:tesla-split-localrepo</artifact>
+                        </artifacts>
+                      </fileSet>
                     </fileSets>
                   </fileSet>
                   <fileSet>
