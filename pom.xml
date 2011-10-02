@@ -477,12 +477,12 @@
         <artifactId>tesla-concurrent-localrepo</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
-      <!--bootstrap-start-comment-->
       <dependency>
         <groupId>org.eclipse.tesla</groupId>
         <artifactId>tesla-split-localrepo</artifactId>
         <version>1.0-SNAPSHOT</version>
       </dependency>
+      <!--bootstrap-start-comment-->
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-core</artifactId>
