@@ -481,6 +481,7 @@
         <groupId>org.eclipse.tesla</groupId>
         <artifactId>tesla-split-localrepo</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <scope>runtime</scope>
       </dependency>
       <!--bootstrap-start-comment-->
       <dependency>
