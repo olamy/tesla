@@ -237,13 +237,15 @@ public class DefaultModelBuilder
     {
         DefaultModelBuildingResult result = new DefaultModelBuildingResult();
 
-        DefaultModelProblemCollector problems = new DefaultModelProblemCollector( null );
+        DefaultModelProblemCollector problems = new DefaultModelProblemCollector( result );
 
         DefaultProfileActivationContext profileActivationContext = getProfileActivationContext( request );
 
         problems.setSource( "(external profiles)" );
         List<Profile> activeExternalProfiles =
             profileSelector.getActiveProfiles( request.getProfiles(), profileActivationContext, problems );
+
+        result.setActiveExternalProfiles( activeExternalProfiles );
 
         if ( !activeExternalProfiles.isEmpty() )
         {
@@ -321,8 +323,7 @@ public class DefaultModelBuilder
                 message += currentData.getId();
 
                 problems.add( ModelProblem.Severity.FATAL, message, null, null );
-                throw new ModelBuildingException( problems.getRootModel(), problems.getRootModelId(),
-                                                  problems.getProblems() );
+                throw problems.newModelBuildingException();
             }
         }
 
@@ -345,11 +346,7 @@ public class DefaultModelBuilder
         resultData.setArtifactId( resultModel.getArtifactId() );
         resultData.setVersion( resultModel.getVersion() );
 
-        result.setProblems( problems.getProblems() );
-
         result.setEffectiveModel( resultModel );
-
-        result.setActiveExternalProfiles( activeExternalProfiles );
 
         for ( ModelData currentData : lineage )
         {
@@ -380,7 +377,7 @@ public class DefaultModelBuilder
     {
         Model resultModel = result.getEffectiveModel();
 
-        DefaultModelProblemCollector problems = new DefaultModelProblemCollector( result.getProblems() );
+        DefaultModelProblemCollector problems = new DefaultModelProblemCollector( result );
         problems.setSource( resultModel );
         problems.setRootModel( resultModel );
 
@@ -419,7 +416,7 @@ public class DefaultModelBuilder
 
         if ( problems.hasErrors() )
         {
-            throw new ModelBuildingException( resultModel, problems.getRootModelId(), problems.getProblems() );
+            throw problems.newModelBuildingException();
         }
 
         return result;
@@ -499,8 +496,7 @@ public class DefaultModelBuilder
         {
             problems.add( Severity.FATAL, "Non-parseable POM " + modelSource.getLocation() + ": " + e.getMessage(),
                           null, e );
-            throw new ModelBuildingException( problems.getRootModel(), problems.getRootModelId(),
-                                              problems.getProblems() );
+            throw problems.newModelBuildingException();
         }
         catch ( IOException e )
         {
@@ -518,8 +514,7 @@ public class DefaultModelBuilder
                 }
             }
             problems.add( Severity.FATAL, "Non-readable POM " + modelSource.getLocation() + ": " + msg, null, e );
-            throw new ModelBuildingException( problems.getRootModel(), problems.getRootModelId(),
-                                              problems.getProblems() );
+            throw problems.newModelBuildingException();
         }
 
         model.setPomFile( pomFile );
@@ -529,8 +524,7 @@ public class DefaultModelBuilder
 
         if ( problems.hasFatalErrors() )
         {
-            throw new ModelBuildingException( problems.getRootModel(), problems.getRootModelId(),
-                                              problems.getProblems() );
+            throw problems.newModelBuildingException();
         }
 
         return model;
@@ -844,8 +838,7 @@ public class DefaultModelBuilder
             }
 
             problems.add( Severity.FATAL, buffer.toString(), parent.getLocation( "" ), e );
-            throw new ModelBuildingException( problems.getRootModel(), problems.getRootModelId(),
-                                              problems.getProblems() );
+            throw problems.newModelBuildingException();
         }
 
         ModelBuildingRequest lenientRequest = request;
@@ -863,8 +856,7 @@ public class DefaultModelBuilder
 
         Model parentModel = readModel( modelSource, null, lenientRequest, problems );
 
-        ModelData parentData =
-            new ModelData( parentModel, parent.getGroupId(), parent.getArtifactId(), parent.getVersion() );
+        ModelData parentData = new ModelData( parentModel, groupId, artifactId, version );
 
         return parentData;
     }
@@ -909,6 +901,18 @@ public class DefaultModelBuilder
             String artifactId = dependency.getArtifactId();
             String version = dependency.getVersion();
 
+            if ( groupId == null || groupId.length() <= 0 )
+            {
+                problems.add( Severity.ERROR, "'dependencyManagement.dependencies.dependency.groupId' for "
+                    + dependency.getManagementKey() + " is missing.", dependency.getLocation( "" ), null );
+                continue;
+            }
+            if ( artifactId == null || artifactId.length() <= 0 )
+            {
+                problems.add( Severity.ERROR, "'dependencyManagement.dependencies.dependency.artifactId' for "
+                    + dependency.getManagementKey() + " is missing.", dependency.getLocation( "" ), null );
+                continue;
+            }
             if ( version == null || version.length() <= 0 )
             {
                 problems.add( Severity.ERROR, "'dependencyManagement.dependencies.dependency.version' for "

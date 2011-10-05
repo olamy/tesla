@@ -356,12 +356,6 @@ public class DefaultModelValidator
         {
             String key = dependency.getManagementKey();
 
-            validateStringNotEmpty( prefix + ".groupId", problems, Severity.ERROR, dependency.getGroupId(), key,
-                                    dependency );
-
-            validateStringNotEmpty( prefix + ".artifactId", problems, Severity.ERROR, dependency.getArtifactId(), key,
-                                    dependency );
-
             if ( "import".equals( dependency.getScope() ) )
             {
                 if ( !"pom".equals( dependency.getType() ) )
@@ -869,7 +863,8 @@ public class DefaultModelValidator
                 int idx = fieldName.lastIndexOf( '.' );
                 if ( idx >= 0 )
                 {
-                    key = fieldName = fieldName.substring( idx + 1 );
+                    fieldName = fieldName.substring( idx + 1 );
+                    key = fieldName;
                 }
 
                 if ( fieldName.endsWith( "]" ) )

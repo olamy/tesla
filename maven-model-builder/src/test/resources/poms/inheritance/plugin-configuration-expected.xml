@@ -29,7 +29,16 @@ under the License.
 
   <!-- name is not inherited, but description is -->
   <description>Model inheritance description</description>
-  <url>http://www.apache.org/child/</url><!-- child's artifactId added to parent url -->
+  <url>http://www.apache.org/child/</url><!-- child's artifactId appended to parent url -->
+
+  <mailingLists>
+    <mailingList>
+      <name>parent</name>
+      <post>post@mailing.list.com</post>
+      <subscribe>subscribe@mailing.list.com</subscribe>
+      <unsubscribe>unsubscribe@mailing.list.com</unsubscribe>
+    </mailingList>
+  </mailingLists>
 
   <build>
     <plugins>
@@ -58,4 +67,21 @@ under the License.
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>MNG-5115</artifactId>
+        <reportSets>
+          <reportSet>
+            <id>default-inherited</id>
+            <reports>
+              <report>to-be-inherited</report>
+            </reports>
+          </reportSet>
+          <!-- reportSet with inherited=false is not here -->
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

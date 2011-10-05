@@ -20,7 +20,6 @@ under the License.
 -->
 
 <!--
-
   There is currently only one component descriptor that cannot be generated from annotations because of the
   accompanying configuration. Our options are to embed this information programatically or use a configuration source
   to pull in the lifecycle information.
@@ -55,6 +54,7 @@ under the License.
       </configuration>
     </component>
 
+    <!-- 'default' lifecycle, without any binding since it is dependent on packaging -->
     <component>
       <role>org.apache.maven.lifecycle.Lifecycle</role>
       <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
@@ -90,12 +90,15 @@ under the License.
         <!-- END SNIPPET: lifecycle -->
       </configuration>
     </component>
+
+    <!-- 'clean' lifecycle, with default binding -->
     <component>
       <role>org.apache.maven.lifecycle.Lifecycle</role>
       <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
       <role-hint>clean</role-hint>
       <configuration>
         <id>clean</id>
+        <!-- START SNIPPET: clean -->
         <phases>
           <phase>pre-clean</phase>
           <phase>clean</phase>
@@ -106,14 +109,18 @@ under the License.
             org.apache.maven.plugins:maven-clean-plugin:2.4.1:clean
           </clean>
         </default-phases>
+        <!-- END SNIPPET: clean -->
       </configuration>
     </component>
+
+    <!-- 'site' lifecycle, with default bindings -->
     <component>
       <role>org.apache.maven.lifecycle.Lifecycle</role>
       <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
       <role-hint>site</role-hint>
       <configuration>
         <id>site</id>
+        <!-- START SNIPPET: site -->
         <phases>
           <phase>pre-site</phase>
           <phase>site</phase>
@@ -128,6 +135,7 @@ under the License.
             org.apache.maven.plugins:maven-site-plugin:2.0.1:deploy
           </site-deploy>
         </default-phases>
+        <!-- END SNIPPET: site -->
       </configuration>
     </component>
 
