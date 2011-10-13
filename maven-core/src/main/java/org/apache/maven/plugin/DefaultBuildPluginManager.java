@@ -20,6 +20,9 @@ import java.io.PrintStream;
 import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.incremental.internal.MavenBuildContextManager;
+import org.apache.maven.incremental.internal.MojoExecutionScope;
+import org.apache.maven.incremental.internal.MojoExecutionModule;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -27,13 +30,17 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.component.repository.ComponentDependency;
+import org.eclipse.tesla.incremental.BuildContext;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.RemoteRepository;
+
+import com.google.inject.Provider;
 
 // TODO: the antrun plugin has its own configurator, the only plugin that does. might need to think about how that works
 // TODO: remove the coreArtifactFilterManager
 
-@Component(role = BuildPluginManager.class)
+@Component( role = BuildPluginManager.class )
 public class DefaultBuildPluginManager
     implements BuildPluginManager
 {
@@ -44,17 +51,24 @@ public class DefaultBuildPluginManager
     @Requirement
     private LegacySupport legacySupport;
 
+    @Requirement
+    private MavenBuildContextManager buildContextManager;
+
+    @Requirement(hint=MojoExecutionModule.SCOPE_NAME)
+    private MojoExecutionScope scope;
+
     /**
-     * 
      * @param plugin
      * @param repositoryRequest
      * @return PluginDescriptor The component descriptor for the Maven plugin.
      * @throws PluginNotFoundException The plugin could not be found in any repositories.
      * @throws PluginResolutionException The plugin could be found but could not be resolved.
-     * @throws InvalidPluginDescriptorException 
+     * @throws InvalidPluginDescriptorException
      */
-    public PluginDescriptor loadPlugin( Plugin plugin, List<RemoteRepository> repositories, RepositorySystemSession session )
-        throws PluginNotFoundException, PluginResolutionException, PluginDescriptorParsingException, InvalidPluginDescriptorException
+    public PluginDescriptor loadPlugin( Plugin plugin, List<RemoteRepository> repositories,
+                                        RepositorySystemSession session )
+        throws PluginNotFoundException, PluginResolutionException, PluginDescriptorParsingException,
+        InvalidPluginDescriptorException
     {
         return mavenPluginManager.getPluginDescriptor( plugin, repositories, session );
     }
@@ -63,24 +77,39 @@ public class DefaultBuildPluginManager
     // Mojo execution
     // ----------------------------------------------------------------------
 
-    public void executeMojo( MavenSession session, MojoExecution mojoExecution )
+    public void executeMojo( final MavenSession session, final MojoExecution mojoExecution )
         throws MojoFailureException, MojoExecutionException, PluginConfigurationException, PluginManagerException
     {
         MavenProject project = session.getCurrentProject();
 
         MojoDescriptor mojoDescriptor = mojoExecution.getMojoDescriptor();
+        PluginDescriptor pluginDescriptor = mojoDescriptor.getPluginDescriptor();
 
         Mojo mojo = null;
 
         ClassRealm pluginRealm;
         try
         {
-            pluginRealm = getPluginRealm( session, mojoDescriptor.getPluginDescriptor() );
+            pluginRealm = getPluginRealm( session, pluginDescriptor );
         }
         catch ( PluginResolutionException e )
         {
             throw new PluginExecutionException( mojoExecution, project, e );
         }
+
+        final BuildContext[] buildContext = new BuildContext[1];
+        scope.enter();
+        scope.seed( BuildContext.class, new Provider<BuildContext>()
+        {
+            public BuildContext get()
+            {
+                if ( buildContext[0] == null )
+                {
+                    buildContext[0] = buildContextManager.newContext( session, mojoExecution );
+                }
+                return buildContext[0];
+            }
+        } );
 
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader( pluginRealm );
@@ -152,18 +181,39 @@ public class DefaultBuildPluginManager
         {
             mavenPluginManager.releaseMojo( mojo, mojoExecution );
 
+            scope.exit();
+            if ( buildContext[0] != null )
+            {
+                buildContext[0].close();
+            }
+
             Thread.currentThread().setContextClassLoader( oldClassLoader );
 
             legacySupport.setSession( oldSession );
         }
+
+
+    }
+
+    private boolean isUsingBuildAvoidance( PluginDescriptor pluginDescriptor )
+    {
+        for ( ComponentDependency dependency : pluginDescriptor.getDependencies() )
+        {
+            if ( "org.eclipse.tesla".equals( dependency.getGroupId() )
+                && "tesla-build-avoidance".equals( dependency.getArtifactId() ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * TODO pluginDescriptor classRealm and artifacts are set as a side effect of this
-     *      call, which is not nice.
-     * @throws PluginResolutionException 
+     * TODO pluginDescriptor classRealm and artifacts are set as a side effect of this call, which is not nice.
+     * 
+     * @throws PluginResolutionException
      */
-    public ClassRealm getPluginRealm( MavenSession session, PluginDescriptor pluginDescriptor ) 
+    public ClassRealm getPluginRealm( MavenSession session, PluginDescriptor pluginDescriptor )
         throws PluginResolutionException, PluginManagerException
     {
         ClassRealm pluginRealm = pluginDescriptor.getClassRealm();

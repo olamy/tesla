@@ -53,6 +53,7 @@
     <mavenVersion>3.0.4-SNAPSHOT</mavenVersion>
     <gossipVersion>1.7</gossipVersion>
     <jlineVersion>2.3</jlineVersion>
+    <buildAvoidanceVersion>1.0-SNAPSHOT</buildAvoidanceVersion>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -602,6 +603,11 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.eclipse.tesla</groupId>
+        <artifactId>maven-build-context</artifactId>
+        <version>${buildAvoidanceVersion}</version>
+      </dependency>
       <!--bootstrap-start-comment-->
       <dependency>
         <groupId>easymock</groupId>
@@ -725,32 +731,6 @@
            <groupId>org.sonatype.plugins</groupId>
            <artifactId>sisu-maven-plugin</artifactId>
            <version>1.1</version>
-         </plugin>
-         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-         <plugin>
-           <groupId>org.eclipse.m2e</groupId>
-           <artifactId>lifecycle-mapping</artifactId>
-           <version>1.0.0</version>
-           <configuration>
-             <lifecycleMappingMetadata>
-               <pluginExecutions>
-                 <pluginExecution>
-                   <pluginExecutionFilter>
-                     <groupId>org.sonatype.plugins</groupId>
-                     <artifactId>sisu-maven-plugin</artifactId>
-                     <versionRange>[1.1,)</versionRange>
-                     <goals>
-                       <goal>main-index</goal>
-                       <goal>test-index</goal>
-                     </goals>
-                   </pluginExecutionFilter>
-                   <action>
-                     <ignore/>
-                   </action>
-                 </pluginExecution>
-               </pluginExecutions>
-             </lifecycleMappingMetadata>
-           </configuration>
          </plugin>
       </plugins>
     </pluginManagement>

@@ -44,6 +44,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.codehaus.plexus.ContainerConfiguration;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.FileUtils;
@@ -98,6 +99,7 @@ public abstract class AbstractCoreMavenComponentTestCase
     {
 //        containerConfiguration.addComponentDiscoverer( PluginManager.class );
 //        containerConfiguration.addComponentDiscoveryListener( PluginManager.class );
+        containerConfiguration.setAutoWiring( true ).setClassPathScanning( PlexusConstants.SCANNING_INDEX );
     }
 
     protected MavenExecutionRequest createMavenExecutionRequest( File pom )

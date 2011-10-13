@@ -82,6 +82,7 @@ public class DefaultArtifactFilterManager
         artifacts.add( "org.sonatype.aether:aether-api" );
         artifacts.add( "org.sonatype.aether:aether-spi" );
         artifacts.add( "org.sonatype.aether:aether-impl" );
+        artifacts.add( "org.eclipse.tesla:tesla-build-avoidance" );
 
         /*
          * NOTE: Don't exclude the wagons or any of their dependencies (apart from the wagon API). This would otherwise
