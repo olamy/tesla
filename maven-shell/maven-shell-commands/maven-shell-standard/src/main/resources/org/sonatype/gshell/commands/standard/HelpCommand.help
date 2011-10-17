@@ -1,0 +1,50 @@
+#
+# Copyright (C) 2009 the original author(s).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+@|bold NAME|@
+
+    @{command.name} - @{command.description}
+
+@|bold SYNOPSIS|@
+
+    @|bold @{command.name}|@ [options] [NAME]
+    
+@|bold DESCRIPTION|@
+
+    Displays help pages.  When no argument is given, displays all pages
+    available in the current context.  When an argument is given that matches
+    a page name, the help page is displayed, else a list of matching pages
+    is displayed.
+
+@{command.details}
+@|bold EXAMPLES|@
+
+    Display the list of help pages:
+
+        @{command.name}
+
+    Display the help page for the @|bold exit|@ command:
+
+        @{command.name} exit
+
+    Display help pages for the @|bold pref|@ group:
+
+        @{command.name} pref
+
+    Display help pages for the current group:
+
+        @{command.name} .
+

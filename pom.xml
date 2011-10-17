@@ -40,7 +40,7 @@
     <classWorldsVersion>2.4</classWorldsVersion>
     <commonsCliVersion>1.2</commonsCliVersion>
     <easyMockVersion>1.2_Java1.3</easyMockVersion>
-    <junitVersion>3.8.2</junitVersion>
+    <junitVersion>4.10</junitVersion>
     <plexusVersion>1.5.5</plexusVersion>
     <plexusInterpolationVersion>1.14</plexusInterpolationVersion>
     <plexusUtilsVersion>2.0.6</plexusUtilsVersion>
@@ -51,6 +51,10 @@
     <modelloVersion>1.4.1</modelloVersion>
     <jxpathVersion>1.3</jxpathVersion>
     <aetherVersion>1.11</aetherVersion>
+    <gshellVersion>3.0.4-SNAPSHOT</gshellVersion>
+    <gossipVersion>1.7</gossipVersion>
+    <jlineVersion>2.3</jlineVersion>
+    <slf4jVersion>1.6.1</slf4jVersion>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <!-- Control the name of the distribtion and information output by mvn -->
     <distributionId>apache-maven</distributionId>
@@ -146,6 +150,7 @@
     <module>maven-repository-metadata</module>
     <module>maven-embedder</module>
     <module>maven-compat</module>
+    <module>maven-shell</module>
     <module>apache-maven</module>
   </modules>
 
@@ -250,6 +255,11 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>org.sonatype.sisu</groupId>
+        <artifactId>sisu-inject-bean</artifactId>
+        <version>${sisuInjectVersion}</version>
+      </dependency>
+      <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-annotations</artifactId>
         <version>${plexusVersion}</version>
@@ -293,6 +303,145 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jlineVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jlineVersion}</version>
+        <classifier>tests</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-core</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-bootstrap</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.sonatype.gossip</groupId>
+        <artifactId>gossip-slf4j</artifactId>
+        <version>${gossipVersion}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.sonatype.grrrowl</groupId>
+        <artifactId>grrrowl</artifactId>
+        <version>1.1.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4jVersion}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4jVersion}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>0.9.29</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.3.1</version>
+      </dependency>
+
+      <!--bootstrap-start-comment-->
+      <dependency>
+        <groupId>org.apache.maven.shell</groupId>
+        <artifactId>maven-shell-core</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell</groupId>
+        <artifactId>maven-shell-core</artifactId>
+        <classifier>tests</classifier>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell</groupId>
+        <artifactId>maven-shell-util</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.ext</groupId>
+        <artifactId>maven-shell-gossip</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.ext</groupId>
+        <artifactId>maven-shell-plexus</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.ext</groupId>
+        <artifactId>maven-shell-logback</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-standard</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-logging</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-pref</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-network</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-file</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell.commands</groupId>
+        <artifactId>maven-shell-pom</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell</groupId>
+        <artifactId>maven-shell-maven</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shell</groupId>
+        <artifactId>maven-shell-personality</artifactId>
+        <version>${gshellVersion}</version>
+      </dependency>
+      <!--bootstrap-end-comment-->
+
       <!--  Repository -->
       <dependency>
         <groupId>org.sonatype.aether</groupId>
@@ -345,6 +494,21 @@
         <groupId>commons-jxpath</groupId>
         <artifactId>commons-jxpath</artifactId>
         <version>${jxpathVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-jexl</groupId>
+        <artifactId>commons-jexl</artifactId>
+        <version>1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.sonatype.plexus</groupId>

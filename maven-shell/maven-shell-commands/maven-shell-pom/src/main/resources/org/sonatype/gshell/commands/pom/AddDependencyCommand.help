@@ -1,0 +1,18 @@
+@|bold NAME|@
+
+    @{command.name} - @{command.description}
+
+@|bold SYNOPSIS|@
+
+    @|bold @{command.name}|@ g:a:v
+
+@|bold DESCRIPTION|@
+
+    Add specified dependency to pom.xml.
+
+@{command.details}
+@|bold EXAMPLES|@
+
+    Add slf4j 1.6.2:
+
+        @{command.name} org.slf4j:slf4j-api:1.6.1
