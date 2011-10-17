@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ~ Copyright (c) 2009-2011 Sonatype, Inc. ~ All rights reserved. This program and the accompanying materials ~ are made available under the 
+  terms of the Eclipse Public License v1.0 ~ and Apache License v2.0 which accompanies this distribution. ~ The Eclipse Public License is available 
+  at ~ http://www.eclipse.org/legal/epl-v10.html ~ The Apache License v2.0 is available at ~ http://www.apache.org/licenses/LICENSE-2.0.html ~ 
+  You may elect to redistribute this code under either of these licenses. -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.maven</groupId>
+    <artifactId>maven</artifactId>
+    <version>3.0.4-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.eclipse.tesla.shell</groupId>
+  <artifactId>tesla-shell-osgi</artifactId>
+  <name>Tesla Shell OSGi:: Aggregator</name>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>tesla-shell-osgi-core</module>
+  </modules>
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+
+      <resource>
+        <directory>${project.basedir}/src/main/filtered-resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <testResources>
+      <testResource>
+        <directory>${project.basedir}/src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </testResource>
+
+      <testResource>
+        <directory>${project.basedir}/src/test/filtered-resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </testResource>
+    </testResources>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            <forkMode>once</forkMode>
+            <argLine>-ea</argLine>
+            <failIfNoTests>false</failIfNoTests>
+            <workingDirectory>${project.build.directory}</workingDirectory>
+            <excludes>
+              <exclude>**/Abstract*.java</exclude>
+              <exclude>**/Test*.java</exclude>
+            </excludes>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.0,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[1.5,)</version>
+                </requireJavaVersion>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.codehaus.plexus:plexus-container-default</exclude>
+                    <exclude>org.sonatype.spice:spice-inject-plexus</exclude>
+                    <exclude>com.google.inject:guice</exclude>
+                  </excludes>
+                </bannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

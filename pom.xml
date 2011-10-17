@@ -182,7 +182,7 @@
     <module>maven-model-builder</module>
     <module>maven-embedder</module>
     <module>maven-compat</module>
-    <module>tesla-shell</module>
+    <module>tesla-shell-osgi</module>
     <module>tesla-polyglot</module> 
   </modules>
 
@@ -486,7 +486,7 @@
       <!--bootstrap-start-comment-->
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
-        <artifactId>tesla-shell-core</artifactId>
+        <artifactId>tesla-shell-osgi-core</artifactId>
         <version>${gshellVersion}</version>
       </dependency>
       <dependency>

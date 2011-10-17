@@ -61,6 +61,10 @@ under the License.
       <outputDirectory>conf</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>src/etc</directory>
+      <outputDirectory>etc</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>src/lib</directory>
       <outputDirectory>lib</outputDirectory>
     </fileSet>

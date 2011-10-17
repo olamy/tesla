@@ -110,24 +110,10 @@
                     </excludes>
                     <fileSets>
                       <fileSet>
-                        <directory>mvnsh</directory>
+                        <directory>shell</directory>
                         <artifacts>
-                          <artifact>org.eclipse.tesla.shell:tesla-shell-personality</artifact>
-                          <artifact>org.eclipse.tesla.shell:tesla-shell-maven</artifact>
-                          <artifact>org.eclipse.tesla.shell.ext:tesla-shell-gossip</artifact>
-                          <artifact>org.eclipse.tesla.shell.ext:tesla-shell-plexus</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-logging</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-network</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pref</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-standard</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-file</artifact>
-                          <artifact>org.eclipse.tesla.shell.commands:tesla-shell-pom</artifact>
+                          <artifact>org.eclipse.tesla.shell:tesla-shell-osgi-core</artifact>
                         </artifacts>
-                        <excludes>
-                          <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>
-                          <exclude>org.sonatype.gossip:gossip-core</exclude>
-                          <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
-                        </excludes>
                       </fileSet>
                       <fileSet>
                         <directory>ext</directory>
