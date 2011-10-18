@@ -777,6 +777,8 @@
                 <exclude>bootstrap/**</exclude>
                 <!-- FIXME temporary exclude that but must be fixed -->
                 <exclude>src/test/**</exclude>
+                <!-- ignore imported plexus-utils classes -->
+                <exclude>src/main/java/org/codehaus/plexus/util/xml/**</exclude>
               </excludes>
             </configuration>
             <executions>
