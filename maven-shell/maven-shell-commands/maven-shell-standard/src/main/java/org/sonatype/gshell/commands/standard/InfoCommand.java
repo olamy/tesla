@@ -121,7 +121,7 @@ public class InfoCommand
                     printlnHeader(io, "Shell");
                     println(io, "Display Name", branding.getDisplayName());
                     println(io, "Program Name", branding.getProgramName());
-                    println(io, "License", branding.getLicense());
+                    println(io, "License", branding.getLicense().getContent());
                     println(io, "Version", branding.getVersion());
                     println(io, "Home Dir", branding.getShellHomeDir());
                     println(io, "Context Dir", branding.getShellContextDir());

@@ -35,15 +35,14 @@ import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
 @Named
 @Singleton
 public class BrandingImpl extends BrandingSupport {
-  
-  private static final String[] BANNER = {
-    " _______        _       _  ",
-    "|__   __|      | |     | | ",
-    "   | | ___  ___| | __ _| | ",
-    "   | |/ _ \\/ __| |/ _` | | ",
-    "   | |  __/\\__ \\ | (_| |_| ",
-    "   |_|\\___||___/_|\\__,_(_)  THE FUTURE BUILDS WITH TESLA!",
-  };
+
+    private static final String[] BANNER = {
+   " __  __                 _",
+   "|  \\/  |_   ___ __  ___| |__",
+   "| |\\/| \\ \\ / / '_ \\/ __| '_ \\",
+   "| |  | |\\ V /| | | \\__ \\ | | |",
+   "|_|  |_| \\_/ |_| |_|___/_| |_|"};
+
   
   @Override
   public String getDisplayName() {
@@ -83,6 +82,6 @@ public class BrandingImpl extends BrandingSupport {
 
   @Override
   public License getLicense() {
-    return new LicenseSupport("Eclipse Public License, 1.0", getClass().getResource("license.txt"));
+    return new LicenseSupport("Apache License, Version 2.0", getClass().getResource("license.txt"));
   }
 }
