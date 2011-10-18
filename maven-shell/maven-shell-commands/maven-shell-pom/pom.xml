@@ -21,6 +21,8 @@
   </parent>
   <artifactId>maven-shell-pom</artifactId>
 
+  <name>Maven Shell :: Commands :: Pom</name>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven.shell.commands</groupId>
