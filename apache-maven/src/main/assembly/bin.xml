@@ -39,6 +39,17 @@ under the License.
         <exclude>junit:junit</exclude>
         <exclude>log4j:log4j</exclude>
         <exclude>commons-logging:commons-logging-api</exclude>
+        <!-- mvnsh only in lib/mvnsh -->
+        <exclude>org.apache.maven.shell:maven-shell-personality</exclude>
+        <exclude>org.apache.maven.shell:maven-shell-maven</exclude>
+        <exclude>org.apache.maven.shell.ext:maven-shell-gossip</exclude>
+        <exclude>org.apache.maven.shell.ext:maven-shell-plexus</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-logging</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-network</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-pref</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-standard</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-file</exclude>
+        <exclude>org.apache.maven.shell.commands:maven-shell-pom</exclude>
       
         <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
         <exclude>org.codehaus.plexus:plexus-component-api</exclude>
@@ -61,6 +72,54 @@ under the License.
         <exclude>org.slf4j:slf4j-jdk14</exclude>
         <exclude>org.apache.maven.mercury:mercury-crypto-api</exclude>
         <exclude>org.apache.maven.mercury:mercury-crypto-basic</exclude-->        
+      </excludes>
+    </dependencySet>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>lib/mvnsh</outputDirectory>
+      <includes>
+        <include>org.apache.maven.shell:maven-shell-personality</include>
+        <include>org.apache.maven.shell:maven-shell-maven</include>
+        <include>org.apache.maven.shell.ext:maven-shell-gossip</include>
+        <include>org.apache.maven.shell.ext:maven-shell-plexus</include>
+        <include>org.apache.maven.shell.commands:maven-shell-logging</include>
+        <include>org.apache.maven.shell.commands:maven-shell-network</include>
+        <include>org.apache.maven.shell.commands:maven-shell-pref</include>
+        <include>org.apache.maven.shell.commands:maven-shell-standard</include>
+        <include>org.apache.maven.shell.commands:maven-shell-file</include>
+        <include>org.apache.maven.shell.commands:maven-shell-pom</include>
+      </includes>
+      <excludes>
+        <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>log4j:log4j</exclude>
+        <exclude>commons-logging:commons-logging-api</exclude>
+
+        <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>
+        <exclude>org.sonatype.gossip:gossip-core</exclude>
+        <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
+
+        <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
+        <exclude>org.codehaus.plexus:plexus-component-api</exclude>
+        <exclude>classworlds:classworlds</exclude>
+        <exclude>junit:junit</exclude>
+        <exclude>jmock:jmock</exclude>
+        <exclude>xml-apis:xml-apis</exclude>
+        <exclude>org.apache.maven:apache-maven</exclude>
+        <exclude>org.apache.maven:maven-artifact</exclude>
+        <exclude>org.apache.maven:maven-monitor</exclude>
+        <exclude>org.apache.maven:maven-plugin-descriptor</exclude>
+        <exclude>jdom:jdom</exclude>
+        <exclude>org.apache.maven:apache-maven</exclude>
+        <exclude>bouncycastle:bcprov-jdk15</exclude>
+        <exclude>bouncycastle:bcpg-jdk15</exclude>
+        <exclude>log4j:log4j</exclude>
+        <exclude>org.sonatype.mercury:mercury-mp3-cli</exclude>
+        <exclude>commons-logging:commons-logging-api</exclude>
+        <exclude>org.slf4j:slf4j-api</exclude>
+        <exclude>org.slf4j:slf4j-jdk14</exclude>
+        <exclude>org.apache.maven.mercury:mercury-crypto-api</exclude>
+        <exclude>org.apache.maven.mercury:mercury-crypto-basic</exclude-->
       </excludes>
     </dependencySet>
   </dependencySets>
@@ -87,7 +146,9 @@ under the License.
       <includes>
         <include>m2</include>
         <include>mvn</include>
+        <include>mvnsh</include>
         <include>mvnDebug</include>
+        <include>mvnshd</include>
         <!-- This is so that CI systems can periodically run the profiler -->
         <include>mvnyjp</include>
       </includes>

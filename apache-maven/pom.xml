@@ -75,6 +75,47 @@
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-connector-wagon</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell</groupId>
+      <artifactId>maven-shell-personality</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-standard</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-logging</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-network</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-pref</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-file</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.commands</groupId>
+      <artifactId>maven-shell-pom</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell</groupId>
+      <artifactId>maven-shell-maven</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

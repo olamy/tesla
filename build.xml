@@ -292,6 +292,8 @@ This goal just validates the presence of that distribution.
         <include name="mvn" />
         <include name="mvnDebug" />
         <include name="mvnyjp" />
+        <include name="mvnsh" />
+        <include name="mvnshd" />
       </fileset>
     </chmod>
   </target>
