@@ -42,6 +42,8 @@ under the License.
         <!-- mvnsh only in lib/mvnsh -->
         <exclude>org.apache.maven.shell:maven-shell-personality</exclude>
         <exclude>org.apache.maven.shell:maven-shell-maven</exclude>
+        <exclude>org.apache.maven.shell:maven-shell-core</exclude>
+        <exclude>org.apache.maven.shell:maven-shell-util</exclude>
         <exclude>org.apache.maven.shell.ext:maven-shell-gossip</exclude>
         <exclude>org.apache.maven.shell.ext:maven-shell-plexus</exclude>
         <exclude>org.apache.maven.shell.commands:maven-shell-logging</exclude>
@@ -50,7 +52,22 @@ under the License.
         <exclude>org.apache.maven.shell.commands:maven-shell-standard</exclude>
         <exclude>org.apache.maven.shell.commands:maven-shell-file</exclude>
         <exclude>org.apache.maven.shell.commands:maven-shell-pom</exclude>
-      
+
+        <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
+        <exclude>org.slf4j:slf4j-api</exclude>
+        <exclude>org.slf4j:slf4j-nop</exclude>
+        <exclude>org.slf4j:jcl-over-slf4j</exclude>
+
+        <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>
+        <exclude>org.sonatype.gossip:gossip-core</exclude>
+        <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
+
+        <exclude>org.sonatype.grrrowl:grrrowl</exclude>
+        <exclude>org.sonatype.jline:jline</exclude>
+        <exclude>org.fusesource.jansi:jansi</exclude>
+        <exclude>de.pdark:decentxml</exclude>
+
+
         <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
         <exclude>org.codehaus.plexus:plexus-component-api</exclude>
         <exclude>classworlds:classworlds</exclude>
@@ -80,6 +97,8 @@ under the License.
       <includes>
         <include>org.apache.maven.shell:maven-shell-personality</include>
         <include>org.apache.maven.shell:maven-shell-maven</include>
+        <include>org.apache.maven.shell:maven-shell-core</include>
+        <include>org.apache.maven.shell:maven-shell-util</include>
         <include>org.apache.maven.shell.ext:maven-shell-gossip</include>
         <include>org.apache.maven.shell.ext:maven-shell-plexus</include>
         <include>org.apache.maven.shell.commands:maven-shell-logging</include>
@@ -88,6 +107,11 @@ under the License.
         <include>org.apache.maven.shell.commands:maven-shell-standard</include>
         <include>org.apache.maven.shell.commands:maven-shell-file</include>
         <include>org.apache.maven.shell.commands:maven-shell-pom</include>
+        <include>org.sonatype.grrrowl:grrrowl</include>
+        <include>org.sonatype.jline:jline</include>
+        <include>org.fusesource.jansi:jansi</include>
+        <include>de.pdark:decentxml</include>
+        <include>org.slf4j:jcl-over-slf4j</include>
       </includes>
       <excludes>
         <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
@@ -98,28 +122,21 @@ under the License.
         <exclude>org.sonatype.gossip:gossip-bootstrap</exclude>
         <exclude>org.sonatype.gossip:gossip-core</exclude>
         <exclude>org.sonatype.gossip:gossip-slf4j</exclude>
+      </excludes>
+    </dependencySet>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputDirectory>lib/ext</outputDirectory>
+      <includes>
+        <include>org.sonatype.gossip:gossip-slf4j</include>
+        <include>org.slf4j:slf4j-api</include>
 
-        <!--exclude>org.codehaus.plexus:plexus-classworlds</exclude>
-        <exclude>org.codehaus.plexus:plexus-component-api</exclude>
-        <exclude>classworlds:classworlds</exclude>
-        <exclude>junit:junit</exclude>
-        <exclude>jmock:jmock</exclude>
-        <exclude>xml-apis:xml-apis</exclude>
-        <exclude>org.apache.maven:apache-maven</exclude>
-        <exclude>org.apache.maven:maven-artifact</exclude>
-        <exclude>org.apache.maven:maven-monitor</exclude>
-        <exclude>org.apache.maven:maven-plugin-descriptor</exclude>
-        <exclude>jdom:jdom</exclude>
-        <exclude>org.apache.maven:apache-maven</exclude>
-        <exclude>bouncycastle:bcprov-jdk15</exclude>
-        <exclude>bouncycastle:bcpg-jdk15</exclude>
-        <exclude>log4j:log4j</exclude>
-        <exclude>org.sonatype.mercury:mercury-mp3-cli</exclude>
-        <exclude>commons-logging:commons-logging-api</exclude>
-        <exclude>org.slf4j:slf4j-api</exclude>
-        <exclude>org.slf4j:slf4j-jdk14</exclude>
-        <exclude>org.apache.maven.mercury:mercury-crypto-api</exclude>
-        <exclude>org.apache.maven.mercury:mercury-crypto-basic</exclude-->
+        <include>org.sonatype.gossip:gossip-bootstrap</include>
+        <include>org.sonatype.gossip:gossip-core</include>
+        <include>org.sonatype.gossip:gossip-slf4j</include>
+      </includes>
+      <excludes>
+
       </excludes>
     </dependencySet>
   </dependencySets>
