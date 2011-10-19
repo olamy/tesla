@@ -121,6 +121,16 @@
       <artifactId>slf4j-nop</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.maven.shell.ext</groupId>
+      <artifactId>maven-shell-plexus</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.shell.ext</groupId>
+      <artifactId>maven-shell-gossip</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
