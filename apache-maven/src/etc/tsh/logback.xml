@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2011 Sonatype, Inc.
+
+    All rights reserved. Includes the third-party code listed at http://links.sonatype.com/products/nexus/manager/attributions
+    Sonatype and Sonatype Nexus are trademarks of Sonatype, Inc. Apache Maven is a trademark of the Apache Software Foundation.
+    M2Eclipse is a trademark of the Eclipse Foundation. All other trademarks are the property of their respective owners.
+
+-->
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+
+    <contextName>default</contextName>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${user.home}/.m2/tsh/tsh.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%date %level [%thread%X{DC}] %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="Sisu" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
