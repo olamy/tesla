@@ -8,11 +8,10 @@ import java.util.Properties;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.CompletableFunction;
-import org.eclipse.tesla.shell.support.spi.CommandAnnotationProcessor;
-import org.eclipse.tesla.shell.support.spi.ShellCommand;
+import org.eclipse.tesla.shell.support.spi.BindingProcessor;
+import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.sonatype.guice.bean.locators.BeanLocator;
@@ -30,7 +29,7 @@ import com.google.inject.Key;
  */
 @Named
 @EagerSingleton
-class CommandsWatcher
+class BindingWatcher
 {
 
     private BundleContext bundleContext;
@@ -39,12 +38,12 @@ class CommandsWatcher
 
     private BeanLocator beanLocator;
 
-    private List<CommandAnnotationProcessor> processors;
+    private List<BindingProcessor> processors;
 
     @Inject
-    CommandsWatcher( final BundleContext bundleContext,
-                     final BeanLocator beanLocator,
-                     final List<CommandAnnotationProcessor> processors )
+    BindingWatcher( final BundleContext bundleContext,
+                    final BeanLocator beanLocator,
+                    final List<BindingProcessor> processors )
     {
         this.beanLocator = beanLocator;
         this.processors = processors;
@@ -52,42 +51,41 @@ class CommandsWatcher
         this.bundleContext = bundleContext;
         beanLocator.watch(
             Key.get( Object.class ),
-            new Mediator<Annotation, Object, CommandsWatcher>()
+            new Mediator<Annotation, Object, BindingWatcher>()
             {
-                public void add( final BeanEntry<Annotation, Object> beanEntry, final CommandsWatcher watcher )
+                public void add( final BeanEntry<Annotation, Object> beanEntry, final BindingWatcher watcher )
                     throws Exception
                 {
-                    watcher.registerCommand( beanEntry );
+                    watcher.registerFunction( beanEntry );
                 }
 
-                public void remove( final BeanEntry<Annotation, Object> beanEntry, final CommandsWatcher watcher )
+                public void remove( final BeanEntry<Annotation, Object> beanEntry, final BindingWatcher watcher )
                     throws Exception
                 {
-                    watcher.unregisterCommand( beanEntry );
+                    watcher.unregisterFunction( beanEntry );
                 }
             },
             this
         );
     }
 
-    private void registerCommand( final BeanEntry<Annotation, Object> beanEntry )
+    private void registerFunction( final BeanEntry<Annotation, Object> beanEntry )
     {
         final Class<Object> implementationClass = beanEntry.getImplementationClass();
-        final CommandAnnotationProcessor processor = getAnnotationProcessor( implementationClass );
+        final BindingProcessor processor = getBindingProcessor( implementationClass );
         if ( processor != null )
         {
-            final Command commandAnnotation = processor.getAnnotation( implementationClass );
-            final ShellCommand command = processor.createCommand( commandAnnotation, beanEntry );
+            final FunctionDescriptor descriptor = processor.process( beanEntry );
             final Properties commandProperties = new Properties();
-            commandProperties.setProperty( "osgi.command.scope", command.getScope() );
-            commandProperties.setProperty( "osgi.command.function", command.getName() );
+            commandProperties.setProperty( "osgi.command.scope", descriptor.getScope() );
+            commandProperties.setProperty( "osgi.command.function", descriptor.getName() );
             commandProperties.setProperty( "implementationClass", implementationClass.getName() );
             final BundleContext commandBundleContext = bundleContextOfCommand( implementationClass );
             if ( commandBundleContext != null )
             {
                 final ServiceRegistration serviceRegistration = commandBundleContext.registerService(
                     new String[]{ Function.class.getName(), CompletableFunction.class.getName() },
-                    command,
+                    descriptor.getFunction(),
                     commandProperties
                 );
                 commands.put( beanEntry, serviceRegistration );
@@ -113,9 +111,9 @@ class CommandsWatcher
         return null;
     }
 
-    private CommandAnnotationProcessor getAnnotationProcessor( final Class<Object> implementationClass )
+    private BindingProcessor getBindingProcessor( final Class<Object> implementationClass )
     {
-        for ( final CommandAnnotationProcessor processor : processors )
+        for ( final BindingProcessor processor : processors )
         {
             if ( processor.handles( implementationClass ) )
             {
@@ -125,7 +123,7 @@ class CommandsWatcher
         return null;
     }
 
-    private void unregisterCommand( final BeanEntry<Annotation, Object> beanEntry )
+    private void unregisterFunction( final BeanEntry<Annotation, Object> beanEntry )
     {
         final ServiceRegistration serviceRegistration = commands.remove( beanEntry );
         if ( serviceRegistration != null )

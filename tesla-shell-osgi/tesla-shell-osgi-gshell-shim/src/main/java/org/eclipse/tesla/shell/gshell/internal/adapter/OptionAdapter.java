@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.gshell.internal;
+package org.eclipse.tesla.shell.gshell.internal.adapter;
 
 import java.lang.annotation.Annotation;
 
@@ -9,13 +9,13 @@ import org.apache.felix.gogo.commands.Option;
 *
 * @since 1.0
 */
-class GShellShimOption
+public class OptionAdapter
     implements Option
 {
 
     private org.sonatype.gshell.util.cli2.Option delegate;
 
-    GShellShimOption( final org.sonatype.gshell.util.cli2.Option delegate )
+    public OptionAdapter( final org.sonatype.gshell.util.cli2.Option delegate )
     {
         this.delegate = delegate;
     }

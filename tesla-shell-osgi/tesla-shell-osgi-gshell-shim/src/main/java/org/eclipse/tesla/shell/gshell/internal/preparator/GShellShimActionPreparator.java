@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.gshell.internal;
+package org.eclipse.tesla.shell.gshell.internal.preparator;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -8,6 +8,10 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.eclipse.tesla.shell.gshell.internal.CommandActionProxy;
+import org.eclipse.tesla.shell.gshell.internal.adapter.ArgumentAdapter;
+import org.eclipse.tesla.shell.gshell.internal.adapter.OptionAdapter;
+import org.eclipse.tesla.shell.gshell.internal.preparator.DefaultActionPreparator;
 import org.sonatype.gshell.command.CommandAction;
 
 /**
@@ -32,11 +36,11 @@ public class GShellShimActionPreparator
                                final Map<Argument, Injector> arguments,
                                final List<Argument> orderedArguments )
     {
-        if ( !( action instanceof GShellShimAction ) )
+        if ( !( action instanceof CommandActionProxy ) )
         {
             super.introspect( action, options, arguments, orderedArguments );
         }
-        final CommandAction commandAction = ( (GShellShimAction) action ).getCommandAction();
+        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
         for ( Class type = commandAction.getClass(); type != null; type = type.getSuperclass() )
         {
             for ( Field field : type.getDeclaredFields() )
@@ -45,13 +49,13 @@ public class GShellShimActionPreparator
                     field.getAnnotation( org.sonatype.gshell.util.cli2.Option.class );
                 if ( option != null )
                 {
-                    options.put( new GShellShimOption( option ), new FieldInjector( commandAction, field ) );
+                    options.put( new OptionAdapter( option ), new FieldInjector( commandAction, field ) );
                 }
                 org.sonatype.gshell.util.cli2.Argument argument =
                     field.getAnnotation( org.sonatype.gshell.util.cli2.Argument.class );
                 if ( argument != null )
                 {
-                    final GShellShimArgument shimArgument = new GShellShimArgument( argument, field );
+                    final ArgumentAdapter shimArgument = new ArgumentAdapter( argument, field );
                     arguments.put( shimArgument, new FieldInjector( commandAction, field ) );
                     int index = argument.index();
                     while ( orderedArguments.size() <= index )

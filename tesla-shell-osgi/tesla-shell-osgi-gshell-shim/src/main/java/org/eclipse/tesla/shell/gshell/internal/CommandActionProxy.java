@@ -11,13 +11,13 @@ import org.sonatype.gshell.shell.ShellHolder;
  *
  * @since 1.0
  */
-class GShellShimAction
+public class CommandActionProxy
     implements Action
 {
 
     private final CommandAction commandAction;
 
-    GShellShimAction( final CommandAction commandAction )
+    CommandActionProxy( final CommandAction commandAction )
     {
         this.commandAction = commandAction;
     }
@@ -30,7 +30,7 @@ class GShellShimAction
         return null;
     }
 
-    CommandAction getCommandAction()
+    public CommandAction getCommandAction()
     {
         return commandAction;
     }

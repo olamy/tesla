@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.gshell.internal;
+package org.eclipse.tesla.shell.gshell.internal.adapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import org.apache.felix.gogo.commands.Argument;
 *
 * @since 1.0
 */
-class GShellShimArgument
+public class ArgumentAdapter
 implements Argument
 {
 
@@ -18,8 +18,8 @@ implements Argument
 
     private final Field field;
 
-    GShellShimArgument( final org.sonatype.gshell.util.cli2.Argument delegate,
-                        final Field field )
+    public ArgumentAdapter( final org.sonatype.gshell.util.cli2.Argument delegate,
+                     final Field field )
     {
         this.delegate = delegate;
         this.field = field;

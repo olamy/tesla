@@ -1,24 +1,26 @@
 package org.eclipse.tesla.shell.gshell.internal;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Arrays;
 import java.util.Dictionary;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.CompletableFunction;
-import org.eclipse.tesla.shell.support.spi.ShellCommand;
-import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.sonatype.gshell.guice.CoreModule;
 import org.sonatype.guice.bean.containers.InjectedTest;
 import com.google.inject.Binder;
 
@@ -27,7 +29,7 @@ import com.google.inject.Binder;
  *
  * @since 1.0
  */
-public class CommandsWatcherTest
+public class BndingWatcherTest
     extends InjectedTest
 {
 
@@ -40,9 +42,7 @@ public class CommandsWatcherTest
     @Mock
     private CommandSession commandSession;
 
-    private ArgumentCaptor<ShellCommand> commandCaptor = ArgumentCaptor.forClass( ShellCommand.class );
-
-    private ArgumentCaptor<Dictionary> servicePropertiesCaptor = ArgumentCaptor.forClass( Dictionary.class );
+    private Map<String, AbstractCommand> commands = new HashMap<String, AbstractCommand>();
 
     @Override
     public void configure( final Binder binder )
@@ -57,10 +57,20 @@ public class CommandsWatcherTest
         when(
             bundleContext.registerService(
                 eq( new String[]{ Function.class.getName(), CompletableFunction.class.getName() } ),
-                commandCaptor.capture(),
-                servicePropertiesCaptor.capture()
+                any(),
+                Matchers.<Dictionary>any()
             )
-        ).thenReturn( serviceRegistration );
+        ).thenAnswer( new Answer<ServiceRegistration>()
+        {
+            public ServiceRegistration answer( final InvocationOnMock invocation )
+                throws Throwable
+            {
+                final Object properties = invocation.getArguments()[2];
+                final String name = (String) ( (Dictionary) properties ).get( "osgi.command.function" );
+                commands.put( name, (AbstractCommand) invocation.getArguments()[1] );
+                return serviceRegistration;
+            }
+        } );
 
         super.setUp();
     }
@@ -75,23 +85,9 @@ public class CommandsWatcherTest
     public void test()
         throws Exception
     {
-        final ShellCommand command = getCommand( "cd" );
+        final AbstractCommand command = commands.get( "cd" );
         command.execute( commandSession, Arrays.<Object>asList( "." ) );
 
-    }
-
-    private ShellCommand getCommand( final String name )
-    {
-        final List<ShellCommand> commands = commandCaptor.getAllValues();
-        for ( final ShellCommand command : commands )
-        {
-            if ( name.equals( command.getName() ) )
-            {
-                return command;
-            }
-        }
-        Assert.fail( "No command:" + name );
-        return null;
     }
 
 }
