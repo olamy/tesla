@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.commands.support.internal;
+package org.eclipse.tesla.shell.support.spi;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -15,18 +15,18 @@ import org.sonatype.inject.BeanEntry;
  *
  * @since 1.0
  */
-class GuiceShellCommand
+public class ShellCommand
     extends AbstractCommand
     implements CompletableFunction
 {
 
-    private final BeanEntry<Annotation, Action> beanEntry;
+    private final BeanEntry<Annotation, Object> beanEntry;
 
     private final String scope;
 
     private final String name;
 
-    GuiceShellCommand( final Command commandAnnotation, final BeanEntry<Annotation, Action> beanEntry )
+    public ShellCommand( final Command commandAnnotation, final BeanEntry<Annotation, Object> beanEntry )
     {
         this.beanEntry = beanEntry;
         scope = commandAnnotation.scope();
@@ -46,11 +46,17 @@ class GuiceShellCommand
     @Override
     public Action createNewAction()
     {
-        return beanEntry.getProvider().get();
+        return (Action) beanEntry.getProvider().get();
     }
 
     public List<Completer> getCompleters()
     {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+    protected BeanEntry<Annotation, Object> getBeanEntry()
+    {
+        return beanEntry;
     }
 }

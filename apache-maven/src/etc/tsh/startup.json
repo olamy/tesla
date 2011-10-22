@@ -78,7 +78,11 @@
     },
     {
         "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-support:3.0.4-SNAPSHOT",
-        "startLevel":20
+        "startLevel":60
+    },
+    {
+        "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-gshell-shim:3.0.4-SNAPSHOT",
+        "startLevel":60
     },
     {
         "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-provision:3.0.4-SNAPSHOT",

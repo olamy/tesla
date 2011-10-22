@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.commands.internal;
+package org.eclipse.tesla.shell.support.internal;
 
 import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
 
@@ -9,7 +9,7 @@ import javax.inject.Named;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.eclipse.tesla.shell.commands.support.GuiceOsgiCommandSupport;
+import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
 import org.osgi.framework.Bundle;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;

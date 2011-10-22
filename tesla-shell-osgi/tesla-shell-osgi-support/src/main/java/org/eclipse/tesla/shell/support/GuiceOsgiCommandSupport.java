@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.commands.support;
+package org.eclipse.tesla.shell.support;
 
 import javax.inject.Inject;
 

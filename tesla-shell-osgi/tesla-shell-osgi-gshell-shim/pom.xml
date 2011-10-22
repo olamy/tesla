@@ -14,12 +14,17 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla-shell-osgi-support</artifactId>
+  <artifactId>tesla-shell-osgi-gshell-shim</artifactId>
   <packaging>bundle</packaging>
 
-  <name>Tesla Shell OSGi :: Commands :: Support</name>
+  <name>Tesla Shell OSGi :: Commands :: GShell Shim</name>
 
   <dependencies>
+    <dependency>
+      <groupId>org.eclipse.tesla.shell</groupId>
+      <artifactId>tesla-shell-osgi-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.karaf.shell</groupId>
       <artifactId>org.apache.karaf.shell.console</artifactId>
@@ -30,11 +35,27 @@
       <groupId>org.sonatype.sisu</groupId>
       <artifactId>sisu-inject-bean</artifactId>
       <version>2.3.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>4.1.0</version>
+      <groupId>org.eclipse.tesla.shell</groupId>
+      <artifactId>tesla-shell-util</artifactId>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonatype.jline</groupId>
+          <artifactId>jline</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.tesla.shell</groupId>
+      <artifactId>tesla-shell-core</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -50,6 +71,12 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.tesla.shell.commands</groupId>
+      <artifactId>tesla-shell-file</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -62,24 +89,28 @@
         <configuration>
           <instructions>
             <Import-Package>
-              com.google.inject,
               javax.inject,
-              org.apache.felix.gogo.commands.basic,
-              org.apache.felix.gogo.commands,
-              org.apache.felix.service.command,
+              com.google.inject.*,
+              javax.management,
+              jline.*,
+              org.fusesource.jansi,
+              org.apache.felix.gogo.*,
+              org.apache.felix.service.command,*
               org.apache.karaf.shell.console,
-              org.osgi.framework,
+              org.eclipse.tesla.shell.support.spi,
               org.sonatype.inject,
-              org.sonatype.guice.bean.locators
+              !*
             </Import-Package>
             <Export-Package>
-              org.eclipse.tesla.shell.support;version=${project.version},
-              org.eclipse.tesla.shell.support.spi;version=${project.version}
+              org.codehaus.plexus.util,
+              org.sonatype.gshell.*
             </Export-Package>
             <Include-Resource>
               {maven-resources},
               META-INF/sisu=target/classes/META-INF/sisu
             </Include-Resource>
+            <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+            <Embed-Transitive>true</Embed-Transitive>
           </instructions>
         </configuration>
       </plugin>

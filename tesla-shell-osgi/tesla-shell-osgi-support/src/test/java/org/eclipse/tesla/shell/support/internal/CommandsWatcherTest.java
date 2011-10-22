@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.commands.support.internal;
+package org.eclipse.tesla.shell.support.internal;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,7 +17,8 @@ import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.CompletableFunction;
-import org.eclipse.tesla.shell.commands.support.GuiceOsgiCommandSupport;
+import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
+import org.eclipse.tesla.shell.support.spi.ShellCommand;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -44,7 +45,7 @@ public class CommandsWatcherTest
     @Mock
     private CommandSession commandSession;
 
-    private ArgumentCaptor<GuiceShellCommand> commandCaptor = ArgumentCaptor.forClass( GuiceShellCommand.class );
+    private ArgumentCaptor<ShellCommand> commandCaptor = ArgumentCaptor.forClass( ShellCommand.class );
 
     private ArgumentCaptor<Dictionary> servicePropertiesCaptor = ArgumentCaptor.forClass( Dictionary.class );
 

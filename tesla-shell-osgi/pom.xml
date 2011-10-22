@@ -24,11 +24,18 @@
   <modules>
     <module>tesla-shell-osgi-core</module>
     <module>tesla-shell-osgi-support</module>
+    <module>tesla-shell-osgi-gshell-shim</module>
     <module>tesla-shell-osgi-provision</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+    <dependency>
+      <groupId>org.apache.karaf.shell</groupId>
+      <artifactId>org.apache.karaf.shell.console</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
       <dependency>
         <groupId>org.eclipse.tesla.shell</groupId>
         <artifactId>tesla-shell-osgi-support</artifactId>

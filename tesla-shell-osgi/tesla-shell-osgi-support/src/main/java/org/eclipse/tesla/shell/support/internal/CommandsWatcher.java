@@ -1,16 +1,18 @@
-package org.eclipse.tesla.shell.commands.support.internal;
+package org.eclipse.tesla.shell.support.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.CompletableFunction;
+import org.eclipse.tesla.shell.support.spi.CommandAnnotationProcessor;
+import org.eclipse.tesla.shell.support.spi.ShellCommand;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.sonatype.guice.bean.locators.BeanLocator;
@@ -31,25 +33,29 @@ class CommandsWatcher
 
     private BundleContext bundleContext;
 
-    private Map<BeanEntry<Annotation, Action>, ServiceRegistration> commands;
+    private Map<BeanEntry<Annotation, Object>, ServiceRegistration> commands;
+
+    private List<CommandAnnotationProcessor> processors;
 
     @Inject
     CommandsWatcher( final BundleContext bundleContext,
-                     final BeanLocator beanLocator )
+                     final BeanLocator beanLocator,
+                     final List<CommandAnnotationProcessor> processors)
     {
-        commands = new HashMap<BeanEntry<Annotation, Action>, ServiceRegistration>();
+        this.processors = processors;
+        commands = new HashMap<BeanEntry<Annotation, Object>, ServiceRegistration>();
         this.bundleContext = bundleContext;
         beanLocator.watch(
-            Key.get( Action.class ),
-            new Mediator<Annotation, Action, CommandsWatcher>()
+            Key.get( Object.class ),
+            new Mediator<Annotation, Object, CommandsWatcher>()
             {
-                public void add( final BeanEntry<Annotation, Action> beanEntry, final CommandsWatcher watcher )
+                public void add( final BeanEntry<Annotation, Object> beanEntry, final CommandsWatcher watcher )
                     throws Exception
                 {
                     watcher.registerCommand( beanEntry );
                 }
 
-                public void remove( final BeanEntry<Annotation, Action> beanEntry, final CommandsWatcher watcher )
+                public void remove( final BeanEntry<Annotation, Object> beanEntry, final CommandsWatcher watcher )
                     throws Exception
                 {
                     watcher.unregisterCommand( beanEntry );
@@ -59,14 +65,14 @@ class CommandsWatcher
         );
     }
 
-    private void registerCommand( final BeanEntry<Annotation, Action> beanEntry )
+    private void registerCommand( final BeanEntry<Annotation, Object> beanEntry )
     {
-        final Class<Action> implementationClass = beanEntry.getImplementationClass();
-        final Command commandAnnotation = implementationClass.getAnnotation( Command.class );
-
-        if ( commandAnnotation != null )
+        final Class<Object> implementationClass = beanEntry.getImplementationClass();
+        final CommandAnnotationProcessor processor = getAnnotationProcessor(implementationClass);
+        if ( processor != null )
         {
-            final GuiceShellCommand command = new GuiceShellCommand( commandAnnotation, beanEntry );
+            final Command commandAnnotation = processor.getAnnotation(implementationClass);
+            final ShellCommand command = processor.createCommand(commandAnnotation,beanEntry);
             final Properties commandProperties = new Properties();
             commandProperties.setProperty( "osgi.command.scope", command.getScope() );
             commandProperties.setProperty( "osgi.command.function", command.getName() );
@@ -80,7 +86,19 @@ class CommandsWatcher
         }
     }
 
-    private void unregisterCommand( final BeanEntry<Annotation, Action> beanEntry )
+    private CommandAnnotationProcessor getAnnotationProcessor( final Class<Object> implementationClass )
+    {
+        for ( final CommandAnnotationProcessor processor : processors )
+        {
+            if(processor.handles(implementationClass))
+            {
+                return processor;
+            }
+        }
+        return null;
+    }
+
+    private void unregisterCommand( final BeanEntry<Annotation, Object> beanEntry )
     {
         final ServiceRegistration serviceRegistration = commands.remove( beanEntry );
         if ( serviceRegistration != null )

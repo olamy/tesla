@@ -50,12 +50,15 @@ import static org.apache.maven.execution.MavenExecutionRequest.REACTOR_MAKE_UPST
 import static org.sonatype.gshell.variables.VariableNames.SHELL_HOME;
 import static org.sonatype.gshell.variables.VariableNames.SHELL_USER_DIR;
 
+import javax.inject.Named;
+
 /**
  * Execute Maven.
  * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.7
  */
+@Named
 @Command(name = "mvn")
 @Preferences(path = "commands/mvn")
 public class MavenCommand extends CommandActionSupport implements CliProcessorAware {

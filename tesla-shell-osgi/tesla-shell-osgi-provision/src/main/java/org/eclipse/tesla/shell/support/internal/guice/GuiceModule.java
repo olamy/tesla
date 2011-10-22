@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.commands.internal.guice;
+package org.eclipse.tesla.shell.support.internal.guice;
 
 import javax.inject.Named;
 
