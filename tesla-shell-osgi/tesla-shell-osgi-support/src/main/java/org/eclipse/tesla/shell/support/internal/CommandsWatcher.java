@@ -19,6 +19,8 @@ import org.sonatype.guice.bean.locators.BeanLocator;
 import org.sonatype.inject.BeanEntry;
 import org.sonatype.inject.EagerSingleton;
 import org.sonatype.inject.Mediator;
+import com.google.inject.ConfigurationException;
+import com.google.inject.Injector;
 import com.google.inject.Key;
 
 /**
@@ -35,13 +37,16 @@ class CommandsWatcher
 
     private Map<BeanEntry<Annotation, Object>, ServiceRegistration> commands;
 
+    private BeanLocator beanLocator;
+
     private List<CommandAnnotationProcessor> processors;
 
     @Inject
     CommandsWatcher( final BundleContext bundleContext,
                      final BeanLocator beanLocator,
-                     final List<CommandAnnotationProcessor> processors)
+                     final List<CommandAnnotationProcessor> processors )
     {
+        this.beanLocator = beanLocator;
         this.processors = processors;
         commands = new HashMap<BeanEntry<Annotation, Object>, ServiceRegistration>();
         this.bundleContext = bundleContext;
@@ -68,29 +73,51 @@ class CommandsWatcher
     private void registerCommand( final BeanEntry<Annotation, Object> beanEntry )
     {
         final Class<Object> implementationClass = beanEntry.getImplementationClass();
-        final CommandAnnotationProcessor processor = getAnnotationProcessor(implementationClass);
+        final CommandAnnotationProcessor processor = getAnnotationProcessor( implementationClass );
         if ( processor != null )
         {
-            final Command commandAnnotation = processor.getAnnotation(implementationClass);
-            final ShellCommand command = processor.createCommand(commandAnnotation,beanEntry);
+            final Command commandAnnotation = processor.getAnnotation( implementationClass );
+            final ShellCommand command = processor.createCommand( commandAnnotation, beanEntry );
             final Properties commandProperties = new Properties();
             commandProperties.setProperty( "osgi.command.scope", command.getScope() );
             commandProperties.setProperty( "osgi.command.function", command.getName() );
             commandProperties.setProperty( "implementationClass", implementationClass.getName() );
-            final ServiceRegistration serviceRegistration = bundleContext.registerService(
-                new String[]{ Function.class.getName(), CompletableFunction.class.getName() },
-                command,
-                commandProperties
-            );
-            commands.put( beanEntry, serviceRegistration );
+            final BundleContext commandBundleContext = bundleContextOfCommand( implementationClass );
+            if ( commandBundleContext != null )
+            {
+                final ServiceRegistration serviceRegistration = commandBundleContext.registerService(
+                    new String[]{ Function.class.getName(), CompletableFunction.class.getName() },
+                    command,
+                    commandProperties
+                );
+                commands.put( beanEntry, serviceRegistration );
+            }
         }
+    }
+
+    private BundleContext bundleContextOfCommand( final Class<Object> implementationClass )
+    {
+        for ( final BeanEntry<Annotation, Injector> beanEntry : beanLocator.locate( Key.get( Injector.class ) ) )
+        {
+            final Injector injector = beanEntry.getValue();
+            try
+            {
+                injector.getBinding( implementationClass );
+                // if we passed above it means that injector is the one for the implementation class
+                return injector.getInstance( BundleContext.class );
+            }
+            catch ( ConfigurationException ignore )
+            {
+            }
+        }
+        return null;
     }
 
     private CommandAnnotationProcessor getAnnotationProcessor( final Class<Object> implementationClass )
     {
         for ( final CommandAnnotationProcessor processor : processors )
         {
-            if(processor.handles(implementationClass))
+            if ( processor.handles( implementationClass ) )
             {
                 return processor;
             }
