@@ -32,8 +32,6 @@ import com.google.inject.Key;
 class BindingWatcher
 {
 
-    private BundleContext bundleContext;
-
     private Map<BeanEntry<Annotation, Object>, ServiceRegistration> commands;
 
     private BeanLocator beanLocator;
@@ -41,14 +39,12 @@ class BindingWatcher
     private List<BindingProcessor> processors;
 
     @Inject
-    BindingWatcher( final BundleContext bundleContext,
-                    final BeanLocator beanLocator,
+    BindingWatcher( final BeanLocator beanLocator,
                     final List<BindingProcessor> processors )
     {
         this.beanLocator = beanLocator;
         this.processors = processors;
         commands = new HashMap<BeanEntry<Annotation, Object>, ServiceRegistration>();
-        this.bundleContext = bundleContext;
         beanLocator.watch(
             Key.get( Object.class ),
             new Mediator<Annotation, Object, BindingWatcher>()

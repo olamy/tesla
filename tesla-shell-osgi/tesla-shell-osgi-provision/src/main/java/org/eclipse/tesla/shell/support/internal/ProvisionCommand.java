@@ -9,6 +9,7 @@ import javax.inject.Named;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.eclipse.tesla.shell.provision.Provisioner;
 import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
 import org.osgi.framework.Bundle;
 import org.sonatype.aether.artifact.Artifact;
@@ -25,30 +26,28 @@ public class ProvisionCommand
     extends GuiceOsgiCommandSupport
 {
 
-    @Argument( name = "coordinates", description = "Maven coordinates of jar to be provisioned", required = true )
-    private String coordinates;
+    @Argument( name = "coordinates", description = "Maven coordinates of jar to be provisioned", required = true, multiValued = true)
+    private String[] coordinates;
 
-    @Option( name = "-s", aliases = { "--start" }, description = "If provisioned bundle should be started" )
-    private boolean start;
-
-    @Option( name = "-sl", aliases = { "--startLevel" }, description = "Start level for provisioned bundle" )
-    private int startLevel;
+    @Option( name = "-d", aliases = { "--dryRun" }, description = "Do not actually install just explain what will be done" )
+    private boolean dryRun;
 
     @Inject
-    private MavenArtifactResolver resolver;
+    private Provisioner provisioner;
 
     @Override
     protected Object doExecute()
         throws Exception
     {
-        final Artifact artifact = resolver.resolveArtifact( request().artifact( coordinates ) );
-        final URI uri = artifact.getFile().toURI();
-        final Bundle bundle = getBundleContext().installBundle( uri.toASCIIString(), uri.toURL().openStream() );
-        if ( start )
-        {
-            bundle.start();
+        if(dryRun) {
+            provisioner.dryRun(coordinates);
         }
-        return bundle;
+        else
+        {
+            provisioner.provision(coordinates);
+        }
+
+        return null;
     }
 
 }
