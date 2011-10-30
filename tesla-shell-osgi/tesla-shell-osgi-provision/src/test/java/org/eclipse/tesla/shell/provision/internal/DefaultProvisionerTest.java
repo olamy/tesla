@@ -80,7 +80,7 @@ public class DefaultProvisionerTest
             bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
         ).thenReturn( mock( Bundle.class ) );
         underTest.provision( "ch.qos.logback:logback-classic:0.9.30", "org.sonatype.aether:aether-impl:1.13" );
-        verify( bundleContext, times( 19 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
+        verify( bundleContext, times( 16 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
         for ( final String location : locationCaptor.getAllValues() )
         {
             System.out.println( location );

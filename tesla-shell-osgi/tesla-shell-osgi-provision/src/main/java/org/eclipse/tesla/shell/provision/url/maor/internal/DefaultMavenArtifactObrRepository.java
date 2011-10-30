@@ -100,6 +100,19 @@ public class DefaultMavenArtifactObrRepository
         throws IOException
     {
         final List<Resource> resources = new ArrayList<Resource>();
+        if ( tree.getDependency() != null )
+        {
+            // skip test resources
+            if ( "test".equals( tree.getDependency().getScope() ) )
+            {
+                return resources;
+            }
+            final Resource resource = resource( tree.getDependency().getArtifact().toString() );
+            if ( resource != null )
+            {
+                resources.add( resource );
+            }
+        }
         if ( tree.getChildren() != null )
         {
             for ( DependencyNode child : tree.getChildren() )
@@ -107,15 +120,6 @@ public class DefaultMavenArtifactObrRepository
                 resources.addAll( asResources( child ) );
             }
         }
-        if ( tree.getDependency() != null )
-        {
-            final Resource resource = resource( tree.getDependency().getArtifact().toString() );
-            if ( resource != null )
-            {
-                resources.add( resource );
-            }
-        }
-
         return resources;
     }
 
