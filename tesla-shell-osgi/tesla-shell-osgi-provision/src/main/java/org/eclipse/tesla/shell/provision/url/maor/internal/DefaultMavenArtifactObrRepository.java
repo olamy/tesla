@@ -9,7 +9,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,6 +19,7 @@ import org.apache.felix.bundlerepository.DataModelHelper;
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.Resource;
 import org.apache.felix.bundlerepository.impl.DataModelHelperImpl;
+import org.apache.felix.bundlerepository.impl.ResourceImpl;
 import org.eclipse.tesla.shell.provision.Storage;
 import org.eclipse.tesla.shell.provision.internal.IOUtils;
 import org.eclipse.tesla.shell.provision.url.maor.MavenArtifactObrRepository;
@@ -35,9 +38,11 @@ public class DefaultMavenArtifactObrRepository
 
     static final String OBR_PATH_TEMPLATE = "obr/maor/%s/obr.xml";
 
-    private Storage storage;
+    private final Storage storage;
 
-    private MavenDependencyTreeResolver dependencyTreeResolver;
+    private final MavenDependencyTreeResolver dependencyTreeResolver;
+
+    private final DataModelHelperImpl dataModelHelper;
 
     @Inject
     public DefaultMavenArtifactObrRepository( final Storage storage,
@@ -45,6 +50,7 @@ public class DefaultMavenArtifactObrRepository
     {
         this.storage = storage;
         this.dependencyTreeResolver = dependencyTreeResolver;
+        this.dataModelHelper = new DataModelHelperImpl();
     }
 
     @Override
@@ -53,9 +59,11 @@ public class DefaultMavenArtifactObrRepository
         try
         {
             final DependencyNode tree = dependencyTreeResolver.resolveDependencyTree(
-                tree().model( model().pom( coordinates ) )
-            );
-            final List<Resource> resources = asResources( tree, new DataModelHelperImpl() );
+                tree().model( model().pom( coordinates ) ) );
+
+            final List<Resource> resources = new ArrayList<Resource>();
+            resources.add( resource( coordinates ) );
+            resources.addAll( asResources( tree ) );
 
             final DataModelHelper helper = new DataModelHelperImpl();
             final Repository repository = helper.repository( resources.toArray( new Resource[resources.size()] ) );
@@ -78,7 +86,17 @@ public class DefaultMavenArtifactObrRepository
         }
     }
 
-    private List<Resource> asResources( final DependencyNode tree, final DataModelHelper modelHelper )
+    private Resource resource( final String coordinates )
+        throws IOException
+    {
+        final ResourceImpl resource = (ResourceImpl) dataModelHelper.createResource( new URL( "mab:" + coordinates ) );
+        final Map<String, String> properties = new HashMap<String, String>();
+        properties.put( "maven-coordinates", coordinates );
+        resource.addCapability( dataModelHelper.capability( "maven", properties ) );
+        return resource;
+    }
+
+    private List<Resource> asResources( final DependencyNode tree )
         throws IOException
     {
         final List<Resource> resources = new ArrayList<Resource>();
@@ -86,14 +104,12 @@ public class DefaultMavenArtifactObrRepository
         {
             for ( DependencyNode child : tree.getChildren() )
             {
-                resources.addAll( asResources( child, modelHelper ) );
+                resources.addAll( asResources( child ) );
             }
         }
         if ( tree.getDependency() != null )
         {
-            final Resource resource = modelHelper.createResource(
-                new URL( "mab:" + tree.getDependency().getArtifact().toString() )
-            );
+            final Resource resource = resource( tree.getDependency().getArtifact().toString() );
             if ( resource != null )
             {
                 resources.add( resource );

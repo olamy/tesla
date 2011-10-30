@@ -1,16 +1,24 @@
 package org.eclipse.tesla.shell.provision.internal;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
+import java.io.InputStream;
 import javax.inject.Inject;
 
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
 import org.eclipse.tesla.shell.provision.Storage;
+import org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment;
 import org.eclipse.tesla.shell.provision.internal.mosgi.MockOsgiFramework;
 import org.eclipse.tesla.shell.provision.url.Reference;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.sonatype.guice.bean.containers.InjectedTest;
 import com.google.inject.Binder;
 
@@ -28,11 +36,23 @@ public class DefaultProvisionerTest
     @Inject
     private DefaultProvisioner underTest;
 
+    private BundleContext bundleContext;
+
     @Override
     public void setUp()
     {
-        super.setUp();
         System.setProperty( JAVA_PROTOCOL_HANDLER_PKGS, Reference.class.getPackage().getName() );
+
+        final MockOsgiFramework osgiFramework = new MockOsgiFramework();
+        osgiFramework.withExecutionEnvironment(
+            ExecutionEnvironment.J2SE_1_3,
+            ExecutionEnvironment.J2SE_1_4,
+            ExecutionEnvironment.J2SE_1_5,
+            ExecutionEnvironment.JavaSE_1_6
+        );
+        bundleContext = osgiFramework.getBundleContext();
+
+        super.setUp();
     }
 
     @Override
@@ -45,7 +65,6 @@ public class DefaultProvisionerTest
     @Override
     public void configure( final Binder binder )
     {
-        final BundleContext bundleContext = new MockOsgiFramework().getBundleContext();
         final RepositoryAdminImpl rai = new RepositoryAdminImpl( bundleContext, new Logger( bundleContext ) );
 
         binder.bind( Storage.class ).to( TempDirStorage.class );
@@ -54,8 +73,18 @@ public class DefaultProvisionerTest
 
     @Test
     public void test()
+        throws BundleException
     {
-        underTest.provision( "org.sonatype.aether:aether-impl:1.13" );
+        final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
+        when(
+            bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
+        ).thenReturn( mock( Bundle.class ) );
+        underTest.provision( "ch.qos.logback:logback-classic:0.9.30", "org.sonatype.aether:aether-impl:1.13" );
+        verify( bundleContext, times( 19 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
+        for ( final String location : locationCaptor.getAllValues() )
+        {
+            System.out.println( location );
+        }
     }
 
 }

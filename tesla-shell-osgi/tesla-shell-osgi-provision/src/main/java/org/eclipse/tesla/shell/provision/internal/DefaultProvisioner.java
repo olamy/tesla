@@ -1,14 +1,18 @@
 package org.eclipse.tesla.shell.provision.internal;
 
+import static java.util.Arrays.asList;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.felix.bundlerepository.Reason;
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.Resolver;
+import org.apache.felix.bundlerepository.Resource;
 import org.apache.felix.bundlerepository.impl.Referral;
 import org.apache.felix.bundlerepository.impl.RepositoryImpl;
 import org.eclipse.tesla.shell.provision.Provisioner;
@@ -38,13 +42,14 @@ class DefaultProvisioner
 
     public void provision( final String... coordinates )
     {
-        final String setUrl = mavenObrArtifactSet.create( coordinates );
+        final String url = mavenObrArtifactSet.create( coordinates );
         try
         {
             final List<Repository> repositories = new ArrayList<Repository>();
             repositories.add( repositoryAdmin.getSystemRepository() );
             repositories.add( repositoryAdmin.getLocalRepository() );
-            repositories.addAll( repositories( setUrl ) );
+            final List<Repository> setRelatedRepositories = repositories( url );
+            repositories.addAll( setRelatedRepositories );
 
             final Resolver resolver = repositoryAdmin.resolver(
                 repositories.toArray( new Repository[repositories.size()] )
@@ -53,16 +58,33 @@ class DefaultProvisioner
             {
                 resolver.add(
                     repositoryAdmin.getHelper().requirement(
-                        coordinate,
+                        "maven",
                         String.format( "(maven-coordinates=%s)", coordinate )
                     )
                 );
             }
             boolean resolved = resolver.resolve();
+            if ( resolved )
+            {
+                resolver.deploy( 0 );
+            }
+            else
+            {
+                printProblems( resolver );
+            }
         }
         catch ( Exception e )
         {
             throw new RuntimeException( e );
+        }
+    }
+
+    private void printProblems( final Resolver resolver )
+    {
+        final Reason[] reasons = resolver.getUnsatisfiedRequirements();
+        for ( final Reason reason : reasons )
+        {
+            System.out.println(String.format( "%s->%s", reason.getResource(), reason.getRequirement() ));
         }
     }
 

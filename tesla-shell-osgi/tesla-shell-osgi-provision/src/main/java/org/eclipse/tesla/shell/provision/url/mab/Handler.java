@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.apache.maven.repository.internal.DefaultServiceLocator;
+import org.eclipse.tesla.shell.provision.Storage;
+import org.eclipse.tesla.shell.provision.internal.MavenLikePathResolver;
+import org.eclipse.tesla.shell.provision.internal.TempDirStorage;
 import org.eclipse.tesla.shell.provision.url.mab.internal.Connection;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
@@ -29,18 +32,24 @@ public class Handler
     extends URLStreamHandler
 {
 
+    private Storage storage;
+
+    private MavenLikePathResolver pathResolver;
+
     private MavenModelResolver modelResolver;
 
     private MavenArtifactResolver artifactResolver;
 
     public Handler()
     {
+        storage = new TempDirStorage( new TempDirStorage.TempDir() );
         final ServiceLocator serviceLocator = new DefaultServiceLocator()
         {
             {
                 setService( RepositoryConnectorFactory.class, AsyncRepositoryConnectorFactory.class );
             }
         };
+        pathResolver = new MavenLikePathResolver( serviceLocator );
         final DefaultMavenSettingsFactory settingsFactory = new DefaultMavenSettingsFactory( serviceLocator );
         final Provider<RepositorySystemSession> sessionProvider = new Provider<RepositorySystemSession>()
         {
@@ -60,10 +69,11 @@ public class Handler
     }
 
     @Inject
-    Handler( final MavenModelResolver modelResolver,
+    Handler( final Storage storage,
+             final MavenModelResolver modelResolver,
              final MavenArtifactResolver artifactResolver )
     {
-
+        this.storage = storage;
         this.modelResolver = modelResolver;
         this.artifactResolver = artifactResolver;
     }
@@ -72,7 +82,7 @@ public class Handler
     protected URLConnection openConnection( final URL url )
         throws IOException
     {
-        return new Connection( modelResolver, artifactResolver, url );
+        return new Connection( storage, pathResolver, modelResolver, artifactResolver, url );
     }
 
 }

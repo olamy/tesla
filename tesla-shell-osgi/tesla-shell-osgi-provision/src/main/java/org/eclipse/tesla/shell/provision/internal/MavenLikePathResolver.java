@@ -16,14 +16,14 @@ import org.sonatype.aether.spi.locator.ServiceLocator;
  * @since 1.0
  */
 @Named
-class MavenLikePathResolver
+public class MavenLikePathResolver
     implements PathResolver
 {
 
     private LocalRepositoryManager localRepositoryManager;
 
     @Inject
-    MavenLikePathResolver( final ServiceLocator serviceLocator )
+    public MavenLikePathResolver( final ServiceLocator serviceLocator )
     {
         final RepositorySystem repositorySystem = serviceLocator.getService( RepositorySystem.class );
         localRepositoryManager = repositorySystem.newLocalRepositoryManager( new LocalRepository( "." ) );
