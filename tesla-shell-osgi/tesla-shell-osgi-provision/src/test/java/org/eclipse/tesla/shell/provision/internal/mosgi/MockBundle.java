@@ -1,6 +1,9 @@
 package org.eclipse.tesla.shell.provision.internal.mosgi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
+import java.util.List;
 import java.util.Properties;
 
 import org.osgi.framework.Bundle;
@@ -21,6 +24,8 @@ public abstract class MockBundle
     private BundleContext bundleContext;
 
     private long id;
+
+    private List<String> exports;
 
     MockBundle setBundleContext( final BundleContext bundleContext )
     {
@@ -56,6 +61,36 @@ public abstract class MockBundle
     public Dictionary getHeaders()
     {
         return getProperties();
+    }
+
+    public MockBundle withPackages( final String... exports )
+    {
+        this.getExports().addAll( Arrays.asList( exports ) );
+        this.properties.setProperty( Constants.EXPORT_PACKAGE, exports() );
+        return this;
+    }
+
+    private String exports()
+    {
+        final StringBuilder sb = new StringBuilder();
+        for ( final String export : getExports() )
+        {
+            if ( sb.length() > 0 )
+            {
+                sb.append( "," );
+            }
+            sb.append( export );
+        }
+        return sb.toString();
+    }
+
+    private List<String> getExports()
+    {
+        if(exports == null)
+        {
+            exports = new ArrayList<String>(  );
+        }
+        return exports;
     }
 
     private Properties getProperties()

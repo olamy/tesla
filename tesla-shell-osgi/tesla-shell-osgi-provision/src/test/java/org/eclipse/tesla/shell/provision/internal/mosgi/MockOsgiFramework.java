@@ -95,4 +95,8 @@ public class MockOsgiFramework
         return this;
     }
 
+    public MockBundle getSystemBundle()
+    {
+        return (MockBundle) getBundleContext().getBundle( 0 );
+    }
 }
