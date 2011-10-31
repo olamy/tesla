@@ -1,6 +1,7 @@
 package org.eclipse.tesla.shell.provision.internal;
 
 import static org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment.JavaSE_1_6;
+import static org.eclipse.tesla.shell.provision.internal.mosgi.OSGiFramework.OSGi_FRAMEWORK_4_2;
 import static org.eclipse.tesla.shell.provision.internal.mosgi.PackageUtils.packagesOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -52,7 +53,9 @@ public class DefaultProvisionerTest
             ExecutionEnvironment.J2SE_1_5,
             JavaSE_1_6
         );
-        osgiFramework.getSystemBundle().withPackages( packagesOf( JavaSE_1_6 ) );
+        osgiFramework.getSystemBundle()
+            .withPackages( packagesOf( JavaSE_1_6 ) )
+            .withPackages( packagesOf( OSGi_FRAMEWORK_4_2 ) );
         bundleContext = osgiFramework.getBundleContext();
 
         super.setUp();
@@ -82,7 +85,12 @@ public class DefaultProvisionerTest
         when(
             bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
         ).thenReturn( mock( Bundle.class ) );
-        underTest.provision( "ch.qos.logback:logback-classic:0.9.30", "org.sonatype.aether:aether-impl:1.13" );
+
+        underTest.provision(
+            "ch.qos.logback:logback-classic:0.9.30",
+            "org.sonatype.aether:aether-impl:1.13"
+        );
+
         verify( bundleContext, times( 16 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
         for ( final String location : locationCaptor.getAllValues() )
         {
@@ -98,8 +106,13 @@ public class DefaultProvisionerTest
         when(
             bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
         ).thenReturn( mock( Bundle.class ) );
-        underTest.provision( "org.apache.maven:maven-embedder:3.0.3" );
-        verify( bundleContext, times( 16 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
+
+        underTest.provision(
+            "ch.qos.logback:logback-classic:0.9.30",
+            "org.apache.maven:maven-embedder:3.0.3"
+        );
+
+        verify( bundleContext, times( 31 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
         for ( final String location : locationCaptor.getAllValues() )
         {
             System.out.println( location );

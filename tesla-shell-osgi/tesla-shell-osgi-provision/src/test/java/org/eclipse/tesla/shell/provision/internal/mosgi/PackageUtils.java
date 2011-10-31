@@ -77,4 +77,10 @@ public class PackageUtils
         return packagesFrom( resource );
     }
 
+    public static String[] packagesOf( final OSGiFramework framework )
+    {
+        final URL resource = PackageUtils.class.getClassLoader().getResource( framework.getValue() + ".properties" );
+        return packagesFrom( resource );
+    }
+
 }

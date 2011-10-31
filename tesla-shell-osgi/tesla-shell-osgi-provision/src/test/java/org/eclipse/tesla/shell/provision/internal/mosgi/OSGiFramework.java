@@ -5,16 +5,13 @@ package org.eclipse.tesla.shell.provision.internal.mosgi;
  *
  * @since 1.0
  */
-public enum ExecutionEnvironment
+public enum OSGiFramework
 {
-    J2SE_1_3( "J2SE-1.3" ),
-    J2SE_1_4( "J2SE-1.4" ),
-    J2SE_1_5( "J2SE-1.5" ),
-    JavaSE_1_6( "JavaSE-1.6" );
+    OSGi_FRAMEWORK_4_2( "OSGi-4.2" );
 
     private final String value;
 
-    ExecutionEnvironment( final String value )
+    OSGiFramework( final String value )
     {
         this.value = value;
     }
