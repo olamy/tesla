@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
-import org.eclipse.tesla.shell.provision.Storage;
 import org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment;
 import org.eclipse.tesla.shell.provision.internal.mosgi.MockOsgiFramework;
 import org.eclipse.tesla.shell.provision.url.Reference;
@@ -73,7 +72,7 @@ public class DefaultProvisionerTest
     {
         final RepositoryAdminImpl rai = new RepositoryAdminImpl( bundleContext, new Logger( bundleContext ) );
 
-        binder.bind( Storage.class ).to( TempDirStorage.class );
+        binder.bind( BundleContext.class ).toInstance( bundleContext );
         binder.bind( RepositoryAdmin.class ).toInstance( rai );
     }
 
@@ -82,9 +81,6 @@ public class DefaultProvisionerTest
         throws BundleException
     {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
-        when(
-            bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
-        ).thenReturn( mock( Bundle.class ) );
 
         underTest.provision(
             "ch.qos.logback:logback-classic:0.9.30",
@@ -103,9 +99,6 @@ public class DefaultProvisionerTest
         throws BundleException
     {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
-        when(
-            bundleContext.installBundle( anyString(), Matchers.<InputStream>any() )
-        ).thenReturn( mock( Bundle.class ) );
 
         underTest.provision(
             "ch.qos.logback:logback-classic:0.9.30",

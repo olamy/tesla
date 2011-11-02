@@ -86,7 +86,9 @@ public class Connection
         }
         catch ( ArtifactResolutionException e )
         {
-            throw new IOException( e );
+            final IOException ioException = new IOException( "Failed to resolver URl " + getURL().toExternalForm() );
+            ioException.initCause( e );
+            throw ioException;
         }
     }
 

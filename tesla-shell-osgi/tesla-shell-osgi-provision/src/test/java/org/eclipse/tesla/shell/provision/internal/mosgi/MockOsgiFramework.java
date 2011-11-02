@@ -2,16 +2,20 @@ package org.eclipse.tesla.shell.provision.internal.mosgi;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
 
 /**
@@ -56,6 +60,35 @@ public class MockOsgiFramework
                 }
             }
         );
+        try
+        {
+            when( bundleContext.installBundle( anyString() ) ).thenAnswer(
+                new Answer<Bundle>()
+                {
+                    @Override
+                    public Bundle answer( final InvocationOnMock invocation )
+                        throws Throwable
+                    {
+                        return installBundle();
+                    }
+                }
+            );
+            when( bundleContext.installBundle( anyString(), Matchers.<InputStream>any() ) ).thenAnswer(
+                new Answer<Bundle>()
+                {
+                    @Override
+                    public Bundle answer( final InvocationOnMock invocation )
+                        throws Throwable
+                    {
+                        return installBundle();
+                    }
+                }
+            );
+        }
+        catch ( BundleException ignore )
+        {
+            // we are mocking so it will not happen
+        }
         installBundle().withBundleSymbolicName( "system" );
     }
 

@@ -1,5 +1,7 @@
 package org.eclipse.tesla.shell.provision.url.maor.internal;
 
+import static org.eclipse.tesla.shell.provision.url.mab.Constants.PROTOCOL_MAB;
+import static org.eclipse.tesla.shell.provision.url.maor.Constants.PROTOCOL_MAOR;
 import static org.sonatype.sisu.maven.bridge.support.CollectRequestBuilder.tree;
 import static org.sonatype.sisu.maven.bridge.support.ModelBuildingRequestBuilder.model;
 
@@ -78,7 +80,7 @@ public class DefaultMavenArtifactObrRepository
             {
                 IOUtils.close( out );
             }
-            return MAOR_PROTOCOL + ":" + coordinates;
+            return PROTOCOL_MAOR + ":" + coordinates;
         }
         catch ( Exception e )
         {
@@ -89,7 +91,9 @@ public class DefaultMavenArtifactObrRepository
     private Resource resource( final String coordinates )
         throws IOException
     {
-        final ResourceImpl resource = (ResourceImpl) dataModelHelper.createResource( new URL( "mab:" + coordinates ) );
+        final ResourceImpl resource = (ResourceImpl) dataModelHelper.createResource(
+            new URL( PROTOCOL_MAB + ":" + coordinates )
+        );
         final Map<String, String> properties = new HashMap<String, String>();
         properties.put( "maven-coordinates", coordinates );
         resource.addCapability( dataModelHelper.capability( "maven", properties ) );

@@ -63,6 +63,8 @@ public abstract class MockBundle
         return getProperties();
     }
 
+
+
     public MockBundle withPackages( final String... exports )
     {
         this.getExports().addAll( Arrays.asList( exports ) );

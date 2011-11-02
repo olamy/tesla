@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.apache.maven.repository.internal.DefaultServiceLocator;
+import org.eclipse.tesla.shell.provision.PathResolver;
 import org.eclipse.tesla.shell.provision.Storage;
 import org.eclipse.tesla.shell.provision.internal.MavenLikePathResolver;
 import org.eclipse.tesla.shell.provision.internal.TempDirStorage;
@@ -34,7 +34,7 @@ public class Handler
 
     private Storage storage;
 
-    private MavenLikePathResolver pathResolver;
+    private PathResolver pathResolver;
 
     private MavenModelResolver modelResolver;
 
@@ -66,16 +66,6 @@ public class Handler
             remoteArtifactResolver,
             sessionProvider
         );
-    }
-
-    @Inject
-    Handler( final Storage storage,
-             final MavenModelResolver modelResolver,
-             final MavenArtifactResolver artifactResolver )
-    {
-        this.storage = storage;
-        this.modelResolver = modelResolver;
-        this.artifactResolver = artifactResolver;
     }
 
     @Override

@@ -38,6 +38,12 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j</groupId>
+      <artifactId>peaberry</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
@@ -63,7 +69,12 @@
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.bundlerepository</artifactId>
       <version>1.6.6</version>
-      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.easymock</groupId>
+          <artifactId>easymock</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -78,6 +89,7 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
@@ -105,17 +117,34 @@
         <configuration>
           <instructions>
             <Import-Package>
+              java.*,
               javax.inject,
               javax.net.*,
               org.ietf.*,
-              org.apache.felix.gogo.commands,
+              org.apache.felix.gogo.commands.*,
               org.apache.felix.service.command,
               org.apache.karaf.shell.console,
-              org.eclipse.tesla.shell.support,
+              org.eclipse.tesla.shell.support.*,
               org.slf4j,
+              org.ops4j.peaberry.*,
               org.osgi.framework.*,
+              org.osgi.service.url.*,
+              org.osgi.util.tracker.*,
+              org.sonatype.inject.*,
               com.google.inject.*,
-              !*
+              !com.google.protobuf.*,
+              !org.apache.commons.httpclient.*,
+              !org.apache.commons.logging.*,
+              !org.apache.felix.shell.*,
+              !org.apache.log4j.*,
+              !org.codehaus.plexus.logging.*,
+              !org.jboss.logging.*,
+              !org.osgi.service.log.*,
+              !org.osgi.service.obr.*,
+              !org.sonatype.guice.*,
+              !org.w3c.dom.*,
+              !org.xml.sax.*,
+              !javax.*
             </Import-Package>
             <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>

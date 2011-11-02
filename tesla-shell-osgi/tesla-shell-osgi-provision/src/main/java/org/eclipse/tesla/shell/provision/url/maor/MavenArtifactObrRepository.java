@@ -10,8 +10,6 @@ import java.io.InputStream;
 public interface MavenArtifactObrRepository
 {
 
-    static final String MAOR_PROTOCOL = "maor";
-
     String create( String coordinates );
 
     InputStream openStream( String path );

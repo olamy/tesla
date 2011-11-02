@@ -77,6 +77,10 @@
         "startLevel":10
     },
     {
+        "coordinates":"org.ops4j:peaberry:1.2",
+        "startLevel":10
+    },
+    {
         "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-support:3.0.4-SNAPSHOT",
         "startLevel":60
     },

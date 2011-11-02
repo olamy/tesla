@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import javax.inject.Inject;
 
 import org.eclipse.tesla.shell.provision.internal.TempDirStorage;
 import org.eclipse.tesla.shell.provision.url.masor.internal.Connection;
@@ -24,18 +23,10 @@ public class Handler
 
     public Handler()
     {
-        this(
-            new DefaultMavenArtifactSetObrRepository(
-                new TempDirStorage( new TempDirStorage.TempDir() ),
-                new Sha1Digester()
-            )
+        mavenArtifactSetObrRepository = new DefaultMavenArtifactSetObrRepository(
+            new TempDirStorage( new TempDirStorage.TempDir() ),
+            new Sha1Digester()
         );
-    }
-
-    @Inject
-    Handler( final MavenArtifactSetObrRepository mavenArtifactSetObrRepository )
-    {
-        this.mavenArtifactSetObrRepository = mavenArtifactSetObrRepository;
     }
 
     @Override

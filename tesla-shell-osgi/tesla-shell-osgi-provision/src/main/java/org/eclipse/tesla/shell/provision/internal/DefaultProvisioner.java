@@ -1,7 +1,5 @@
 package org.eclipse.tesla.shell.provision.internal;
 
-import static java.util.Arrays.asList;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +10,6 @@ import org.apache.felix.bundlerepository.Reason;
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.Resolver;
-import org.apache.felix.bundlerepository.Resource;
 import org.apache.felix.bundlerepository.impl.Referral;
 import org.apache.felix.bundlerepository.impl.RepositoryImpl;
 import org.eclipse.tesla.shell.provision.Provisioner;
@@ -66,7 +63,7 @@ class DefaultProvisioner
             boolean resolved = resolver.resolve();
             if ( resolved )
             {
-                resolver.deploy( 0 );
+                resolver.deploy( Resolver.START );
             }
             else
             {
@@ -84,7 +81,7 @@ class DefaultProvisioner
         final Reason[] reasons = resolver.getUnsatisfiedRequirements();
         for ( final Reason reason : reasons )
         {
-            System.out.println(String.format( "%s->%s", reason.getResource(), reason.getRequirement() ));
+            System.out.println( String.format( "%s->%s", reason.getResource(), reason.getRequirement() ) );
         }
     }
 

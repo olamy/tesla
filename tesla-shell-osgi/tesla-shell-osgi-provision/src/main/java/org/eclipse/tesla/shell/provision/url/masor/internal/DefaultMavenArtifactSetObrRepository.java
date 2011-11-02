@@ -1,6 +1,7 @@
 package org.eclipse.tesla.shell.provision.url.masor.internal;
 
-import static org.eclipse.tesla.shell.provision.url.maor.MavenArtifactObrRepository.MAOR_PROTOCOL;
+import static org.eclipse.tesla.shell.provision.url.maor.Constants.PROTOCOL_MAOR;
+import static org.eclipse.tesla.shell.provision.url.masor.Constants.PROTOCOL_MASOR;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -54,7 +55,7 @@ public class DefaultMavenArtifactSetObrRepository
             {
                 final Referral referral = new Referral();
                 referral.setDepth( "0" );
-                referral.setUrl( MAOR_PROTOCOL + ":" + coordinate );
+                referral.setUrl( PROTOCOL_MAOR + ":" + coordinate );
                 repository.addReferral( referral );
             }
             Writer out = null;
@@ -67,7 +68,7 @@ public class DefaultMavenArtifactSetObrRepository
             {
                 IOUtils.close( out );
             }
-            return MASOR_PROTOCOL + ":" + digest;
+            return PROTOCOL_MASOR + ":" + digest;
         }
         catch ( Exception e )
         {

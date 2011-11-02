@@ -66,12 +66,6 @@ public class Handler
         );
     }
 
-    @Inject
-    Handler( final MavenArtifactObrRepository mavenArtifactObrRepository )
-    {
-        this.mavenArtifactObrRepository = mavenArtifactObrRepository;
-    }
-
     @Override
     protected URLConnection openConnection( final URL url )
         throws IOException

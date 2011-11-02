@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.eclipse.tesla.shell.provision.url.maor.MavenArtifactObrRepository;
+import com.ning.http.client.ProxyServer;
 
 /**
  * TODO
@@ -15,6 +16,8 @@ import org.eclipse.tesla.shell.provision.url.maor.MavenArtifactObrRepository;
 public class Connection
     extends URLConnection
 {
+
+    public static final String PROTOCOL = "maor";
 
     private MavenArtifactObrRepository mavenArtifactObrRepository;
 
