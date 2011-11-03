@@ -1,8 +1,5 @@
 package org.eclipse.tesla.shell.support.internal;
 
-import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
-
-import java.net.URI;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -11,9 +8,6 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.eclipse.tesla.shell.provision.Provisioner;
 import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
-import org.osgi.framework.Bundle;
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
 
 /**
  * TODO
@@ -26,10 +20,12 @@ public class ProvisionCommand
     extends GuiceOsgiCommandSupport
 {
 
-    @Argument( name = "coordinates", description = "Maven coordinates of jar to be provisioned", required = true, multiValued = true)
+    @Argument( name = "coordinates", description = "Maven coordinates of jar to be provisioned", required = true,
+               multiValued = true )
     private String[] coordinates;
 
-    @Option( name = "-d", aliases = { "--dryRun" }, description = "Do not actually install just explain what will be done" )
+    @Option( name = "-d", aliases = { "--dryRun" },
+             description = "Do not actually install just explain what will be done" )
     private boolean dryRun;
 
     @Inject
@@ -39,12 +35,13 @@ public class ProvisionCommand
     protected Object doExecute()
         throws Exception
     {
-        if(dryRun) {
-            provisioner.dryRun(coordinates);
+        if ( dryRun )
+        {
+            provisioner.dryRun( coordinates );
         }
         else
         {
-            provisioner.provision(coordinates);
+            provisioner.installAndStart( coordinates );
         }
 
         return null;

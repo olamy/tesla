@@ -114,6 +114,7 @@ public class Connection
         recipeProperties.setProperty( "Bundle-Version", Maven2OSGiUtils.getVersion( artifact.getVersion() ) );
         recipeProperties.setProperty( "Import-Package", "*" );
         recipeProperties.setProperty( "Export-Package", "*" );
+        recipeProperties.setProperty( "-nouses", "true" );
 
         try
         {

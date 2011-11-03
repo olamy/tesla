@@ -3,7 +3,6 @@ package org.eclipse.tesla.shell.provision.internal;
 import static org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment.JavaSE_1_6;
 import static org.eclipse.tesla.shell.provision.internal.mosgi.OSGiFramework.OSGi_FRAMEWORK_4_2;
 import static org.eclipse.tesla.shell.provision.internal.mosgi.PackageUtils.packagesOf;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
@@ -18,7 +17,6 @@ import org.eclipse.tesla.shell.provision.url.Reference;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.sonatype.guice.bean.containers.InjectedTest;
@@ -82,7 +80,7 @@ public class DefaultProvisionerTest
     {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
 
-        underTest.provision(
+        underTest.install(
             "ch.qos.logback:logback-classic:0.9.30",
             "org.sonatype.aether:aether-impl:1.13"
         );
@@ -100,7 +98,7 @@ public class DefaultProvisionerTest
     {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
 
-        underTest.provision(
+        underTest.install(
             "ch.qos.logback:logback-classic:0.9.30",
             "org.apache.maven:maven-embedder:3.0.3"
         );

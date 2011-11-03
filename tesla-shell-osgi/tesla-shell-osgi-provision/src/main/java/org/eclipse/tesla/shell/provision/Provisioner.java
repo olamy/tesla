@@ -1,5 +1,7 @@
 package org.eclipse.tesla.shell.provision;
 
+import org.osgi.framework.Bundle;
+
 /**
  * TODO
  *
@@ -8,8 +10,10 @@ package org.eclipse.tesla.shell.provision;
 public interface Provisioner
 {
 
-    void provision(String... coordinates);
+    Bundle[] install( String... coordinates );
 
-    void dryRun(String... coordinates);
+    Bundle[] installAndStart( String... coordinates );
+
+    void dryRun( String... coordinates );
 
 }
