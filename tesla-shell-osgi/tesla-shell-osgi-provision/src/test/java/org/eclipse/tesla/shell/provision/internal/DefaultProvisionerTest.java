@@ -1,9 +1,8 @@
 package org.eclipse.tesla.shell.provision.internal;
 
-import static org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment.JavaSE_1_6;
-import static org.eclipse.tesla.shell.provision.internal.mosgi.OSGiFramework.OSGi_FRAMEWORK_4_2;
-import static org.eclipse.tesla.shell.provision.internal.mosgi.PackageUtils.packagesOf;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.ops4j.pax.sham.core.support.PackageUtils.packagesOf;
 
 import java.io.InputStream;
 import javax.inject.Inject;
@@ -11,12 +10,13 @@ import javax.inject.Inject;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
-import org.eclipse.tesla.shell.provision.internal.mosgi.ExecutionEnvironment;
-import org.eclipse.tesla.shell.provision.internal.mosgi.MockOsgiFramework;
 import org.eclipse.tesla.shell.provision.url.Reference;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
+import org.ops4j.pax.sham.core.ExecutionEnvironment;
+import org.ops4j.pax.sham.core.OSGiFramework;
+import org.ops4j.pax.sham.core.ShamFramework;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.sonatype.guice.bean.containers.InjectedTest;
@@ -43,17 +43,16 @@ public class DefaultProvisionerTest
     {
         System.setProperty( JAVA_PROTOCOL_HANDLER_PKGS, Reference.class.getPackage().getName() );
 
-        final MockOsgiFramework osgiFramework = new MockOsgiFramework();
-        osgiFramework.withExecutionEnvironment(
+        final ShamFramework osgiFramework = new ShamFramework().withExecutionEnvironment(
             ExecutionEnvironment.J2SE_1_3,
             ExecutionEnvironment.J2SE_1_4,
             ExecutionEnvironment.J2SE_1_5,
-            JavaSE_1_6
+            ExecutionEnvironment.JavaSE_1_6
         );
         osgiFramework.getSystemBundle()
-            .withPackages( packagesOf( JavaSE_1_6 ) )
-            .withPackages( packagesOf( OSGi_FRAMEWORK_4_2 ) );
-        bundleContext = osgiFramework.getBundleContext();
+            .withPackages( packagesOf( ExecutionEnvironment.JavaSE_1_6 ) )
+            .withPackages( packagesOf( OSGiFramework.OSGI_4_2 ) );
+        bundleContext = osgiFramework.getSystemBundle().getBundleContext();
 
         super.setUp();
     }
@@ -75,7 +74,7 @@ public class DefaultProvisionerTest
     }
 
     @Test
-    public void test()
+    public void installAether()
         throws BundleException
     {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );

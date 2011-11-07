@@ -91,6 +91,11 @@
       <artifactId>hamcrest-core</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+        <groupId>org.ops4j.pax.sham</groupId>
+        <artifactId>pax-sham-core</artifactId>
+        <scope>test</scope>
+      </dependency>
   </dependencies>
   <build>
 

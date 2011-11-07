@@ -51,6 +51,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.tesla.shell</groupId>
@@ -70,6 +71,7 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.tesla.shell.commands</groupId>
@@ -99,10 +101,10 @@
               org.apache.karaf.shell.console,
               org.eclipse.tesla.shell.support.spi,
               org.sonatype.inject,
+              org.codehaus.plexus.util.*,
               !*
             </Import-Package>
             <Export-Package>
-              org.codehaus.plexus.util,
               org.sonatype.gshell.*
             </Export-Package>
             <Include-Resource>
@@ -111,6 +113,7 @@
             </Include-Resource>
             <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
+            <_nouses>true</_nouses>
           </instructions>
         </configuration>
       </plugin>

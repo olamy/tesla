@@ -89,11 +89,18 @@ public class DefaultMavenArtifactObrRepository
     }
 
     private Resource resource( final String coordinates )
-        throws IOException
     {
-        final ResourceImpl resource = (ResourceImpl) dataModelHelper.createResource(
-            new URL( PROTOCOL_MAB + ":" + coordinates )
-        );
+        final ResourceImpl resource;
+        try
+        {
+            resource = (ResourceImpl) dataModelHelper.createResource(
+                new URL( PROTOCOL_MAB + ":" + coordinates )
+            );
+        }
+        catch ( IOException e )
+        {
+            throw new RuntimeException( "Failed to create resource for " + coordinates, e );
+        }
         final Map<String, String> properties = new HashMap<String, String>();
         properties.put( "maven-coordinates", coordinates );
         resource.addCapability( dataModelHelper.capability( "maven", properties ) );
