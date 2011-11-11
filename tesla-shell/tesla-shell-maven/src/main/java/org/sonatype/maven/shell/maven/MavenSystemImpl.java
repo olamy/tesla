@@ -38,6 +38,7 @@ import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.Os;
@@ -48,6 +49,7 @@ import org.sonatype.aether.transfer.TransferListener;
 import org.sonatype.gshell.util.io.Closer;
 import org.sonatype.gshell.util.io.StreamSet;
 import org.sonatype.gshell.util.yarn.Yarn;
+import org.sonatype.inject.Nullable;
 import org.sonatype.maven.shell.maven.internal.BatchModeMavenTransferListener;
 import org.sonatype.maven.shell.maven.internal.ConsoleMavenTransferListener;
 import org.sonatype.maven.shell.maven.internal.ExecutionEventLogger;
@@ -68,7 +70,7 @@ import java.util.Properties;
 
 /**
  * {@link MavenSystem} implementation.
- * 
+ *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.9
  */
@@ -83,10 +85,13 @@ public class MavenSystemImpl implements MavenSystem {
 
   private final Provider<Terminal> terminal;
 
+  private final DefaultPlexusContainer plexusContainer;
+
   @Inject
-  public MavenSystemImpl(final Provider<Terminal> terminal) {
+  public MavenSystemImpl(final Provider<Terminal> terminal, @Nullable DefaultPlexusContainer plexusContainer) {
     assert terminal != null;
     this.terminal = terminal;
+    this.plexusContainer = plexusContainer;
   }
 
   public String getVersion() {
@@ -206,18 +211,23 @@ public class MavenSystemImpl implements MavenSystem {
     //TODO - move the container creation in the GuiceMain
     //TODO - figure out how to share the container if i need it or inject something else
     //TODO - i can create another contruct as after i boot the container i can do plain injection
-    
+
     private DefaultPlexusContainer createContainer() throws Exception {
-      
-      ContainerConfiguration cc = new DefaultContainerConfiguration()
-        .setClassWorld(config.getClassWorld())
-        .setAutoWiring(true)
-        .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
-        .setName("maven");
 
-      // NOTE: This causes wiring failures for jline.Terminal, investigate further
+      DefaultPlexusContainer c = plexusContainer;
+      if (c == null)
+      {
+        final ContainerConfiguration cc = new DefaultContainerConfiguration()
+          .setClassWorld(config.getClassWorld())
+          .setAutoWiring(true)
+          .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
+          .setName("maven");
 
-      DefaultPlexusContainer c = new DefaultPlexusContainer(cc);
+        // NOTE: This causes wiring failures for jline.Terminal, investigate further
+
+        c = new DefaultPlexusContainer(cc);
+      }
+
       configureContainer(c);
 
       return c;
