@@ -1,10 +1,13 @@
 package org.eclipse.tesla.shell.gshell.internal;
 
+import java.util.List;
+
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.service.command.CommandSession;
 import org.sonatype.gshell.command.CommandAction;
 import org.sonatype.gshell.shell.Shell;
 import org.sonatype.gshell.shell.ShellHolder;
+import org.sonatype.gshell.util.io.StreamJack;
 
 /**
  * TODO
@@ -17,6 +20,8 @@ public class CommandActionProxy
 
     private final CommandAction commandAction;
 
+    private List<Object> arguments;
+
     CommandActionProxy( final CommandAction commandAction )
     {
         this.commandAction = commandAction;
@@ -25,9 +30,17 @@ public class CommandActionProxy
     public Object execute( final CommandSession commandSession )
         throws Exception
     {
-        ShellHolder.set( new GShellShimShell(commandSession) );
-        commandAction.execute( new GShellShimCommandContext() );
-        return null;
+        try
+        {
+            StreamJack.install();
+            ShellHolder.set( new GShellShimShell(commandSession) );
+            commandAction.execute( new GShellShimCommandContext(arguments) );
+            return null;
+        }
+        finally
+        {
+            StreamJack.restore();
+        }
     }
 
     public CommandAction getCommandAction()
@@ -35,4 +48,8 @@ public class CommandActionProxy
         return commandAction;
     }
 
+    public void setArguments( final List<Object> arguments )
+    {
+        this.arguments = arguments;
+    }
 }

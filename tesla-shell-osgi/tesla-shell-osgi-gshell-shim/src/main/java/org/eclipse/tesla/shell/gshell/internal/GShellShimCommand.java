@@ -11,6 +11,7 @@ import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
 import org.eclipse.tesla.shell.gshell.internal.preparator.GShellShimActionPreparator;
 import org.sonatype.gshell.command.CommandAction;
+import org.sonatype.gshell.util.NameAware;
 import org.sonatype.inject.BeanEntry;
 
 /**
@@ -44,6 +45,22 @@ class GShellShimCommand
     public Action createNewAction()
     {
         final CommandAction commandAction = (CommandAction) beanEntry.getProvider().get();
+        if ( commandAction instanceof NameAware )
+        {
+            String name = commandAnnotation.name();
+            if ( name == null )
+            {
+                name = commandAction.getClass().getSimpleName();
+            }
+            try
+            {
+                ( (NameAware) commandAction ).setName( name );
+            }
+            catch ( Exception ignore )
+            {
+                // ignore
+            }
+        }
         return new CommandActionProxy( commandAction );
     }
 

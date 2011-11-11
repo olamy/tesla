@@ -8,6 +8,7 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.apache.felix.service.command.CommandSession;
 import org.eclipse.tesla.shell.gshell.internal.CommandActionProxy;
 import org.eclipse.tesla.shell.gshell.internal.adapter.ArgumentAdapter;
 import org.eclipse.tesla.shell.gshell.internal.adapter.OptionAdapter;
@@ -28,6 +29,17 @@ public class GShellShimActionPreparator
     public GShellShimActionPreparator( final Command commandAnnotation )
     {
         this.commandAnnotation = commandAnnotation;
+    }
+
+    @Override
+    public boolean prepare( final Action action, final CommandSession session, final List<Object> params )
+        throws Exception
+    {
+        if(action instanceof CommandActionProxy)
+        {
+            ((CommandActionProxy)action).setArguments(params);
+        }
+        return super.prepare( action, session, params );
     }
 
     @Override
