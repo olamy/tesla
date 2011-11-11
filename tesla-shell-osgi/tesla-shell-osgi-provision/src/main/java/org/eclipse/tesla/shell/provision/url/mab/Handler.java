@@ -17,8 +17,10 @@ import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.spi.locator.ServiceLocator;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
+import org.sonatype.sisu.maven.bridge.MavenDependencyTreeResolver;
 import org.sonatype.sisu.maven.bridge.MavenModelResolver;
 import org.sonatype.sisu.maven.bridge.support.artifact.RemoteMavenArtifactResolverUsingSettings;
+import org.sonatype.sisu.maven.bridge.support.dependency.RemoteMavenDependencyTreeResolverUsingSettings;
 import org.sonatype.sisu.maven.bridge.support.model.RemoteMavenModelResolverUsingSettings;
 import org.sonatype.sisu.maven.bridge.support.session.MavenBridgeRepositorySystemSession;
 import org.sonatype.sisu.maven.bridge.support.settings.DefaultMavenSettingsFactory;
@@ -36,9 +38,11 @@ public class Handler
 
     private PathResolver pathResolver;
 
-    private MavenModelResolver modelResolver;
+    private RemoteMavenModelResolverUsingSettings modelResolver;
 
     private MavenArtifactResolver artifactResolver;
+
+    private MavenDependencyTreeResolver dependencyTreeResolver;
 
     public Handler()
     {
@@ -66,13 +70,19 @@ public class Handler
             remoteArtifactResolver,
             sessionProvider
         );
+        dependencyTreeResolver = new RemoteMavenDependencyTreeResolverUsingSettings(
+            serviceLocator,
+            settingsFactory,
+            modelResolver,
+            sessionProvider
+        );
     }
 
     @Override
     protected URLConnection openConnection( final URL url )
         throws IOException
     {
-        return new Connection( storage, pathResolver, modelResolver, artifactResolver, url );
+        return new Connection( storage, pathResolver, modelResolver, artifactResolver, dependencyTreeResolver, url );
     }
 
 }

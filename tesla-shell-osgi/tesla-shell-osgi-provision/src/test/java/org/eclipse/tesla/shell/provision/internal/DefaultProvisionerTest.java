@@ -11,6 +11,7 @@ import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
 import org.eclipse.tesla.shell.provision.url.Reference;
+import org.eclipse.tesla.shell.provision.url.mab.internal.Connection;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
@@ -73,28 +74,12 @@ public class DefaultProvisionerTest
         binder.bind( RepositoryAdmin.class ).toInstance( rai );
     }
 
-    @Test
-    public void installAether()
+    public void installMaven( boolean useImportPackage, boolean useRequireBundle, int expectedNumberOfBundles )
         throws BundleException
     {
-        final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
+        System.setProperty( Connection.class.getName() + ".useImportPackage", String.valueOf( useImportPackage ) );
+        System.setProperty( Connection.class.getName() + ".useRequireBundle", String.valueOf( useRequireBundle ) );
 
-        underTest.install(
-            "ch.qos.logback:logback-classic:0.9.30",
-            "org.sonatype.aether:aether-impl:1.13"
-        );
-
-        verify( bundleContext, times( 16 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
-        for ( final String location : locationCaptor.getAllValues() )
-        {
-            System.out.println( location );
-        }
-    }
-
-    @Test
-    public void installMaven()
-        throws BundleException
-    {
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
 
         underTest.install(
@@ -102,11 +87,34 @@ public class DefaultProvisionerTest
             "org.apache.maven:maven-embedder:3.0.3"
         );
 
-        verify( bundleContext, times( 31 ) ).installBundle( locationCaptor.capture(), Matchers.<InputStream>any() );
+        verify( bundleContext, times( expectedNumberOfBundles ) ).installBundle(
+            locationCaptor.capture(), Matchers.<InputStream>any()
+        );
         for ( final String location : locationCaptor.getAllValues() )
         {
             System.out.println( location );
         }
+    }
+
+    @Test
+    public void installMaven1()
+        throws BundleException
+    {
+        installMaven( true, false, 31 );
+    }
+
+    @Test
+    public void installMaven2()
+        throws BundleException
+    {
+        installMaven( true, true, 33 );
+    }
+
+    @Test
+    public void installMaven3()
+        throws BundleException
+    {
+        installMaven( false, true, 35 );
     }
 
 }

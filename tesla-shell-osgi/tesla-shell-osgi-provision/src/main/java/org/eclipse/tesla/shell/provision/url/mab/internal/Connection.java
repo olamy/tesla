@@ -2,7 +2,9 @@ package org.eclipse.tesla.shell.provision.url.mab.internal;
 
 import static java.lang.String.format;
 import static org.eclipse.tesla.shell.provision.url.mab.internal.Maven2OSGiUtils.getBundleSymbolicName;
+import static org.eclipse.tesla.shell.provision.url.mab.internal.Maven2OSGiUtils.getVersion;
 import static org.sonatype.sisu.maven.bridge.support.ArtifactRequestBuilder.request;
+import static org.sonatype.sisu.maven.bridge.support.CollectRequestBuilder.tree;
 import static org.sonatype.sisu.maven.bridge.support.ModelBuildingRequestBuilder.model;
 
 import java.io.File;
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -20,9 +23,11 @@ import org.apache.maven.model.Model;
 import org.eclipse.tesla.shell.provision.PathResolver;
 import org.eclipse.tesla.shell.provision.Storage;
 import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.sisu.maven.bridge.MavenArtifactResolver;
+import org.sonatype.sisu.maven.bridge.MavenDependencyTreeResolver;
 import org.sonatype.sisu.maven.bridge.MavenModelResolver;
 import aQute.lib.osgi.Builder;
 
@@ -43,12 +48,15 @@ public class Connection
 
     private MavenArtifactResolver artifactResolver;
 
+    private final MavenDependencyTreeResolver dependencyTreeResolver;
+
     private static final String RECIPE_COMMENT = "Created by " + Connection.class.getName();
 
     public Connection( final Storage storage,
                        final PathResolver pathResolver,
                        final MavenModelResolver modelResolver,
                        final MavenArtifactResolver artifactResolver,
+                       final MavenDependencyTreeResolver dependencyTreeResolver,
                        final URL url )
     {
         super( url );
@@ -56,6 +64,7 @@ public class Connection
         this.pathResolver = pathResolver;
         this.modelResolver = modelResolver;
         this.artifactResolver = artifactResolver;
+        this.dependencyTreeResolver = dependencyTreeResolver;
     }
 
     @Override
@@ -77,7 +86,7 @@ public class Connection
                 return new FileInputStream( artifact.getFile() );
             }
 
-            final Properties recipe = calculateRecipe( artifact );
+            final Properties recipe = calculateRecipe( artifact, url.getPath() );
             final Artifact pomArtifact = pomArtifactFor( artifact );
             recipe.store( storage.outputStreamFor( pathResolver.pathFor( pomArtifact ) ), RECIPE_COMMENT );
 
@@ -104,15 +113,21 @@ public class Connection
                                     artifact.getVersion() );
     }
 
-    private Properties calculateRecipe( final Artifact artifact )
+    private Properties calculateRecipe( final Artifact artifact, final String coordinates )
     {
+        final Boolean useImportPackage = Boolean.valueOf( System.getProperty(
+            getClass().getName() + ".useImportPackage", "true" )
+        );
+        final Boolean useRequireBundle = Boolean.valueOf( System.getProperty(
+            getClass().getName() + ".useRequireBundle", "false" )
+        );
         final Properties recipeProperties = new Properties();
 
         recipeProperties.setProperty( "Bundle-SymbolicName", getBundleSymbolicName(
             artifact.getGroupId(), artifact.getArtifactId(), artifact.getFile() )
         );
-        recipeProperties.setProperty( "Bundle-Version", Maven2OSGiUtils.getVersion( artifact.getVersion() ) );
-        recipeProperties.setProperty( "Import-Package", "*" );
+        recipeProperties.setProperty( "Bundle-Version", getVersion( artifact.getVersion() ) );
+        recipeProperties.setProperty( "Import-Package", useImportPackage ? "*" : "!*" );
         recipeProperties.setProperty( "Export-Package", "*" );
         recipeProperties.setProperty( "-nouses", "true" );
 
@@ -130,6 +145,54 @@ public class Connection
                 recipeProperties.setProperty( "Bundle-Description", model.getDescription() );
             }
             // TODO use license, organization, ...
+
+            if ( useRequireBundle )
+            {
+                final DependencyNode tree = dependencyTreeResolver.resolveDependencyTree(
+                    tree().model( model().pom( coordinates ) )
+                );
+                final List<DependencyNode> children = tree.getChildren();
+                if ( children != null )
+                {
+                    final StringBuilder rb = new StringBuilder();
+                    for ( final DependencyNode child : children )
+                    {
+                        if ( !"test".equals( child.getDependency().getScope() ) )
+                        {
+                            final Artifact da = artifactResolver.resolveArtifact(
+                                request().setArtifact( child.getDependency().getArtifact() )
+                            );
+                            if ( rb.length() > 0 )
+                            {
+                                rb.append( ", " );
+                            }
+                            if ( isAlreadyAnOSGiBundle( da.getFile() ) )
+                            {
+                                final JarFile jarFile = new JarFile( da.getFile() );
+                                final Manifest manifest = jarFile.getManifest();
+                                final Attributes mainAttributes = manifest.getMainAttributes();
+                                rb.append( mainAttributes.getValue( "Bundle-SymbolicName" ).split( ";" )[0] );
+                                rb.append( "; bundle-version=" );
+                                rb.append( mainAttributes.getValue( "Bundle-Version" ) );
+                                rb.append( "; resolution:=optional" );
+                            }
+                            else
+                            {
+                                rb.append( getBundleSymbolicName(
+                                    da.getGroupId(), da.getArtifactId(), da.getFile() )
+                                );
+                                rb.append( "; bundle-version=" );
+                                rb.append( getVersion( da.getVersion() ) );
+                                rb.append( "; resolution:=optional" );
+                            }
+                        }
+                    }
+                    if ( rb.length() > 0 )
+                    {
+                        recipeProperties.put( "Require-Bundle", rb.toString() );
+                    }
+                }
+            }
         }
         catch ( final Exception ignore )
         {
