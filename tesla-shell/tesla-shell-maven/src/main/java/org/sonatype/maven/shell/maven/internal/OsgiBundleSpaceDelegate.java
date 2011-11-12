@@ -31,7 +31,7 @@ public class OsgiBundleSpaceDelegate
     private BundleContext bundleContext;
 
     @Inject
-    void setBundleContext( final BundleContext bundleContext )
+    OsgiBundleSpaceDelegate( final BundleContext bundleContext )
     {
         this.bundleContext = bundleContext;
     }

@@ -3,6 +3,7 @@ package org.sonatype.maven.shell.maven.internal;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.osgi.framework.BundleContext;
 import org.sonatype.maven.shell.maven.MavenRuntimeConfiguration;
 import com.google.inject.Injector;
 
@@ -25,21 +26,26 @@ public class OsgiCustomizer
     }
 
     public void customize( final MavenRuntimeConfiguration configuration )
-        throws Exception
+    {
+        if ( isAnOSGiEnvironment() )
+        {
+            final OsgiBundleSpaceDelegate spaceDelegate = injector.getInstance( OsgiBundleSpaceDelegate.class );
+            configuration.setDelegate( spaceDelegate );
+
+            final OsgiClassWorld classWorldSource = injector.getInstance( OsgiClassWorld.class );
+            configuration.setClassWorld( classWorldSource.getClassWorld() );
+        }
+    }
+
+    private boolean isAnOSGiEnvironment()
     {
         try
         {
-            final OsgiBundleSpaceDelegate spaceDelegate = new OsgiBundleSpaceDelegate();
-            injector.injectMembers( spaceDelegate );
-            configuration.setDelegate( spaceDelegate );
-
-            final OsgiClassWorld classWorldSource = new OsgiClassWorld();
-            injector.injectMembers( classWorldSource );
-            configuration.setClassWorld( classWorldSource.getClassWorld() );
+            return injector.getBinding( BundleContext.class ) != null;
         }
-        catch ( NoClassDefFoundError e )
+        catch ( NoClassDefFoundError ignore )
         {
-            // ignore
+            return false;
         }
     }
 

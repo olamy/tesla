@@ -16,13 +16,12 @@ public class OsgiClassWorld
     private BundleContext bundleContext;
 
     @Inject
-    void setBundleContext( final BundleContext bundleContext )
+    OsgiClassWorld( final BundleContext bundleContext )
     {
         this.bundleContext = bundleContext;
     }
 
     public ClassWorld getClassWorld()
-        throws Exception
     {
         return new ClassWorld( "plexus.core", new BundleClassLoader( bundleContext.getBundle() ) );
     }
