@@ -85,13 +85,10 @@ public class MavenSystemImpl implements MavenSystem {
 
   private final Provider<Terminal> terminal;
 
-  private final DefaultPlexusContainer plexusContainer;
-
   @Inject
-  public MavenSystemImpl(final Provider<Terminal> terminal, @Nullable DefaultPlexusContainer plexusContainer) {
+  public MavenSystemImpl(final Provider<Terminal> terminal) {
     assert terminal != null;
     this.terminal = terminal;
-    this.plexusContainer = plexusContainer;
   }
 
   public String getVersion() {
@@ -214,20 +211,15 @@ public class MavenSystemImpl implements MavenSystem {
 
     private DefaultPlexusContainer createContainer() throws Exception {
 
-      DefaultPlexusContainer c = plexusContainer;
-      if (c == null)
-      {
-        final ContainerConfiguration cc = new DefaultContainerConfiguration()
-          .setClassWorld(config.getClassWorld())
-          .setAutoWiring(true)
-          .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
-          .setName("maven");
+      final ContainerConfiguration cc = new DefaultContainerConfiguration()
+        .setClassWorld(config.getClassWorld())
+        .setAutoWiring(true)
+        .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
+        .setName("maven");
 
-        // NOTE: This causes wiring failures for jline.Terminal, investigate further
+      // NOTE: This causes wiring failures for jline.Terminal, investigate further
 
-        c = new DefaultPlexusContainer(cc);
-      }
-
+      DefaultPlexusContainer c = new DefaultPlexusContainer(cc);
       configureContainer(c);
 
       return c;
