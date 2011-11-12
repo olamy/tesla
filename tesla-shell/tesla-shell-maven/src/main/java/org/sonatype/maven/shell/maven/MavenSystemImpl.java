@@ -38,7 +38,6 @@ import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.Os;
@@ -49,7 +48,6 @@ import org.sonatype.aether.transfer.TransferListener;
 import org.sonatype.gshell.util.io.Closer;
 import org.sonatype.gshell.util.io.StreamSet;
 import org.sonatype.gshell.util.yarn.Yarn;
-import org.sonatype.inject.Nullable;
 import org.sonatype.maven.shell.maven.internal.BatchModeMavenTransferListener;
 import org.sonatype.maven.shell.maven.internal.ConsoleMavenTransferListener;
 import org.sonatype.maven.shell.maven.internal.ExecutionEventLogger;
@@ -211,7 +209,7 @@ public class MavenSystemImpl implements MavenSystem {
 
     private DefaultPlexusContainer createContainer() throws Exception {
 
-      final ContainerConfiguration cc = new DefaultContainerConfiguration()
+      ContainerConfiguration cc = new DefaultContainerConfiguration()
         .setClassWorld(config.getClassWorld())
         .setAutoWiring(true)
         .setClassPathScanning(PlexusConstants.SCANNING_CACHE)
