@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
-import org.eclipse.tesla.osgi.provision.internal.DefaultProvisioner;
 import org.eclipse.tesla.osgi.provision.url.Reference;
 import org.eclipse.tesla.osgi.provision.url.mab.internal.Connection;
 import org.junit.Test;
@@ -45,12 +44,14 @@ public class DefaultProvisionerTest
     {
         System.setProperty( JAVA_PROTOCOL_HANDLER_PKGS, Reference.class.getPackage().getName() );
 
-        final ShamFramework osgiFramework = new ShamFramework().withExecutionEnvironment(
-            ExecutionEnvironment.J2SE_1_3,
-            ExecutionEnvironment.J2SE_1_4,
-            ExecutionEnvironment.J2SE_1_5,
-            ExecutionEnvironment.JavaSE_1_6
-        );
+        final ShamFramework osgiFramework = new ShamFramework()
+            .withExecutionEnvironment(
+                ExecutionEnvironment.J2SE_1_3,
+                ExecutionEnvironment.J2SE_1_4,
+                ExecutionEnvironment.J2SE_1_5,
+                ExecutionEnvironment.JavaSE_1_6
+            )
+            .withFrameworkVersion( "1.0" );
         osgiFramework.getSystemBundle()
             .withPackages( packagesOf( ExecutionEnvironment.JavaSE_1_6 ) )
             .withPackages( packagesOf( OSGiFramework.OSGI_4_2 ) );
