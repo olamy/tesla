@@ -48,6 +48,8 @@ under the License.
         <include>pmvn</include>
         <include>tsh</include>
         <include>tshd</include>
+        <include>tsh-osgi</include>
+        <include>tshd-osgi</include>
         <include>translate</include>
         <include>mvnDebug</include>
         <!-- This is so that CI systems can periodically run the profiler -->
