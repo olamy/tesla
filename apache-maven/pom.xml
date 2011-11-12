@@ -145,7 +145,7 @@
                         <directory>shell</directory>
                         <artifacts>
                           <artifact>org.eclipse.tesla.shell:tesla-shell-osgi-core</artifact>
-                          <artifact>org.apache.felix:org.apache.felix.framework</artifact>
+                          <artifact>org.eclipse:org.eclipse.osgi:3.7.0.v20110524</artifact>
                         </artifacts>
                       </fileSet>
                       <fileSet>
