@@ -129,6 +129,7 @@ public class Connection
         recipeProperties.setProperty( "Bundle-Version", getVersion( artifact.getVersion() ) );
         recipeProperties.setProperty( "Import-Package", useImportPackage ? "*" : "!*" );
         recipeProperties.setProperty( "Export-Package", "*" );
+        recipeProperties.setProperty( "DynamicImport-Package", "*" );
         recipeProperties.setProperty( "-nouses", "true" );
 
         try
