@@ -170,4 +170,10 @@ public class MavenRuntimeConfiguration {
   public static interface Delegate {
     void configure(DefaultPlexusContainer container) throws Exception;
   }
+
+  public static interface Customizer
+  {
+    void customize( MavenRuntimeConfiguration configuration ) throws Exception;
+  }
+
 }

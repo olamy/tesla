@@ -47,6 +47,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>4.1.0</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-core</artifactId>
       <classifier>tests</classifier>
