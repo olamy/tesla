@@ -21,19 +21,19 @@
         "startLevel":10
     },
     {
-        "coordinates":"org.apache.aries.proxy:org.apache.aries.proxy:0.3",
+        "coordinates":"org.apache.aries.proxy:org.apache.aries.proxy:0.4",
         "startLevel":10
     },
     {
-        "coordinates":"org.apache.aries:org.apache.aries.util:0.3",
+        "coordinates":"org.apache.aries:org.apache.aries.util:0.4",
         "startLevel":10
     },
     {
-        "coordinates":"org.apache.aries.proxy:org.apache.aries.proxy:0.3",
+        "coordinates":"org.apache.aries.proxy:org.apache.aries.proxy:0.4",
         "startLevel":10
     },
     {
-        "coordinates":"org.apache.aries.blueprint:org.apache.aries.blueprint:0.3.1",
+        "coordinates":"org.apache.aries.blueprint:org.apache.aries.blueprint:0.4",
         "startLevel":10
     },
     {
@@ -77,15 +77,7 @@
         "startLevel":10
     },
     {
-        "coordinates":"org.ops4j:peaberry:1.2",
-        "startLevel":10
-    },
-    {
         "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-support:3.0.4-SNAPSHOT",
-        "startLevel":60
-    },
-    {
-        "coordinates":"org.eclipse.tesla.shell:tesla-shell-osgi-gshell-shim:3.0.4-SNAPSHOT",
         "startLevel":60
     },
     {
