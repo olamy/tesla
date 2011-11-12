@@ -71,7 +71,7 @@ public class MavenCommand extends CommandActionSupport implements CliProcessorAw
 
   private Properties props;
 
-    private final MavenRuntimeConfiguration.Customizer customizer;
+  private final MavenRuntimeConfiguration.Customizer customizer;
 
     @Option(name = "D", longName = "define")
   protected void setProperty(final String input) {

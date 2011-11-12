@@ -34,6 +34,18 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.eclipse.tesla.shell</groupId>
+      <artifactId>maven-provision</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-inject-bean</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
       <scope>test</scope>
@@ -133,6 +145,7 @@
                         <directory>shell</directory>
                         <artifacts>
                           <artifact>org.eclipse.tesla.shell:tesla-shell-osgi-core</artifact>
+                          <artifact>org.apache.felix:org.apache.felix.framework</artifact>
                         </artifacts>
                       </fileSet>
                       <fileSet>

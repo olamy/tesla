@@ -75,4 +75,17 @@ under the License.
       <outputDirectory>/</outputDirectory>
     </fileSet>    
   </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <includes>
+        <include>org.eclipse.tesla.shell:maven-provision</include>
+        <include>org.sonatype.sisu:sisu-guava</include>
+        <include>org.sonatype.sisu:sisu-guice</include>
+        <include>org.sonatype.sisu:sisu-inject-bean</include>
+        <include>ch.qos.logback:*</include>
+        <include>org.slf4j:slf4j-api</include>
+      </includes>
+      <outputDirectory>lib/shell/bundles</outputDirectory>
+    </dependencySet>
+  </dependencySets>
 </assembly>

@@ -21,89 +21,28 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.eclipse.tesla.shell</groupId>
+      <artifactId>maven-provision</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.karaf.shell</groupId>
       <artifactId>org.apache.karaf.shell.console</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.tesla.shell</groupId>
       <artifactId>tesla-shell-osgi-support</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sonatype.sisu</groupId>
       <artifactId>sisu-inject-bean</artifactId>
-      <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.ops4j</groupId>
-      <artifactId>peaberry</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.sonatype.sisu</groupId>
-      <artifactId>sisu-maven-bridge</artifactId>
-      <version>2.0-SNAPSHOT</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.sonatype.sisu</groupId>
-          <artifactId>sisu-inject-bean</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>biz.aQute</groupId>
-      <artifactId>bndlib</artifactId>
-      <version>1.43.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.bundlerepository</artifactId>
-      <version>1.6.6</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.easymock</groupId>
-          <artifactId>easymock</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-        <groupId>org.ops4j.pax.sham</groupId>
-        <artifactId>pax-sham-core</artifactId>
-        <scope>test</scope>
-      </dependency>
   </dependencies>
-  <build>
 
+  <build>
     <plugins>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
-        <version>1.1</version>
         <executions>
           <execution>
             <goals>
@@ -113,46 +52,12 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.5</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Import-Package>
-              java.*,
-              javax.inject,
-              javax.net.*,
-              org.ietf.*,
-              org.apache.felix.gogo.commands.*,
-              org.apache.felix.service.command,
-              org.apache.karaf.shell.console,
-              org.eclipse.tesla.shell.support.*,
-              org.slf4j,
-              org.osgi.framework.*,
-              org.osgi.service.packageadmin.*,
-              org.osgi.service.url.*,
-              org.osgi.util.tracker.*,
-              org.sonatype.inject.*,
-              com.google.inject.*,
-              !com.google.protobuf.*,
-              !org.apache.commons.httpclient.*,
-              !org.apache.commons.logging.*,
-              !org.apache.felix.shell.*,
-              !org.apache.log4j.*,
-              !org.codehaus.plexus.logging.*,
-              !org.jboss.logging.*,
-              !org.osgi.service.log.*,
-              !org.osgi.service.obr.*,
-              !org.sonatype.guice.*,
-              !org.w3c.dom.*,
-              !org.xml.sax.*,
-              !javax.*
-            </Import-Package>
-            <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-            <Embed-Transitive>true</Embed-Transitive>
             <Include-Resource>
               {maven-resources},
               META-INF/sisu=target/classes/META-INF/sisu

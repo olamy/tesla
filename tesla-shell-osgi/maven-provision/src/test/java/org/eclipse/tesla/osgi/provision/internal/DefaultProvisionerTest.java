@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.provision.internal;
+package org.eclipse.tesla.osgi.provision.internal;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,11 +10,9 @@ import javax.inject.Inject;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
-import org.eclipse.tesla.shell.command.provision.internal.DefaultProvisioner;
-import org.eclipse.tesla.shell.command.provision.url.Reference;
-import org.eclipse.tesla.shell.command.provision.url.mab.internal.Connection;
-import org.eclipse.tesla.shell.command.provision.url.Reference;
-import org.eclipse.tesla.shell.command.provision.url.mab.internal.Connection;
+import org.eclipse.tesla.osgi.provision.internal.DefaultProvisioner;
+import org.eclipse.tesla.osgi.provision.url.Reference;
+import org.eclipse.tesla.osgi.provision.url.mab.internal.Connection;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;

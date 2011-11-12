@@ -22,20 +22,16 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>maven-bundle</module>
+    <module>maven-provision</module>
     <module>tesla-shell-osgi-core</module>
     <module>tesla-shell-osgi-support</module>
     <module>tesla-shell-osgi-gshell-shim</module>
     <module>tesla-shell-osgi-provision</module>
-    <module>maven-bundle</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>org.apache.felix.framework</artifactId>
-        <version>4.1.0-SNAPSHOT</version>
-      </dependency>
       <dependency>
         <groupId>org.sonatype.sisu</groupId>
         <artifactId>sisu-maven-bridge</artifactId>
@@ -85,28 +81,30 @@
         <version>4.2.0</version>
       </dependency>
       <dependency>
-        <groupId>org.ops4j</groupId>
-        <artifactId>peaberry</artifactId>
-        <version>1.2</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-          </exclusion>
-        </exclusions>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>4.2.0</version>
       </dependency>
       <dependency>
         <groupId>org.ops4j.pax.sham</groupId>
         <artifactId>pax-sham-core</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>biz.aQute</groupId>
+        <artifactId>bndlib</artifactId>
+        <version>1.43.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.bundlerepository</artifactId>
+        <version>1.6.6</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>

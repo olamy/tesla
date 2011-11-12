@@ -22,6 +22,9 @@
 
     <logger name="Sisu" level="INFO"/>
 
+  <logger name="org.eclipse.tesla.osgi" level="DEBUG"/>
+  <logger name="org.eclipse.tesla.shell" level="DEBUG"/>
+
     <root level="INFO">
         <appender-ref ref="FILE"/>
     </root>
