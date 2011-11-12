@@ -69,7 +69,6 @@ public class Main
     private void boot()
         throws Exception
     {
-        Thread.currentThread().setContextClassLoader( null );
         final File etc4tsh = new File( System.getProperty( "shell.home" ), "etc/tsh" );
 
         System.setProperty( "logback.configurationFile", new File( etc4tsh, "logback.xml" ).getAbsolutePath() );
@@ -79,6 +78,8 @@ public class Main
         framework.init();
 
         provision( new File( etc4tsh, "startup.json" ), framework.getBundleContext(), properties );
+
+        Thread.currentThread().setContextClassLoader( null );
 
         framework.start();
 
