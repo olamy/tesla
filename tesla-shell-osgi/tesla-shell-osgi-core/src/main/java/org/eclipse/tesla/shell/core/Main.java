@@ -5,7 +5,6 @@ import static org.eclipse.tesla.shell.core.internal.PropertiesHelper.loadPropert
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,14 +127,23 @@ public class Main
         throws Exception
     {
         final ClassLoader classLoader = getClass().getClassLoader();
-        final InputStream is = classLoader.getResourceAsStream(
-            "META-INF/services/" + FrameworkFactory.class.getName()
-        );
-        final BufferedReader br = new BufferedReader( new InputStreamReader( is, "UTF-8" ) );
-        final String factoryClass = br.readLine();
-        br.close();
-        final FrameworkFactory factory = (FrameworkFactory) classLoader.loadClass( factoryClass ).newInstance();
-        return factory.newFramework( properties );
+        BufferedReader br = null;
+        try
+        {
+            br = new BufferedReader( new InputStreamReader(
+                classLoader.getResourceAsStream( "META-INF/services/" + FrameworkFactory.class.getName() ), "UTF-8" )
+            );
+            final String factoryClass = br.readLine();
+            final FrameworkFactory factory = (FrameworkFactory) classLoader.loadClass( factoryClass ).newInstance();
+            return factory.newFramework( properties );
+        }
+        finally
+        {
+            if ( br != null )
+            {
+                br.close();
+            }
+        }
     }
 
     private Properties loadProperties( final File etc )
