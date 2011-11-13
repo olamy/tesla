@@ -1,7 +1,5 @@
 package org.eclipse.tesla.osgi.provision.internal;
 
-import static java.util.Arrays.asList;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,19 +11,15 @@ import org.apache.felix.bundlerepository.Reason;
 import org.apache.felix.bundlerepository.Repository;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.Resolver;
-import org.apache.felix.bundlerepository.Resource;
 import org.apache.felix.bundlerepository.impl.Referral;
 import org.apache.felix.bundlerepository.impl.RepositoryImpl;
+import org.eclipse.tesla.osgi.provision.ProvisionSet;
 import org.eclipse.tesla.osgi.provision.Provisioner;
 import org.eclipse.tesla.osgi.provision.url.masor.MavenArtifactSetObrRepository;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.Version;
-import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.Logger;
@@ -94,7 +88,10 @@ class DefaultProvisioner
                         }
                         if ( !coordinates.isEmpty() )
                         {
-                            installAndStart( coordinates.toArray( new String[coordinates.size()] ) );
+                            final ProvisionSet provisionSet = resolve(
+                                coordinates.toArray( new String[coordinates.size()] )
+                            );
+                            provisionSet.installAndStart();
                         }
                         return bundleContext.getService( serviceReference );
                     }
@@ -121,99 +118,17 @@ class DefaultProvisioner
 
     }
 
-    public Bundle[] install( final String... coordinates )
+    public ProvisionSet resolve( final String... coordinates )
     {
-        logger.info( "Installing {}", Arrays.toString( coordinates ) );
-        return provision( coordinates );
-    }
-
-    public Bundle[] installAndStart( final String... coordinates )
-    {
-        logger.info( "Installing {}", Arrays.toString( coordinates ) );
-        final Bundle[] bundles = provision( coordinates );
-        if ( bundles.length > 0 )
-        {
-            final List<Bundle> fragments = getFragments( bundles );
-            refreshHosts( fragments );
-            final List<Bundle> toBeStarted = new ArrayList<Bundle>( Arrays.asList( bundles ) );
-            toBeStarted.removeAll( fragments );
-            for ( final Bundle bundle : toBeStarted )
-            {
-                try
-                {
-                    logger.info( "Starting {}", bundle );
-                    bundle.start();
-                }
-                catch ( BundleException e )
-                {
-                    logger.warn( "Cannot start bundle " + bundle, e );
-                }
-            }
-        }
-        return bundles;
-    }
-
-    private void refreshHosts( final List<Bundle> fragments )
-    {
-        final PackageAdmin packageAdmin = getPackageAdmin();
-        for ( final Bundle fragment : fragments )
-        {
-            final String bsn = getHostSymbolicName( fragment );
-            final String versionRange = getHostVersionRange( fragment );
-            final Bundle[] hosts = packageAdmin.getBundles( bsn, versionRange );
-            if ( hosts != null )
-            {
-                packageAdmin.refreshPackages( hosts );
-            }
-        }
-    }
-
-    private String getHostVersionRange( final Bundle fragment )
-    {
-        // TODO look how they do it in Felix
-        final String fragmentHost = (String) fragment.getHeaders().get( Constants.FRAGMENT_HOST );
-        final String[] segments = fragmentHost.split( ";" );
-        String versionRange = null;
-        for ( final String segment : segments )
-        {
-            if ( segment.trim().startsWith( "bundle-version=" ) )
-            {
-                versionRange = segment.trim()
-                    .replaceFirst( "bundle-version=", "" )
-                    .replace( "\"", "" );
-            }
-        }
-        return versionRange;
-    }
-
-    private String getHostSymbolicName( final Bundle fragment )
-    {
-        final String fragmentHost = (String) fragment.getHeaders().get( Constants.FRAGMENT_HOST );
-        return fragmentHost.split( ";" )[0];
-    }
-
-    private List<Bundle> getFragments( final Bundle[] bundles )
-    {
-        final List<Bundle> fragments = new ArrayList<Bundle>();
-        for ( final Bundle bundle : bundles )
-        {
-            if ( bundle.getHeaders().get( Constants.FRAGMENT_HOST ) != null )
-            {
-                fragments.add( bundle );
-            }
-        }
-        return fragments;
-    }
-
-    private Bundle[] provision( final String... coordinates )
-    {
+        logger.info( "Resolving {}", Arrays.toString( coordinates ) );
         final String url = mavenObrArtifactSet.create( coordinates );
         logger.debug( "Using OBR to provision from {}", url );
+
         try
         {
             if ( logger.isDebugEnabled() )
             {
-                logger.debug( "State before provisioning: " );
+                logger.debug( "State before resolving: " );
                 for ( final Bundle bundle : bundleContext.getBundles() )
                 {
                     logger.debug( "  - {}", bundle );
@@ -238,24 +153,11 @@ class DefaultProvisioner
                 );
             }
             boolean resolved = resolver.resolve();
-            if ( resolved )
-            {
-                resolver.deploy( 0 );
-                if ( logger.isDebugEnabled() )
-                {
-                    logger.debug( "State after provisioning: " );
-                    for ( final Bundle bundle : bundleContext.getBundles() )
-                    {
-                        logger.debug( "  - {}", bundle );
-                    }
-                }
-                return getInstalledBundles( resolver );
-            }
-            else
+            if ( !resolved )
             {
                 logProblems( resolver );
-                return new Bundle[0];
             }
+            return new DefaultProvisionSet( coordinates, bundleContext, resolver, resolved );
         }
         catch ( Exception e )
         {
@@ -263,44 +165,23 @@ class DefaultProvisioner
         }
     }
 
-    private Bundle[] getInstalledBundles( final Resolver resolver )
-    {
-        final List<Bundle> installed = new ArrayList<Bundle>();
-        final Resource[] addedResources = resolver.getRequiredResources();
-        // TODO shall we also add the optional resources
-        if ( addedResources != null )
-        {
-            final PackageAdmin packageAdmin = getPackageAdmin();
-            if ( packageAdmin != null )
-            {
-                for ( final Resource resource : addedResources )
-                {
-                    final String symbolicName = resource.getSymbolicName();
-                    final Version version = resource.getVersion();
-                    final Bundle[] bundles = packageAdmin.getBundles( symbolicName, version.toString() );
-                    if ( bundles != null )
-                    {
-                        installed.addAll( asList( bundles ) );
-                    }
-                }
-            }
-        }
-        return installed.toArray( new Bundle[installed.size()] );
-    }
-
-    private PackageAdmin getPackageAdmin()
-    {
-        final ServiceReference ref = bundleContext.getServiceReference( PackageAdmin.class.getName() );
-        return (PackageAdmin) bundleContext.getService( ref );
-    }
-
     private void logProblems( final Resolver resolver )
     {
-        final Reason[] reasons = resolver.getUnsatisfiedRequirements();
-        logger.error( "Found the following problems: " );
-        for ( final Reason reason : reasons )
+        if ( logger.isErrorEnabled() )
         {
-            logger.error( "{} -> {}", reason.getResource(), reason.getRequirement() );
+            final Reason[] reasons = resolver.getUnsatisfiedRequirements();
+            logger.error( "Found the following problems: " );
+            for ( final Reason reason : reasons )
+            {
+                if ( reason.getResource() == null || reason.getResource().getId() == null )
+                {
+                    logger.error( "  {}", reason.getRequirement() );
+                }
+                else
+                {
+                    logger.error( "  {} -> {}", reason.getResource(), reason.getRequirement() );
+                }
+            }
         }
     }
 

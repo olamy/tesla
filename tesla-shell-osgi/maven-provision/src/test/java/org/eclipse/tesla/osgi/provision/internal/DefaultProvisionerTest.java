@@ -84,7 +84,7 @@ public class DefaultProvisionerTest
 
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
 
-        underTest.install(
+        underTest.resolve(
             "ch.qos.logback:logback-classic:0.9.30",
             "org.apache.maven:maven-embedder:3.0.3"
         );

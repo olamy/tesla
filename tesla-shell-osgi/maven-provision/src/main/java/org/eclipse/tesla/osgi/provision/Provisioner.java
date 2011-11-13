@@ -10,10 +10,6 @@ import org.osgi.framework.Bundle;
 public interface Provisioner
 {
 
-    Bundle[] install( String... coordinates );
-
-    Bundle[] installAndStart( String... coordinates );
-
-    void dryRun( String... coordinates );
+    ProvisionSet resolve( String... coordinates );
 
 }

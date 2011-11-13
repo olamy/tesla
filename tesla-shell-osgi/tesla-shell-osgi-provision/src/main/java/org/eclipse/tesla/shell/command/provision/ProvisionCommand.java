@@ -6,6 +6,7 @@ import javax.inject.Named;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.eclipse.tesla.osgi.provision.ProvisionSet;
 import org.eclipse.tesla.osgi.provision.Provisioner;
 import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
 
@@ -35,15 +36,15 @@ public class ProvisionCommand
     protected Object doExecute()
         throws Exception
     {
-        if ( dryRun )
+        final ProvisionSet provisionSet = provisioner.resolve( coordinates );
+        if ( provisionSet.hasProblems() )
         {
-            provisioner.dryRun( coordinates );
+            provisionSet.printProblems( System.err );
         }
         else
         {
-            provisioner.installAndStart( coordinates );
+            provisionSet.installAndStart();
         }
-
         return null;
     }
 
