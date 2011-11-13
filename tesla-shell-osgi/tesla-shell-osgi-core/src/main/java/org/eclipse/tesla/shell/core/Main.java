@@ -146,7 +146,7 @@ public class Main
         if ( properties.getProperty( Constants.FRAMEWORK_STORAGE ) == null )
         {
             File storage = new File( System.getProperty( "user.home" ), ".m2/tsh/cache" );
-            if ( !storage.mkdirs() )
+            if ( !storage.exists() && !storage.mkdirs() )
             {
                 throw new RuntimeException(
                     "Could not create shell caching directory: " + storage.getAbsolutePath()
