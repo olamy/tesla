@@ -5,11 +5,14 @@ import static org.eclipse.tesla.shell.core.internal.PropertiesHelper.loadPropert
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.tesla.shell.core.internal.PropertiesHelper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -26,10 +29,34 @@ import org.osgi.framework.launch.FrameworkFactory;
 public class Main
 {
 
+    static final String PROFILE = Main.class.getName() + ".profile";
+
+    private boolean reset;
+
+    private String profile = "default";
+
+    public Main( final String[] args )
+    {
+        try
+        {
+            parseArguments( args );
+        }
+        catch ( Exception e )
+        {
+            System.err.println( e.getMessage() );
+            exit( 1 );
+        }
+    }
+
+    protected void exit( int exitCode )
+    {
+        System.exit( exitCode );
+    }
+
     public static void main( final String[] args )
         throws Exception
     {
-        new Main().boot();
+        new Main( args ).boot();
     }
 
     private void boot()
@@ -41,6 +68,8 @@ public class Main
         System.setProperty( "logback.configurationFile", new File( etc4tsh, "logback.xml" ).getAbsolutePath() );
 
         final Properties properties = loadProperties( etc4tsh );
+
+        prepareProfile( properties );
 
         final Framework framework = loadFramework( properties );
         framework.init();
@@ -139,10 +168,7 @@ public class Main
         }
         finally
         {
-            if ( br != null )
-            {
-                br.close();
-            }
+            IOUtil.close( br );
         }
     }
 
@@ -151,19 +177,68 @@ public class Main
     {
         final Properties properties = loadPropertiesFile( etc, "tsh.properties", false );
         PropertiesHelper.substituteVariables( properties );
-        if ( properties.getProperty( Constants.FRAMEWORK_STORAGE ) == null )
-        {
-            File storage = new File( System.getProperty( "user.home" ), ".m2/tsh/cache" );
-            if ( !storage.exists() && !storage.mkdirs() )
-            {
-                throw new RuntimeException(
-                    "Could not create shell caching directory: " + storage.getAbsolutePath()
-                );
-            }
-            properties.setProperty( Constants.FRAMEWORK_STORAGE, storage.getAbsolutePath() );
-        }
+
+        final File profileDir = new File( System.getProperty( "user.home" ), ".m2/tsh/" + profile );
+        properties.setProperty( PROFILE, profileDir.getAbsolutePath() );
+
+        final File storageDir = new File( profileDir, "storage" );
+        properties.setProperty( Constants.FRAMEWORK_STORAGE, storageDir.getAbsolutePath() );
 
         return properties;
+    }
+
+    private void prepareProfile( final Properties properties )
+        throws IOException
+    {
+        final File profileDir = new File( properties.getProperty( PROFILE ) );
+        if ( reset && profileDir.exists() )
+        {
+            FileUtils.deleteDirectory( profileDir );
+        }
+        if ( !profileDir.exists() && !profileDir.mkdirs() )
+        {
+            throw new RuntimeException(
+                "Could not create shell profile directory: " + profileDir.getAbsolutePath()
+            );
+        }
+
+        final File storageDir = new File( properties.getProperty( Constants.FRAMEWORK_STORAGE ) );
+        if ( !storageDir.exists() && !storageDir.mkdirs() )
+        {
+            throw new RuntimeException(
+                "Could not create shell storage directory: " + profileDir.getAbsolutePath()
+            );
+        }
+    }
+
+    private void parseArguments( final String[] args )
+    {
+        if ( args != null && args.length > 0 )
+        {
+            for ( int i = 0; i < args.length; i++ )
+            {
+                if ( "--reset".equals( args[i] ) )
+                {
+                    reset = true;
+                }
+                else if ( "--profile".equals( args[i] ) )
+                {
+                    i++;
+                    if ( i < args.length )
+                    {
+                        profile = args[i];
+                    }
+                    else
+                    {
+                        throw new IllegalArgumentException( "Profile name must be supplied after --profile" );
+                    }
+                }
+                else
+                {
+                    throw new IllegalArgumentException( "Argument " + args[i] + " is not supported" );
+                }
+            }
+        }
     }
 
 }
