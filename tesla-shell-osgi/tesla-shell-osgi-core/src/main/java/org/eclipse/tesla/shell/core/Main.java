@@ -29,11 +29,15 @@ import org.osgi.framework.launch.FrameworkFactory;
 public class Main
 {
 
-    static final String PROFILE = Main.class.getName() + ".profile";
+    protected static final String PROFILE = Main.class.getName() + ".profile";
+
+    protected static final String DEFAULT_PROFILE = "default";
+
+    static final boolean FAIL_IF_NOT_FOUND = true;
 
     private boolean reset;
 
-    private String profile = "default";
+    private String profile = DEFAULT_PROFILE;
 
     public Main( final String[] args )
     {
@@ -78,7 +82,7 @@ public class Main
 
         Thread.currentThread().setContextClassLoader( null );
         framework.start();
-        provisionFromStartup( new File( etc4tsh, "startup" ), framework.getBundleContext() );
+        provisionFromStartup( etc4tsh, framework.getBundleContext() );
 
         while ( true )
         {
@@ -90,11 +94,19 @@ public class Main
         }
     }
 
-    private void provisionFromStartup( final File startup, final BundleContext bundleContext )
+    private void provisionFromStartup( final File etc, final BundleContext bundleContext )
     {
         try
         {
-            final Properties properties = loadPropertiesFile( startup.getParentFile(), startup.getName(), true );
+            File propertiesFile = new File( etc, profile + "/bundles.properties" );
+            if ( !propertiesFile.exists() )
+            {
+                propertiesFile = new File( etc, DEFAULT_PROFILE + "/bundles.properties" );
+            }
+            final Properties properties = loadPropertiesFile(
+                propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
+            );
+            PropertiesHelper.substituteVariables( properties );
 
             bundleContext.registerService(
                 String.class.getName(),
@@ -175,7 +187,14 @@ public class Main
     private Properties loadProperties( final File etc )
         throws Exception
     {
-        final Properties properties = loadPropertiesFile( etc, "tsh.properties", false );
+        File propertiesFile = new File( etc, profile + "/shell.properties" );
+        if ( !propertiesFile.exists() )
+        {
+            propertiesFile = new File( etc, DEFAULT_PROFILE + "/shell.properties" );
+        }
+        final Properties properties = loadPropertiesFile(
+            propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
+        );
         PropertiesHelper.substituteVariables( properties );
 
         final File profileDir = new File( System.getProperty( "user.home" ), ".m2/tsh/" + profile );
