@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.apache.felix.bundlerepository.RepositoryAdmin;
 import org.apache.felix.bundlerepository.impl.RepositoryAdminImpl;
 import org.apache.felix.utils.log.Logger;
+import org.eclipse.tesla.osgi.provision.ProvisionSet;
 import org.eclipse.tesla.osgi.provision.url.Reference;
 import org.eclipse.tesla.osgi.provision.url.mab.internal.Connection;
 import org.junit.Test;
@@ -84,10 +85,11 @@ public class DefaultProvisionerTest
 
         final ArgumentCaptor<String> locationCaptor = ArgumentCaptor.forClass( String.class );
 
-        underTest.resolve(
+        final ProvisionSet provisionSet = underTest.resolve(
             "ch.qos.logback:logback-classic:0.9.30",
             "org.apache.maven:maven-embedder:3.0.3"
         );
+        provisionSet.install();
 
         verify( bundleContext, times( expectedNumberOfBundles ) ).installBundle(
             locationCaptor.capture(), Matchers.<InputStream>any()
