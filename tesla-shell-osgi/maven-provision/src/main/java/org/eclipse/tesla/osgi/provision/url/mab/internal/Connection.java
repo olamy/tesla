@@ -20,8 +20,11 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.apache.maven.model.Model;
+import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.tesla.osgi.provision.PathResolver;
 import org.eclipse.tesla.osgi.provision.Storage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
@@ -41,6 +44,8 @@ public class Connection
 {
 
     static final String PATH_TEMPLATE = "mab/%s";
+
+    private final Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     private Storage storage;
 
@@ -199,7 +204,44 @@ public class Connection
         }
         catch ( final Exception ignore )
         {
-
+            //ignore
+        }
+        final Boolean useOverrides = Boolean.valueOf( System.getProperty(
+            getClass().getName() + ".useOverrides", "true" )
+        );
+        if ( useOverrides )
+        {
+            final File overridesDir = new File( System.getProperty( "user.home" ), ".m2/tsh/recipes" );
+            final File recipe = new File( overridesDir, pathResolver.pathFor( pomArtifactFor( artifact ) ) );
+            if ( recipe.exists() )
+            {
+                logger.info( "Using recipe overrides from {}", recipe.getAbsolutePath() );
+                InputStream in = null;
+                try
+                {
+                    in = new FileInputStream( recipe );
+                    final Properties overrides = new Properties();
+                    overrides.load( in );
+                    for ( Object key : overrides.keySet() )
+                    {
+                        recipeProperties.setProperty( (String) key, overrides.getProperty( (String) key ) );
+                    }
+                }
+                catch ( IOException e )
+                {
+                    throw new RuntimeException(
+                        format( "Could not merge recipe overrides %s", recipe.getAbsolutePath() ), e
+                    );
+                }
+                finally
+                {
+                    IOUtil.close( in );
+                }
+            }
+            else
+            {
+                logger.trace( "No recipe overrides available at {}", recipe.getAbsolutePath() );
+            }
         }
         return recipeProperties;
     }
