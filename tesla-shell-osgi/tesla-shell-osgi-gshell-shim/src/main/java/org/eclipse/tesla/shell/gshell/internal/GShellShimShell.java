@@ -24,15 +24,18 @@ public class GShellShimShell
 
     private final CommandSession commandSession;
 
+    private final Branding branding;
+
     public GShellShimShell( final CommandSession commandSession )
     {
         this.commandSession = commandSession;
         io = new IO();
+        branding = new GshellShimBranding();
     }
 
     public Branding getBranding()
     {
-        throw new UnsupportedOperationException();
+        return branding;
     }
 
     public IO getIo()
