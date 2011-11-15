@@ -102,7 +102,7 @@
               org.apache.felix.gogo.*,
               org.apache.felix.service.command,*
               org.apache.karaf.shell.console,
-              org.eclipse.tesla.shell.support.spi,
+              org.eclipse.tesla.shell.*,
               org.sonatype.inject,
               org.slf4j.*,
               !com.thoughtworks.xstream.*,

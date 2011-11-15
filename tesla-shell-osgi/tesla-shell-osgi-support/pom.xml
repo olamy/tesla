@@ -63,18 +63,17 @@
             <Import-Package>
               com.google.inject,
               javax.inject,
+              jline,
               org.apache.felix.gogo.commands.basic,
               org.apache.felix.gogo.commands,
+              org.apache.felix.gogo.commands.converter,
               org.apache.felix.service.command,
               org.apache.karaf.shell.console,
+              org.fusesource.jansi,
               org.osgi.framework,
               org.sonatype.inject,
               org.sonatype.guice.bean.locators
             </Import-Package>
-            <Export-Package>
-              org.eclipse.tesla.shell.support;version=${project.version},
-              org.eclipse.tesla.shell.support.spi;version=${project.version}
-            </Export-Package>
             <Include-Resource>
               {maven-resources},
               META-INF/sisu=target/classes/META-INF/sisu

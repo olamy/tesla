@@ -9,7 +9,7 @@ import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.felix.gogo.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
-import org.eclipse.tesla.shell.gshell.internal.preparator.GShellShimActionPreparator;
+import org.eclipse.tesla.shell.gshell.internal.preparator.GShellShimCommandLineParser;
 import org.sonatype.gshell.command.CommandAction;
 import org.sonatype.gshell.util.NameAware;
 import org.sonatype.inject.BeanEntry;
@@ -68,7 +68,7 @@ class GShellShimCommand
     protected ActionPreparator getPreparator()
         throws Exception
     {
-        return new GShellShimActionPreparator( commandAnnotation );
+        return new GShellShimCommandLineParser( commandAnnotation );
     }
 
     public List<Completer> getCompleters()
