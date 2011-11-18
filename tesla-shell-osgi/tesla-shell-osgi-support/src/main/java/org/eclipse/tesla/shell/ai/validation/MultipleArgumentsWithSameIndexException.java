@@ -1,8 +1,8 @@
 package org.eclipse.tesla.shell.ai.validation;
 
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.CommandException;
-import org.apache.felix.gogo.commands.Option;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -10,11 +10,11 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class MissingOptionException
+public class MultipleArgumentsWithSameIndexException
     extends CommandException
 {
 
-    public MissingOptionException( final Command command, final Option option )
+    public MultipleArgumentsWithSameIndexException( final Command command, final Argument arg1, final Argument arg2 )
     {
         super(
             Ansi.ansi()
@@ -25,14 +25,18 @@ public class MissingOptionException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( command.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( ": option " )
+                .a( ": arguments " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( option.name() )
+                .a( arg1.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( " is required" )
+                .a( " and " )
+                .a( Ansi.Attribute.INTENSITY_BOLD )
+                .a( arg2.name() )
+                .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
+                .a( " have same the same index" )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Option " + option.name() + " is required"
+            String.format( "Arguments %s and %s have same the same index", arg1.name(), arg2.name() )
         );
     }
 

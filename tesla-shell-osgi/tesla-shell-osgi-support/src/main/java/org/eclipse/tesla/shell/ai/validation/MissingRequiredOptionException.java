@@ -2,6 +2,7 @@ package org.eclipse.tesla.shell.ai.validation;
 
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.CommandException;
+import org.apache.felix.gogo.commands.Option;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -9,11 +10,11 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class UndefinedOptionException
+public class MissingRequiredOptionException
     extends CommandException
 {
 
-    public UndefinedOptionException( final Command command, final String name )
+    public MissingRequiredOptionException( final Command command, final Option option )
     {
         super(
             Ansi.ansi()
@@ -24,13 +25,14 @@ public class UndefinedOptionException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( command.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( " undefined option " )
+                .a( ": option " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( name )
+                .a( option.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
+                .a( " is required" )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Undefined option: " + name
+            "Option " + option.name() + " is required"
         );
     }
 

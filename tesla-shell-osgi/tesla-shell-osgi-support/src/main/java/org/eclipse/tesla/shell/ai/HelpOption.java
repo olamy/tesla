@@ -22,12 +22,12 @@ public class HelpOption
 
     public String name()
     {
-        return "--help";
+        return "-h";
     }
 
     public String[] aliases()
     {
-        return new String[]{ };
+        return new String[]{ "--help" };
     }
 
     public String description()
