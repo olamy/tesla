@@ -99,21 +99,6 @@ public class CommandLineParser
         return true;
     }
 
-    private boolean isHelp( final List<Object> params )
-    {
-        if ( params != null )
-        {
-            for ( final Object param : params )
-            {
-                if ( "--help".equals( param ) )
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private List<String> findSwitches( final List<OptionBinding> bindings )
     {
         final ArrayList<String> switches = new ArrayList<String>();
@@ -283,30 +268,31 @@ public class CommandLineParser
                     }
 
                     // look ahead
-                    final Object lookAheadValue = copyOfArgumentValues.get( i + 1 );
-                    if ( lookAheadValue instanceof String )
+                    if ( i < copyOfArgumentValues.size() - 1 )
                     {
-                        final String lookAheadAsString = (String) lookAheadValue;
-
-                        if ( switchesNames.contains( valueAsString ) )
+                        final Object lookAheadValue = copyOfArgumentValues.get( i + 1 );
+                        if ( lookAheadValue instanceof String )
                         {
-                            if ( !"true".equalsIgnoreCase( lookAheadAsString )
-                                && !"false".equalsIgnoreCase( lookAheadAsString )
-                                && ( lookAheadAsString.startsWith( "-" )
-                                || lookAheadAsString.equals( "--" )
-                                || !Boolean.valueOf( lookAheadAsString ) ) )
+                            final String lookAheadAsString = (String) lookAheadValue;
+
+                            if ( switchesNames.contains( valueAsString ) )
                             {
-                                optionValues.put( valueAsString, true );
-                                continue;
+                                if ( !"true".equalsIgnoreCase( lookAheadAsString )
+                                    && !"false".equalsIgnoreCase( lookAheadAsString )
+                                    && ( lookAheadAsString.startsWith( "-" )
+                                    || lookAheadAsString.equals( "--" )
+                                    || !Boolean.valueOf( lookAheadAsString ) ) )
+                                {
+                                    optionValues.put( valueAsString, true );
+                                    continue;
+                                }
                             }
                         }
+                        // we have a value for the option, remove it from arguments list
+                        removeByIdentity( argumentValues, lookAheadValue );
+                        // and add it as an option
+                        optionValues.put( valueAsString, lookAheadValue );
                     }
-
-                    // we have a value for the option, remove it from arguments list
-                    removeByIdentity( argumentValues, lookAheadValue );
-                    // and add it as an option
-                    optionValues.put( valueAsString, lookAheadValue );
-                    // skip the value that follows as we already know is an option value
                 }
             }
         }
@@ -403,11 +389,26 @@ public class CommandLineParser
         return arguments;
     }
 
-    protected void printUsage( final CommandSession session,
-                               final Action action,
-                               final List<OptionBinding> options,
-                               final List<ArgumentBinding> arguments,
-                               final PrintStream out )
+    private boolean isHelp( final List<Object> params )
+    {
+        if ( params != null )
+        {
+            for ( final Object param : params )
+            {
+                if ( "--help".equals( param ) )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void printUsage( final CommandSession session,
+                             final Action action,
+                             final List<OptionBinding> options,
+                             final List<ArgumentBinding> arguments,
+                             final PrintStream out )
     {
         options.add( new OptionBinding( HelpOption.INSTANCE ) );
         Command command = getCommand( action );
@@ -553,7 +554,7 @@ public class CommandLineParser
         }
     }
 
-    private void printObjectDefaultsTo( PrintStream out, Object o )
+    private void printObjectDefaultsTo( final PrintStream out, final Object o )
     {
         if ( o != null
             && ( !( o instanceof Boolean ) || ( (Boolean) o ) )
@@ -570,18 +571,19 @@ public class CommandLineParser
         out.println( ")" );
     }
 
-    protected String loadDescription( Class clazz, String desc )
+    protected String loadDescription( final Class clazz, final String description )
     {
-        if ( desc.startsWith( "classpath:" ) )
+        String resolved = description;
+        if ( description.startsWith( "classpath:" ) )
         {
-            InputStream is = clazz.getResourceAsStream( desc.substring( "classpath:".length() ) );
+            InputStream is = clazz.getResourceAsStream( resolved.substring( "classpath:".length() ) );
             if ( is == null )
             {
-                is = clazz.getClassLoader().getResourceAsStream( desc.substring( "classpath:".length() ) );
+                is = clazz.getClassLoader().getResourceAsStream( resolved.substring( "classpath:".length() ) );
             }
             if ( is == null )
             {
-                desc = "Unable to load description from " + desc;
+                resolved = "Unable to load description from " + description;
             }
             else
             {
@@ -594,11 +596,11 @@ public class CommandLineParser
                     {
                         sw.append( (char) c );
                     }
-                    desc = sw.toString();
+                    resolved = sw.toString();
                 }
                 catch ( IOException e )
                 {
-                    desc = "Unable to load description from " + desc;
+                    resolved = "Unable to load description from " + description;
                 }
                 finally
                 {
@@ -613,7 +615,7 @@ public class CommandLineParser
                 }
             }
         }
-        return desc;
+        return resolved;
     }
 
     // TODO move this to a helper class?

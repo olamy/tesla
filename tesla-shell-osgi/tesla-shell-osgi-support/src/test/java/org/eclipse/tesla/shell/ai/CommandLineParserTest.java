@@ -590,26 +590,14 @@ public class CommandLineParserTest
         @Option( name = "-opt1" )
         private String opt1;
 
-        @Option( name = "-opt2" )
+        @Option( name = "-opt2", required = true )
         private boolean opt2;
 
-        @Option( name = "-opt3" )
-        private int opt3;
-
-        @Option( name = "-opt4" )
-        private File opt4;
-
-        @Argument( index = 0 )
+        @Argument( index = 0, required = true )
         private String arg1;
 
         @Argument( index = 1 )
         private boolean arg2;
-
-        @Argument( index = 2 )
-        private int arg3;
-
-        @Argument( index = 4 )
-        private File arg4;
 
     }
 
@@ -620,6 +608,42 @@ public class CommandLineParserTest
         final CommandLineParser underTest = new CommandLineParser();
         final Command20 command = new Command20();
         underTest.prepare( command, session, $( "--help" ) );
+    }
+
+    // ----------------------------------------------------------------------
+    // mixed options/arguments order
+    // ----------------------------------------------------------------------
+
+    @Command( scope = "test-scope", name = "command-21" )
+    private static class Command21
+        extends AbstractTestAction
+    {
+
+        @Option( name = "-opt1" )
+        private String opt1;
+
+        @Option( name = "-opt2" )
+        private String opt2;
+
+        @Argument( index = 1 )
+        private String arg1;
+
+        @Argument( index = 2 )
+        private String arg2;
+
+    }
+
+    @Test
+    public void parse21()
+        throws Exception
+    {
+        final CommandLineParser underTest = new CommandLineParser();
+        final Command21 command = new Command21();
+        underTest.prepare( command, session, $( "t-a-1", "-opt1", "t-o-1", "t-a-2", "-opt2" ) );
+        assertThat( command.opt1, is( "t-o-1" ) );
+        assertThat( command.opt2, is( nullValue() ) );
+        assertThat( command.arg1, is( "t-a-1" ) );
+        assertThat( command.arg2, is( "t-a-2" ) );
     }
 
     private List<Object> $( final Object... params )
