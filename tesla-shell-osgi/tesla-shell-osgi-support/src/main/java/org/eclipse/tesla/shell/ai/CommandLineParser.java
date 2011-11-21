@@ -293,6 +293,10 @@ public class CommandLineParser
                         // and add it as an option
                         optionValues.put( valueAsString, lookAheadValue );
                     }
+                    else
+                    {
+                        optionValues.put( valueAsString, null );
+                    }
                 }
             }
         }
