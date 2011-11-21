@@ -33,10 +33,11 @@ public class MultipleArgumentsWithSameIndexException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( arg2.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( " have same the same index" )
+                .a( " have the same index: " )
+                .a( arg1.index() )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            String.format( "Arguments %s and %s have same the same index", arg1.name(), arg2.name() )
+            String.format( "Arguments %s and %s have same the same index: %s", arg1.name(), arg2.name(), arg1.index() )
         );
     }
 

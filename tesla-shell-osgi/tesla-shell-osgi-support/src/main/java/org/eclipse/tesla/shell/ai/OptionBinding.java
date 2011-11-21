@@ -29,6 +29,16 @@ public class OptionBinding
         this.injector = injector;
     }
 
+    OptionBinding( final Option option )
+    {
+        if ( option == null )
+        {
+            throw new IllegalArgumentException( "@Option cannot be null" );
+        }
+        this.option = option;
+        this.injector = null;
+    }
+
     public Option getOption()
     {
         return option;

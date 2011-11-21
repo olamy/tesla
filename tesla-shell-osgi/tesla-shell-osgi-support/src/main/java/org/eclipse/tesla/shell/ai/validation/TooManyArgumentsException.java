@@ -1,5 +1,7 @@
 package org.eclipse.tesla.shell.ai.validation;
 
+import java.util.ArrayList;
+
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.CommandException;
 import org.fusesource.jansi.Ansi;
@@ -13,7 +15,7 @@ public class TooManyArgumentsException
     extends CommandException
 {
 
-    public TooManyArgumentsException( final Command command )
+    public TooManyArgumentsException( final Command command, final ArrayList<Object> remainingValues )
     {
         super(
             Ansi.ansi()
@@ -24,10 +26,11 @@ public class TooManyArgumentsException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( command.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( ": too many arguments specified" )
+                .a( ": too many arguments specified " )
+                .a( remainingValues.toString() )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Too many arguments specified"
+            String.format( "Too many arguments specified: %s", remainingValues )
         );
     }
 

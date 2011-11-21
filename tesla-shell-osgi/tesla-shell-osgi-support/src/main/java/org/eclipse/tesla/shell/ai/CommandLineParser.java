@@ -30,9 +30,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,9 +47,13 @@ import org.apache.felix.gogo.commands.converter.DefaultConverter;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.NameScoping;
 import org.eclipse.tesla.shell.ai.validation.ArgumentConversionException;
+import org.eclipse.tesla.shell.ai.validation.MissingRequiredArgumentException;
+import org.eclipse.tesla.shell.ai.validation.MissingRequiredOptionException;
 import org.eclipse.tesla.shell.ai.validation.MultipleArgumentsWithSameIndexException;
+import org.eclipse.tesla.shell.ai.validation.MultipleOptionsWithSameNameException;
 import org.eclipse.tesla.shell.ai.validation.OptionConversionException;
-import org.eclipse.tesla.shell.ai.validation.UndefinedOptionException;
+import org.eclipse.tesla.shell.ai.validation.TooManyArgumentsException;
+import org.eclipse.tesla.shell.ai.validation.TooManyOptionsException;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
 
@@ -88,124 +94,8 @@ public class CommandLineParser
         final Map<String, Object> optionValues = extractOptions( findSwitches( options ), argumentValues );
 
         injectOptions( action, session, command, options, optionValues );
-
         injectArguments( action, session, command, arguments, argumentValues );
 
-//        // Populate
-//        Map<Option, Object> optionValues = new HashMap<Option, Object>();
-//        Map<Argument, Object> argumentValues = new HashMap<Argument, Object>();
-//        boolean processOptions = true;
-//        int argIndex = 0;
-//        for ( Iterator<Object> it = params.iterator(); it.hasNext(); )
-//        {
-//            Object param = it.next();
-//            // Check for help
-//            if ( HelpOption.INSTANCE.name().equals( param )
-//                || Arrays.asList( HelpOption.INSTANCE.aliases() ).contains( param ) )
-//            {
-//                printUsage( session, action, options, arguments, System.out );
-//                return false;
-//            }
-//            if ( processOptions && param instanceof String && ( (String) param ).startsWith( "-" ) )
-//            {
-//                boolean isKeyValuePair = ( (String) param ).indexOf( '=' ) != -1;
-//                String name;
-//                Object value = null;
-//                if ( isKeyValuePair )
-//                {
-//                    name = ( (String) param ).substring( 0, ( (String) param ).indexOf( '=' ) );
-//                    value = ( (String) param ).substring( ( (String) param ).indexOf( '=' ) + 1 );
-//                }
-//                else
-//                {
-//                    name = (String) param;
-//                }
-//                OptionBinding optionBinding = null;
-//                Option option = null;
-//                for ( OptionBinding binding : options )
-//                {
-//                    final Option opt = binding.getOption();
-//                    if ( name.equals( opt.name() ) || Arrays.asList( opt.aliases() ).contains( name ) )
-//                    {
-//                        option = opt;
-//                        optionBinding = binding;
-//                        break;
-//                    }
-//                }
-//                if ( option == null )
-//                {
-//                    throw new UndefinedOptionException( command, param );
-//                }
-//                ActionInjector injector = optionBinding.getInjector();
-//                if ( value == null && ( injector.getType() == boolean.class || injector.getType() == Boolean.class ) )
-//                {
-//                    value = Boolean.TRUE;
-//                }
-//                if ( value == null && it.hasNext() )
-//                {
-//                    value = it.next();
-//                }
-//                if ( value == null )
-//                {
-//                    throw new MissingValueException( command, param );
-//                }
-//                if ( option.multiValued() )
-//                {
-//                    List<Object> l = (List<Object>) optionValues.get( option );
-//                    if ( l == null )
-//                    {
-//                        l = new ArrayList<Object>();
-//                        optionValues.put( option, l );
-//                    }
-//                    l.add( value );
-//                }
-//                else
-//                {
-//                    optionValues.put( option, value );
-//                }
-//            }
-//            else
-//            {
-//                processOptions = false;
-//                if ( argIndex >= arguments.size() )
-//                {
-//                    throw new TooManyArgumentsException( command );
-//                }
-//                ArgumentBinding argumentBinding = arguments.get( argIndex );
-//                if ( argumentBinding.getArgument().multiValued() )
-//                {
-//                    List<Object> l = (List<Object>) argumentValues.get( argumentBinding.getArgument() );
-//                    if ( l == null )
-//                    {
-//                        l = new ArrayList<Object>();
-//                        argumentValues.put( argumentBinding.getArgument(), l );
-//                    }
-//                    l.add( param );
-//                }
-//                else
-//                {
-//                    argIndex++;
-//                    argumentValues.put( argumentBinding.getArgument(), param );
-//                }
-//            }
-//        }
-//        // Check required arguments / options
-//        for ( OptionBinding binding : options )
-//        {
-//            final Option option = binding.getOption();
-//            if ( option.required() && optionValues.get( option ) == null )
-//            {
-//                throw new MissingOptionException( command, option );
-//            }
-//        }
-//        for ( ArgumentBinding binding : arguments )
-//        {
-//            final Argument argument = binding.getArgument();
-//            if ( argument.required() && argumentValues.get( argument ) == null )
-//            {
-//                throw new MissingArgumentException( command, argument );
-//            }
-//        }
         return true;
     }
 
@@ -260,27 +150,38 @@ public class CommandLineParser
         for ( ArgumentBinding binding : arguments )
         {
             final ActionInjector injector = binding.getInjector();
-            Object value;
-            if ( binding.getArgument().multiValued() )
+            if ( remainingValues.size() > 0 )
             {
-                value = new ArrayList<Object>( remainingValues );
-                remainingValues.clear();
+                Object value;
+                if ( binding.getArgument().multiValued() )
+                {
+                    value = new ArrayList<Object>( remainingValues );
+                    remainingValues.clear();
+                }
+                else
+                {
+                    value = remainingValues.remove( 0 );
+                }
+                try
+                {
+                    final Object converted = convert( action, session, value, injector.getGenericType() );
+                    injector.set( converted );
+                }
+                catch ( Exception e )
+                {
+                    throw new ArgumentConversionException(
+                        command, binding.getArgument(), value, injector.getGenericType(), e
+                    );
+                }
             }
-            else
+            else if ( binding.getArgument().required() )
             {
-                value = remainingValues.remove( 0 );
+                throw new MissingRequiredArgumentException( command, binding.getArgument() );
             }
-            try
-            {
-                final Object converted = convert( action, session, value, injector.getGenericType() );
-                injector.set( converted );
-            }
-            catch ( Exception e )
-            {
-                throw new ArgumentConversionException(
-                    command, binding.getArgument(), value, injector.getGenericType(), e
-                );
-            }
+        }
+        if ( remainingValues.size() > 0 )
+        {
+            throw new TooManyArgumentsException( command, remainingValues );
         }
     }
 
@@ -291,15 +192,17 @@ public class CommandLineParser
                                 final Map<String, Object> optionValues )
         throws Exception
     {
-        final Map<String, OptionBinding> nameToBinding = mapOptionsByName( options );
-        // Convert and inject values
+        final Map<String, OptionBinding> nameToBinding = mapOptionsByName( command, options );
+        final Set<OptionBinding> remainingOptions = new HashSet<OptionBinding>( options );
+
         for ( Map.Entry<String, Object> entry : optionValues.entrySet() )
         {
             final OptionBinding binding = nameToBinding.get( entry.getKey() );
             if ( binding == null )
             {
-                throw new UndefinedOptionException( command, entry.getKey() );
+                throw new TooManyOptionsException( command, entry.getKey() );
             }
+            remainingOptions.remove( binding );
             final ActionInjector injector = binding.getInjector();
             try
             {
@@ -313,9 +216,20 @@ public class CommandLineParser
                 );
             }
         }
+        if ( remainingOptions.size() > 0 )
+        {
+            for ( final OptionBinding binding : remainingOptions )
+            {
+                if ( binding.getOption().required() )
+                {
+                    throw new MissingRequiredOptionException( command, binding.getOption() );
+                }
+            }
+        }
     }
 
-    private Map<String, OptionBinding> mapOptionsByName( final List<OptionBinding> bindings )
+    private Map<String, OptionBinding> mapOptionsByName( final Command command, final List<OptionBinding> bindings )
+        throws Exception
     {
         final Map<String, OptionBinding> nameToBinding = new HashMap<String, OptionBinding>();
         for ( final OptionBinding binding : bindings )
@@ -323,7 +237,7 @@ public class CommandLineParser
             final Option option = binding.getOption();
             if ( nameToBinding.put( option.name(), binding ) != null )
             {
-                // TODO throw a duplicate option name exception
+                throw new MultipleOptionsWithSameNameException( command, option.name() );
             }
             if ( option.aliases() != null )
             {
@@ -333,7 +247,7 @@ public class CommandLineParser
                     {
                         if ( nameToBinding.put( name, binding ) != null )
                         {
-                            // TODO throw a duplicate option name exception
+                            throw new MultipleOptionsWithSameNameException( command, name );
                         }
                     }
                 }
@@ -446,30 +360,6 @@ public class CommandLineParser
         }
     }
 
-    private ActionInjector injectorOf( final Option option, final List<OptionBinding> options )
-    {
-        for ( final OptionBinding binding : options )
-        {
-            if ( binding.getOption().equals( option ) )
-            {
-                return binding.getInjector();
-            }
-        }
-        throw new IllegalStateException( "Could not find injector of option " + option );
-    }
-
-    private ActionInjector injectorOf( final Argument argument, final List<ArgumentBinding> arguments )
-    {
-        for ( final ArgumentBinding binding : arguments )
-        {
-            if ( binding.getArgument().equals( argument ) )
-            {
-                return binding.getInjector();
-            }
-        }
-        throw new IllegalStateException( "Could not find injector of argument " + argument );
-    }
-
     protected Command getCommand( final Action action )
     {
         return action.getClass().getAnnotation( Command.class );
@@ -519,6 +409,7 @@ public class CommandLineParser
                                final List<ArgumentBinding> arguments,
                                final PrintStream out )
     {
+        options.add( new OptionBinding( HelpOption.INSTANCE ) );
         Command command = getCommand( action );
         Terminal term = session != null ? (Terminal) session.get( ".jline.terminal" ) : null;
 
@@ -546,7 +437,7 @@ public class CommandLineParser
             out.println( command.description() );
             out.println();
         }
-        StringBuffer syntax = new StringBuffer();
+        StringBuilder syntax = new StringBuilder();
         if ( command != null )
         {
             if ( globalScope )

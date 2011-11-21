@@ -9,11 +9,11 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class UndefinedOptionException
+public class TooManyOptionsException
     extends CommandException
 {
 
-    public UndefinedOptionException( final Command command, final String name )
+    public TooManyOptionsException( final Command command, final String name )
     {
         super(
             Ansi.ansi()

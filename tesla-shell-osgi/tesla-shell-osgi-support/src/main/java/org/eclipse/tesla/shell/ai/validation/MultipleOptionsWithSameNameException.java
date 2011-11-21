@@ -1,6 +1,5 @@
 package org.eclipse.tesla.shell.ai.validation;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.CommandException;
 import org.fusesource.jansi.Ansi;
@@ -10,11 +9,12 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class MissingArgumentException
+public class MultipleOptionsWithSameNameException
     extends CommandException
 {
 
-    public MissingArgumentException( final Command command, final Argument argument )
+    public MultipleOptionsWithSameNameException( final Command command,
+                                                 final String name )
     {
         super(
             Ansi.ansi()
@@ -25,14 +25,11 @@ public class MissingArgumentException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( command.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( ": argument " )
-                .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( argument.name() )
-                .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( " is required" )
+                .a( ": there are more options with the same name: " )
+                .a( name )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Argument " + argument.name() + " is required"
+            String.format( "There are more options with the same name: %s", name )
         );
     }
 

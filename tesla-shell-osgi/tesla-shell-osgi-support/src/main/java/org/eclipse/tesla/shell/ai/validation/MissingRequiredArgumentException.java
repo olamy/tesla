@@ -1,5 +1,6 @@
 package org.eclipse.tesla.shell.ai.validation;
 
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.CommandException;
 import org.fusesource.jansi.Ansi;
@@ -9,11 +10,11 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class MissingValueException
+public class MissingRequiredArgumentException
     extends CommandException
 {
 
-    public MissingValueException( final Command command, final Object param )
+    public MissingRequiredArgumentException( final Command command, final Argument argument )
     {
         super(
             Ansi.ansi()
@@ -24,13 +25,14 @@ public class MissingValueException
                 .a( Ansi.Attribute.INTENSITY_BOLD )
                 .a( command.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( " missing value for option " )
+                .a( ": argument " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( param )
+                .a( argument.name() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
+                .a( " is required" )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Missing value for option: " + param
+            "Argument " + argument.name() + " is required"
         );
     }
 
