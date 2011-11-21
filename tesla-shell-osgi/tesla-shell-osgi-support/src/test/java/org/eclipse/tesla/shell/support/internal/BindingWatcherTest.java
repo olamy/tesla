@@ -1,10 +1,15 @@
 package org.eclipse.tesla.shell.support.internal;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Arrays;
@@ -20,7 +25,6 @@ import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.console.CompletableFunction;
-import org.eclipse.tesla.shell.support.GuiceOsgiCommandSupport;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
@@ -174,7 +178,7 @@ public class BindingWatcherTest
             @Override
             public boolean matches( final Object argument )
             {
-                if(isA( clazz ).matches( argument ))
+                if ( isA( clazz ).matches( argument ) )
                 {
                     capturingMatcher.captureFrom( argument );
                     return true;
@@ -187,7 +191,7 @@ public class BindingWatcherTest
     @Named
     @Command( scope = "test-scope", name = "test-action", description = "Test" )
     private static class TestAction
-        extends GuiceOsgiCommandSupport
+        implements Action
     {
 
         @Argument( name = "arg", required = true )
@@ -202,13 +206,12 @@ public class BindingWatcherTest
         private static TestAction executed;
 
         @Override
-        protected Object doExecute()
+        public Object execute( final CommandSession commandSession )
             throws Exception
         {
             executed = this;
             return null;
         }
-
     }
 
     @Named

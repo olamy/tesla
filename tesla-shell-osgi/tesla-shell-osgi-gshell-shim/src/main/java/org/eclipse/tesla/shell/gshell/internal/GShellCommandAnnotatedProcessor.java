@@ -18,7 +18,7 @@ import org.sonatype.inject.BeanEntry;
  */
 @Named
 @Singleton
-public class GshellCommandAnnotated
+public class GShellCommandAnnotatedProcessor
     implements BindingProcessor
 {
 

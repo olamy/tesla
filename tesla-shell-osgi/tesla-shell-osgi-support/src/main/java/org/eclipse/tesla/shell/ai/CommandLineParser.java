@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -49,11 +50,17 @@ import org.eclipse.tesla.shell.ai.validation.OptionConversionException;
 import org.eclipse.tesla.shell.ai.validation.UndefinedOptionException;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
-import sun.awt.util.IdentityArrayList;
 
 public class CommandLineParser
     implements ActionPreparator
 {
+
+    public static final CommandLineParser INSTANCE = new CommandLineParser();
+
+    protected CommandLineParser()
+    {
+        // just to almost force using of singleton instance
+    }
 
     public boolean prepare( final Action action, final CommandSession session, final List<Object> params )
         throws Exception
@@ -76,9 +83,7 @@ public class CommandLineParser
         }
 
         // start considering all params as arguments
-        final List<Object> argumentValues = new IdentityArrayList<Object>(
-            params == null ? Collections.emptyList() : params
-        );
+        final List<Object> argumentValues = new ArrayList<Object>( params == null ? Collections.emptyList() : params );
         // then extract options out
         final Map<String, Object> optionValues = extractOptions( findSwitches( options ), argumentValues );
 
@@ -251,22 +256,32 @@ public class CommandLineParser
                                   final List<Object> argumentValues )
         throws Exception
     {
-//        for ( Map.Entry<Argument, Object> entry : argumentValues.entrySet() )
-//        {
-//            ActionInjector injector = injectorOf( entry.getKey(), arguments );
-//
-//            try
-//            {
-//                final Object value = convert( action, session, entry.getValue(), injector.getGenericType() );
-//                injector.set( value );
-//            }
-//            catch ( Exception e )
-//            {
-//                throw new ArgumentConversionException(
-//                    command, entry.getKey(), entry.getValue(), injector.getGenericType(), e
-//                );
-//            }
-//        }
+        final ArrayList<Object> remainingValues = new ArrayList<Object>( argumentValues );
+        for ( ArgumentBinding binding : arguments )
+        {
+            final ActionInjector injector = binding.getInjector();
+            Object value;
+            if ( binding.getArgument().multiValued() )
+            {
+                value = new ArrayList<Object>( remainingValues );
+                remainingValues.clear();
+            }
+            else
+            {
+                value = remainingValues.remove( 0 );
+            }
+            try
+            {
+                final Object converted = convert( action, session, value, injector.getGenericType() );
+                injector.set( converted );
+            }
+            catch ( Exception e )
+            {
+                throw new ArgumentConversionException(
+                    command, binding.getArgument(), value, injector.getGenericType(), e
+                );
+            }
+        }
     }
 
     private void injectOptions( final Action action,
@@ -288,8 +303,8 @@ public class CommandLineParser
             final ActionInjector injector = binding.getInjector();
             try
             {
-                final Object value = convert( action, session, entry.getValue(), injector.getGenericType() );
-                injector.set( value );
+                final Object converted = convert( action, session, entry.getValue(), injector.getGenericType() );
+                injector.set( converted );
             }
             catch ( Exception e )
             {
@@ -345,7 +360,7 @@ public class CommandLineParser
                 if ( valueAsString.startsWith( "-" ) )
                 {
                     // we have an option name, remove it from arguments list
-                    argumentValues.remove( value );
+                    removeByIdentity( argumentValues, value );
 
                     // everything after "--" is an argument
                     if ( valueAsString.equals( "--" ) )
@@ -374,7 +389,7 @@ public class CommandLineParser
                     }
 
                     // we have a value for the option, remove it from arguments list
-                    argumentValues.remove( lookAheadValue );
+                    removeByIdentity( argumentValues, lookAheadValue );
                     // and add it as an option
                     optionValues.put( valueAsString, lookAheadValue );
                     // skip the value that follows as we already know is an option value
@@ -383,6 +398,22 @@ public class CommandLineParser
         }
 
         return optionValues;
+    }
+
+    private void removeByIdentity( final List<Object> list, final Object toRemove )
+    {
+        if ( list != null && list.size() > 0 )
+        {
+            final Iterator<Object> iterator = list.iterator();
+            while ( iterator.hasNext() )
+            {
+                if ( iterator.next() == toRemove )
+                {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 
     private void sortArguments( final Command command, final List<ArgumentBinding> arguments )

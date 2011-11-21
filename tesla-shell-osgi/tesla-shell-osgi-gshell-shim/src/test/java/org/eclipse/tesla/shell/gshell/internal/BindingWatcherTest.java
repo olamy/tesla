@@ -29,7 +29,7 @@ import com.google.inject.Binder;
  *
  * @since 1.0
  */
-public class BndingWatcherTest
+public class BindingWatcherTest
     extends InjectedTest
 {
 

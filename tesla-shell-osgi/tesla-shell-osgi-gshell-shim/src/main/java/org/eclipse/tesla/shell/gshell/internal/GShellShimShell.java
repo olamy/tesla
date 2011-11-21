@@ -30,7 +30,7 @@ public class GShellShimShell
     {
         this.commandSession = commandSession;
         io = new IO();
-        branding = new GshellShimBranding();
+        branding = new GShellShimBranding();
     }
 
     public Branding getBranding()

@@ -8,6 +8,7 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
+import org.eclipse.tesla.shell.support.GuiceCommandSupport;
 import org.sonatype.inject.BeanEntry;
 
 /**
@@ -16,7 +17,7 @@ import org.sonatype.inject.BeanEntry;
  * @since 1.0
  */
 public class ActionProxy
-    extends AbstractCommand
+    extends GuiceCommandSupport
     implements CompletableFunction
 {
 

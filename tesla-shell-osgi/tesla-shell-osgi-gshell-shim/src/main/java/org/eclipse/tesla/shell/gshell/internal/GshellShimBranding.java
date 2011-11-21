@@ -33,7 +33,7 @@ import org.sonatype.gshell.util.PrintBuffer;
  */
 @Named
 @Singleton
-public class GshellShimBranding
+public class GShellShimBranding
     extends BrandingSupport {
   
   private static final String[] BANNER = {
