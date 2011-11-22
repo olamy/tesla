@@ -611,7 +611,7 @@ public class CommandLineParserTest
     }
 
     // ----------------------------------------------------------------------
-    // mixed options/arguments order
+    // mixed options/arguments order, last option without value
     // ----------------------------------------------------------------------
 
     @Command( scope = "test-scope", name = "command-21" )
@@ -681,6 +681,42 @@ public class CommandLineParserTest
         assertThat( command.opt1, is( "t-o-1" ) );
         assertThat( command.opt2, is( "t-o-2" ) );
         assertThat( command.arg1, is( "t-a-1" ) );
+    }
+
+    // ----------------------------------------------------------------------
+    // mixed options/arguments order, last option is a switch
+    // ----------------------------------------------------------------------
+
+    @Command( scope = "test-scope", name = "command-23" )
+    private static class Command23
+        extends AbstractTestAction
+    {
+
+        @Option( name = "-opt1" )
+        private String opt1;
+
+        @Option( name = "-opt2" )
+        private boolean opt2;
+
+        @Argument( index = 1 )
+        private String arg1;
+
+        @Argument( index = 2 )
+        private String arg2;
+
+    }
+
+    @Test
+    public void parse23()
+        throws Exception
+    {
+        final CommandLineParser underTest = new CommandLineParser();
+        final Command23 command = new Command23();
+        underTest.prepare( command, session, $( "t-a-1", "-opt1", "t-o-1", "t-a-2", "-opt2" ) );
+        assertThat( command.opt1, is( "t-o-1" ) );
+        assertThat( command.opt2, is( true ) );
+        assertThat( command.arg1, is( "t-a-1" ) );
+        assertThat( command.arg2, is( "t-a-2" ) );
     }
 
     private List<Object> $( final Object... params )

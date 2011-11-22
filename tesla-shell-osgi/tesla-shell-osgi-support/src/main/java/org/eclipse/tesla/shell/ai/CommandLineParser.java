@@ -298,7 +298,7 @@ public class CommandLineParser
                     }
                     else
                     {
-                        optionValues.put( valueAsString, null );
+                        optionValues.put( valueAsString, switchesNames.contains( valueAsString ) ? true : null );
                     }
                 }
             }
