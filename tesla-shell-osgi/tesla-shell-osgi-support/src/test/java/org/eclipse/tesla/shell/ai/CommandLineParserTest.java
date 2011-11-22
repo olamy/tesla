@@ -719,6 +719,39 @@ public class CommandLineParserTest
         assertThat( command.arg2, is( "t-a-2" ) );
     }
 
+    // ----------------------------------------------------------------------
+    // option is multi valued
+    // ----------------------------------------------------------------------
+
+    @Command( scope = "test-scope", name = "command-24" )
+    private static class Command24
+        extends AbstractTestAction
+    {
+
+        @Option( name = "-opt1" )
+        private String opt1;
+
+        @Option( name = "-opt2", multiValued = true )
+        private String[] opt2;
+
+        @Option( name = "-opt3", multiValued = true )
+        private File[] opt3;
+
+    }
+
+    @Test
+    public void parse24()
+        throws Exception
+    {
+        final CommandLineParser underTest = new CommandLineParser();
+        final Command24 command = new Command24();
+        underTest.prepare( command, session, $( "-opt1", "t-o-1", "-opt2", "t-o-2",
+                                                "-opt3", "t-o-3-1", "-opt3", "t-o-3-2" ) );
+        assertThat( command.opt1, is( "t-o-1" ) );
+        assertThat( command.opt2, arrayContaining( "t-o-2" ) );
+        assertThat( command.opt3, arrayContaining( new File( "t-o-3-1" ), new File( "t-o-3-2" ) ) );
+    }
+
     private List<Object> $( final Object... params )
     {
         return Arrays.asList( params );

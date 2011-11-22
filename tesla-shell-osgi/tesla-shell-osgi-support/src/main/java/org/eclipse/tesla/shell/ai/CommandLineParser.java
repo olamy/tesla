@@ -28,6 +28,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -152,7 +154,9 @@ public class CommandLineParser
                 }
                 try
                 {
-                    final Object converted = convert( action, session, value, injector.getGenericType() );
+                    final Object converted = convert(
+                        action, value, injector.getGenericType(), binding.getArgument().multiValued()
+                    );
                     injector.set( converted );
                 }
                 catch ( Exception e )
@@ -194,7 +198,9 @@ public class CommandLineParser
             final ActionInjector injector = binding.getInjector();
             try
             {
-                final Object converted = convert( action, session, entry.getValue(), injector.getGenericType() );
+                final Object converted = convert(
+                    action, entry.getValue(), injector.getGenericType(), binding.getOption().multiValued()
+                );
                 injector.set( converted );
             }
             catch ( Exception e )
@@ -286,7 +292,7 @@ public class CommandLineParser
                                     || lookAheadAsString.equals( "--" )
                                     || !Boolean.valueOf( lookAheadAsString ) ) )
                                 {
-                                    optionValues.put( valueAsString, true );
+                                    setOption( optionValues, valueAsString, true );
                                     continue;
                                 }
                             }
@@ -294,17 +300,38 @@ public class CommandLineParser
                         // we have a value for the option, remove it from arguments list
                         removeByIdentity( argumentValues, lookAheadValue );
                         // and add it as an option
-                        optionValues.put( valueAsString, lookAheadValue );
+                        setOption( optionValues, valueAsString, lookAheadValue );
                     }
                     else
                     {
-                        optionValues.put( valueAsString, switchesNames.contains( valueAsString ) ? true : null );
+                        setOption( optionValues, valueAsString, switchesNames.contains( valueAsString ) ? true : null );
                     }
                 }
             }
         }
 
         return optionValues;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void setOption( final Map<String, Object> optionValues, final String name, final Object value )
+    {
+        final Object currentValue = optionValues.get( name );
+        if ( currentValue != null )
+        {
+            if ( currentValue instanceof List )
+            {
+                ( (List) currentValue ).add( value );
+            }
+            else
+            {
+                optionValues.put( name, new ArrayList<Object>( Arrays.asList( currentValue, value ) ) );
+            }
+        }
+        else
+        {
+            optionValues.put( name, value );
+        }
     }
 
     private void removeByIdentity( final List<Object> list, final Object toRemove )
@@ -680,14 +707,22 @@ public class CommandLineParser
         return str.length();
     }
 
-    protected Object convert( Action action, CommandSession session, Object value, Type toType )
+    protected Object convert( final Action action,
+                              final Object value,
+                              final Type toType,
+                              final boolean multiValue )
         throws Exception
     {
         if ( toType == String.class )
         {
             return value != null ? value.toString() : null;
         }
-        return new DefaultConverter( action.getClass().getClassLoader() ).convert( value, toType );
+        Object toConvert = value;
+        if ( multiValue && !( toConvert.getClass().isArray() || toConvert instanceof Collection ) )
+        {
+            toConvert = new Object[]{ toConvert };
+        }
+        return new DefaultConverter( action.getClass().getClassLoader() ).convert( toConvert, toType );
     }
 
 }
