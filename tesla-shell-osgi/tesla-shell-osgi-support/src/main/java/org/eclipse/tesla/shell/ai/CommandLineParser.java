@@ -25,6 +25,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +55,8 @@ import org.eclipse.tesla.shell.ai.validation.MultipleOptionsWithSameNameExceptio
 import org.eclipse.tesla.shell.ai.validation.OptionConversionException;
 import org.eclipse.tesla.shell.ai.validation.TooManyArgumentsException;
 import org.eclipse.tesla.shell.ai.validation.TooManyOptionsException;
+import org.eclipse.tesla.shell.support.internal.adapter.ArgumentAdapter;
+import org.eclipse.tesla.shell.support.internal.adapter.OptionAdapter;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
 
@@ -368,6 +371,19 @@ public class CommandLineParser
                     options.add( new OptionBinding( option, new ActionFieldInjector( action, field ) ) );
                 }
             }
+            for ( Method method : type.getDeclaredMethods() )
+            {
+                final org.eclipse.tesla.shell.support.Option option = method.getAnnotation(
+                    org.eclipse.tesla.shell.support.Option.class
+                );
+                final Class<?>[] parameterTypes = method.getParameterTypes();
+                if ( option != null && parameterTypes != null && parameterTypes.length == 1 )
+                {
+                    options.add( new OptionBinding(
+                        new OptionAdapter( option ), new ActionMethodInjector( action, method ) )
+                    );
+                }
+            }
         }
         return options;
     }
@@ -387,6 +403,29 @@ public class CommandLineParser
                         argument = new UnnamedArgument( field.getName(), argument );
                     }
                     arguments.add( new ArgumentBinding( argument, new ActionFieldInjector( action, field ) ) );
+                }
+            }
+            for ( Method method : type.getDeclaredMethods() )
+            {
+                org.eclipse.tesla.shell.support.Argument argument = method.getAnnotation(
+                    org.eclipse.tesla.shell.support.Argument.class
+                );
+                if ( argument != null )
+                {
+                    final ArgumentAdapter argumentAdapter = new ArgumentAdapter( argument );
+                    if ( org.eclipse.tesla.shell.support.Argument.DEFAULT.equals( argument.name() ) )
+                    {
+                        arguments.add( new ArgumentBinding(
+                            new UnnamedArgument( method.getName(), argumentAdapter ),
+                            new ActionMethodInjector( action, method ) )
+                        );
+                    }
+                    else
+                    {
+                        arguments.add( new ArgumentBinding(
+                            argumentAdapter, new ActionMethodInjector( action, method ) )
+                        );
+                    }
                 }
             }
         }

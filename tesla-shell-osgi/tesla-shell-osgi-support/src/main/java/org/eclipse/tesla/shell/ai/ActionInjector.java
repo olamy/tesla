@@ -18,6 +18,6 @@ public interface ActionInjector
         throws IllegalAccessException;
 
     void set( Object value )
-        throws IllegalAccessException;
+        throws Exception;
 
 }

@@ -646,6 +646,43 @@ public class CommandLineParserTest
         assertThat( command.arg2, is( "t-a-2" ) );
     }
 
+    // ----------------------------------------------------------------------
+    // options/arguments on setter methods
+    // ----------------------------------------------------------------------
+
+    @Command( scope = "test-scope", name = "command-22" )
+    private static class Command22
+        extends AbstractTestAction
+    {
+
+        @Option( name = "-opt1" )
+        private String opt1;
+
+        private String opt2;
+
+        @org.eclipse.tesla.shell.support.Option( name = "-opt2" )
+        private void opt2( String value )
+        {
+            opt2 = value;
+        }
+
+        @Argument()
+        private String arg1;
+
+    }
+
+    @Test
+    public void parse22()
+        throws Exception
+    {
+        final CommandLineParser underTest = new CommandLineParser();
+        final Command22 command = new Command22();
+        underTest.prepare( command, session, $( "-opt1", "t-o-1", "t-a-1", "-opt2", "t-o-2" ) );
+        assertThat( command.opt1, is( "t-o-1" ) );
+        assertThat( command.opt2, is( "t-o-2" ) );
+        assertThat( command.arg1, is( "t-a-1" ) );
+    }
+
     private List<Object> $( final Object... params )
     {
         return Arrays.asList( params );

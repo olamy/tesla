@@ -2,6 +2,7 @@ package org.eclipse.tesla.shell.gshell.internal.adapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.apache.felix.gogo.commands.Argument;
@@ -11,24 +12,24 @@ import org.apache.felix.gogo.commands.Argument;
  *
  * @since 1.0
  */
-public class ArgumentAdapter
+public class MethodArgumentAdapter
     implements Argument
 {
 
     private final org.sonatype.gshell.util.cli2.Argument delegate;
 
-    private final Field field;
+    private final Method method;
 
-    public ArgumentAdapter( final org.sonatype.gshell.util.cli2.Argument delegate,
-                            final Field field )
+    public MethodArgumentAdapter( final org.sonatype.gshell.util.cli2.Argument delegate,
+                                  final Method method )
     {
         this.delegate = delegate;
-        this.field = field;
+        this.method = method;
     }
 
     public String name()
     {
-        return field.getName();
+        return method.getName();
     }
 
     public String description()
@@ -48,7 +49,8 @@ public class ArgumentAdapter
 
     public boolean multiValued()
     {
-        return field.getType().isArray() || Collection.class.isAssignableFrom( field.getType() );
+        return method.getParameterTypes()[0].isArray()
+            || Collection.class.isAssignableFrom( method.getParameterTypes()[0] );
     }
 
     public String valueToShowInHelp()

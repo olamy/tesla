@@ -1,6 +1,7 @@
-package org.eclipse.tesla.shell.gshell.internal.preparator;
+package org.eclipse.tesla.shell.gshell.internal;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +9,12 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 import org.eclipse.tesla.shell.ai.ActionFieldInjector;
+import org.eclipse.tesla.shell.ai.ActionMethodInjector;
 import org.eclipse.tesla.shell.ai.ArgumentBinding;
 import org.eclipse.tesla.shell.ai.CommandLineParser;
 import org.eclipse.tesla.shell.ai.OptionBinding;
-import org.eclipse.tesla.shell.gshell.internal.CommandActionProxy;
-import org.eclipse.tesla.shell.gshell.internal.adapter.ArgumentAdapter;
+import org.eclipse.tesla.shell.gshell.internal.adapter.FieldArgumentAdapter;
+import org.eclipse.tesla.shell.gshell.internal.adapter.MethodArgumentAdapter;
 import org.eclipse.tesla.shell.gshell.internal.adapter.OptionAdapter;
 import org.sonatype.gshell.command.CommandAction;
 
@@ -57,12 +59,25 @@ public class GShellShimCommandLineParser
         {
             for ( Field field : type.getDeclaredFields() )
             {
-                final org.sonatype.gshell.util.cli2.Option option =
-                    field.getAnnotation( org.sonatype.gshell.util.cli2.Option.class );
+                final org.sonatype.gshell.util.cli2.Option option = field.getAnnotation(
+                    org.sonatype.gshell.util.cli2.Option.class
+                );
                 if ( option != null )
                 {
                     options.add( new OptionBinding(
                         new OptionAdapter( option ), new ActionFieldInjector( commandAction, field ) )
+                    );
+                }
+            }
+            for ( Method method : type.getDeclaredMethods() )
+            {
+                final org.sonatype.gshell.util.cli2.Option option = method.getAnnotation(
+                    org.sonatype.gshell.util.cli2.Option.class
+                );
+                if ( option != null )
+                {
+                    options.add( new OptionBinding(
+                        new OptionAdapter( option ), new ActionMethodInjector( commandAction, method ) )
                     );
                 }
             }
@@ -84,13 +99,27 @@ public class GShellShimCommandLineParser
         {
             for ( Field field : type.getDeclaredFields() )
             {
-                final org.sonatype.gshell.util.cli2.Argument argument =
-                    field.getAnnotation( org.sonatype.gshell.util.cli2.Argument.class );
+                final org.sonatype.gshell.util.cli2.Argument argument = field.getAnnotation(
+                    org.sonatype.gshell.util.cli2.Argument.class
+                );
                 if ( argument != null )
                 {
-                    final ArgumentAdapter shimArgument = new ArgumentAdapter( argument, field );
+                    final FieldArgumentAdapter shimArgument = new FieldArgumentAdapter( argument, field );
                     arguments.add( new ArgumentBinding(
                         shimArgument, new ActionFieldInjector( commandAction, field ) )
+                    );
+                }
+            }
+            for ( Method method : type.getDeclaredMethods() )
+            {
+                final org.sonatype.gshell.util.cli2.Argument argument = method.getAnnotation(
+                    org.sonatype.gshell.util.cli2.Argument.class
+                );
+                if ( argument != null )
+                {
+                    final MethodArgumentAdapter shimArgument = new MethodArgumentAdapter( argument, method );
+                    arguments.add( new ArgumentBinding(
+                        shimArgument, new ActionMethodInjector( commandAction, method ) )
                     );
                 }
             }
