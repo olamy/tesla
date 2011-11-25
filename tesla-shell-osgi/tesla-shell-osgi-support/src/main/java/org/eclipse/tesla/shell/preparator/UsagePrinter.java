@@ -46,6 +46,10 @@ public class UsagePrinter
 
     static final String PADDINGx2 = PADDING + PADDING;
 
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
+
     public static void print( final CommandSession session,
                               final Action action,
                               final CommandDescriptor commandDescriptor,
@@ -69,6 +73,26 @@ public class UsagePrinter
         printOptions( optionDescriptors, termWidth, out );
         printDetailedDescription( action, commandDescriptor, termWidth, out );
     }
+
+    public static void printFormatted( final String prefix,
+                                       final String str,
+                                       final int termWidth,
+                                       final PrintStream out )
+    {
+        final int pfxLen = prefix.length();
+        final int maxWidth = termWidth - pfxLen;
+        final Pattern wrap = Pattern.compile( "(\\S\\S{" + maxWidth + ",}|.{1," + maxWidth + "})(\\s+|$)" );
+        final Matcher m = wrap.matcher( str );
+        while ( m.find() )
+        {
+            out.print( prefix );
+            out.println( m.group() );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Implementation methods
+    // ----------------------------------------------------------------------
 
     private static void printCommandDescription( final CommandDescriptor descriptor,
                                                  final boolean globalScope,
@@ -295,22 +319,6 @@ public class UsagePrinter
             }
         }
         return resolved;
-    }
-
-    public static void printFormatted( final String prefix,
-                                       final String str,
-                                       final int termWidth,
-                                       final PrintStream out )
-    {
-        final int pfxLen = prefix.length();
-        final int maxWidth = termWidth - pfxLen;
-        final Pattern wrap = Pattern.compile( "(\\S\\S{" + maxWidth + ",}|.{1," + maxWidth + "})(\\s+|$)" );
-        final Matcher m = wrap.matcher( str );
-        while ( m.find() )
-        {
-            out.print( prefix );
-            out.println( m.group() );
-        }
     }
 
     private static String bold( final String value )

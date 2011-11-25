@@ -30,6 +30,10 @@ public class MultipleArgumentsWithSameIndexException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public MultipleArgumentsWithSameIndexException( final CommandDescriptor command,
                                                     final ArgumentDescriptor arg1,
                                                     final ArgumentDescriptor arg2 )

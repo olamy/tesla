@@ -33,6 +33,10 @@ public class OptionConversionException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public OptionConversionException( final CommandDescriptor command,
                                       final OptionDescriptor option,
                                       final Object value,

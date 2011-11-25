@@ -28,15 +28,27 @@ public class ActionFieldInjector
     implements ActionInjector
 {
 
+    // ----------------------------------------------------------------------
+    // Implementation fields
+    // ----------------------------------------------------------------------
+
     private Object instance;
 
     private Field field;
+
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
 
     public ActionFieldInjector( final Object instance, final Field field )
     {
         this.instance = instance;
         this.field = field;
     }
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     @Override
     public Type getGenericType()

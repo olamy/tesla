@@ -29,15 +29,27 @@ public class ActionMethodInjector
     implements ActionInjector
 {
 
+    // ----------------------------------------------------------------------
+    // Implementation fields
+    // ----------------------------------------------------------------------
+
     private Object instance;
 
     private final Method method;
+
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
 
     public ActionMethodInjector( final Object instance, final Method method )
     {
         this.instance = instance;
         this.method = method;
     }
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     @Override
     public Type getGenericType()

@@ -29,6 +29,10 @@ public class MultipleOptionsWithSameNameException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public MultipleOptionsWithSameNameException( final CommandDescriptor command,
                                                  final String optionName )
     {

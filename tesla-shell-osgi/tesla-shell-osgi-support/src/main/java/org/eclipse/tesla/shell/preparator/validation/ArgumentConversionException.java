@@ -33,6 +33,10 @@ public class ArgumentConversionException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public ArgumentConversionException( final CommandDescriptor command,
                                         final ArgumentDescriptor argument,
                                         final Object value,

@@ -30,6 +30,10 @@ public class MissingRequiredArgumentException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public MissingRequiredArgumentException( final CommandDescriptor command,
                                              final ArgumentDescriptor argument )
     {

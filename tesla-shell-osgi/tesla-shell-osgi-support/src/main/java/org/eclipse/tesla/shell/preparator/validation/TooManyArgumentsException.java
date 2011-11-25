@@ -31,6 +31,10 @@ public class TooManyArgumentsException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public TooManyArgumentsException( final CommandDescriptor command,
                                       final ArrayList<Object> remainingValues )
     {

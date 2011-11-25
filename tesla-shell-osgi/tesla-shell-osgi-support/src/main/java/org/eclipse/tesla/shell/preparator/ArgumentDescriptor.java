@@ -28,6 +28,10 @@ public class ArgumentDescriptor
 
     public static final String DEFAULT = Argument.DEFAULT;
 
+    // ----------------------------------------------------------------------
+    // Implementation fields
+    // ----------------------------------------------------------------------
+
     private ActionInjector injector;
 
     private String name = DEFAULT;
@@ -41,6 +45,10 @@ public class ArgumentDescriptor
     private int index = 0;
 
     private String valueToShowInHelp = DEFAULT;
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     public ActionInjector getInjector()
     {

@@ -24,6 +24,10 @@ package org.eclipse.tesla.shell.preparator;
 public class CommandDescriptor
 {
 
+    // ----------------------------------------------------------------------
+    // Implementation fields
+    // ----------------------------------------------------------------------
+
     private String scope;
 
     private String name;
@@ -31,6 +35,10 @@ public class CommandDescriptor
     private String description = "";
 
     private String detailedDescription = "";
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     public String getScope()
     {

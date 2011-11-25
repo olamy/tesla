@@ -30,6 +30,10 @@ public class MissingRequiredOptionException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public MissingRequiredOptionException( final CommandDescriptor command,
                                            final OptionDescriptor option )
     {

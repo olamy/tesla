@@ -29,6 +29,10 @@ public class TooManyOptionsException
     extends CommandException
 {
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     public TooManyOptionsException( final CommandDescriptor command,
                                     final String name )
     {

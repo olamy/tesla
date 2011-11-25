@@ -28,6 +28,10 @@ public class OptionDescriptor
 
     public static final String DEFAULT = Option.DEFAULT_STRING;
 
+    // ----------------------------------------------------------------------
+    // Implementation fields
+    // ----------------------------------------------------------------------
+
     private ActionInjector injector;
 
     private String name;
@@ -41,6 +45,10 @@ public class OptionDescriptor
     private String description = "";
 
     private String valueToShowInHelp = DEFAULT;
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     public ActionInjector getInjector()
     {

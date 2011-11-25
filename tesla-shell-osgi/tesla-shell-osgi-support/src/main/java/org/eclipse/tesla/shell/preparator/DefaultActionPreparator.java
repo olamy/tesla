@@ -55,10 +55,18 @@ public class DefaultActionPreparator
 
     public static final DefaultActionPreparator INSTANCE = new DefaultActionPreparator();
 
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
     protected DefaultActionPreparator()
     {
         // just to almost force using of singleton instance
     }
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
 
     public boolean prepare( final Action action, final CommandSession session, final List<Object> params )
         throws Exception
@@ -93,6 +101,10 @@ public class DefaultActionPreparator
 
         return true;
     }
+
+    // ----------------------------------------------------------------------
+    // Implementation methods
+    // ----------------------------------------------------------------------
 
     private List<String> findSwitches( final List<OptionDescriptor> descriptors )
     {
