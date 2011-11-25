@@ -4,10 +4,9 @@ import java.lang.annotation.Annotation;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.karaf.shell.commands.Command;
-import org.eclipse.tesla.shell.gshell.internal.adapter.CommandAdapter;
 import org.eclipse.tesla.shell.support.spi.BindingProcessor;
 import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;
+import org.sonatype.gshell.command.Command;
 import org.sonatype.gshell.command.CommandAction;
 import org.sonatype.inject.BeanEntry;
 
@@ -22,6 +21,8 @@ public class GShellCommandAnnotatedProcessor
     implements BindingProcessor
 {
 
+    static final String SHIM = "shim";
+
     public boolean handles( final Class<Object> implementationClass )
     {
         return getAnnotation( implementationClass ) != null
@@ -32,21 +33,15 @@ public class GShellCommandAnnotatedProcessor
     {
         final Command annotation = getAnnotation( beanEntry.getImplementationClass() );
         return new FunctionDescriptor.Default(
-            annotation.scope(),
+            SHIM,
             annotation.name(),
-            new GShellShimCommand( annotation, beanEntry )
+            new GShellShimCommand( beanEntry )
         );
     }
 
     private Command getAnnotation( final Class<Object> implementationClass )
     {
-        final org.sonatype.gshell.command.Command annotation =
-            implementationClass.getAnnotation( org.sonatype.gshell.command.Command.class );
-        if ( annotation != null )
-        {
-            return new CommandAdapter( annotation );
-        }
-        return null;
+        return implementationClass.getAnnotation( Command.class );
     }
 
 }

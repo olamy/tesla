@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.ai;
+package org.eclipse.tesla.shell.preparator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
@@ -14,12 +14,12 @@ import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
-import org.eclipse.tesla.shell.ai.validation.MissingRequiredArgumentException;
-import org.eclipse.tesla.shell.ai.validation.MissingRequiredOptionException;
-import org.eclipse.tesla.shell.ai.validation.MultipleArgumentsWithSameIndexException;
-import org.eclipse.tesla.shell.ai.validation.MultipleOptionsWithSameNameException;
-import org.eclipse.tesla.shell.ai.validation.TooManyArgumentsException;
-import org.eclipse.tesla.shell.ai.validation.TooManyOptionsException;
+import org.eclipse.tesla.shell.preparator.validation.MissingRequiredArgumentException;
+import org.eclipse.tesla.shell.preparator.validation.MissingRequiredOptionException;
+import org.eclipse.tesla.shell.preparator.validation.MultipleArgumentsWithSameIndexException;
+import org.eclipse.tesla.shell.preparator.validation.MultipleOptionsWithSameNameException;
+import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
+import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -28,7 +28,7 @@ import org.mockito.Mockito;
  *
  * @since 1.0
  */
-public class CommandLineParserTest
+public class DefaultActionPreparatorTest
 {
 
     final CommandSession session = Mockito.mock( CommandSession.class );
@@ -48,7 +48,7 @@ public class CommandLineParserTest
     public void parse01()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command01 command = new Command01();
         underTest.prepare( command, session, $() );
     }
@@ -71,7 +71,7 @@ public class CommandLineParserTest
     public void parse02()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command02 command = new Command02();
         underTest.prepare( command, session, $( "-opt1", "t-o-1" ) );
         assertThat( command.opt1, is( "t-o-1" ) );
@@ -104,7 +104,7 @@ public class CommandLineParserTest
     public void parse03()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command03 command = new Command03();
         underTest.prepare( command, session, $( "-opt1", "t-o-1", "-opt2", "-opt3", "3", "-opt4", "t-o-4" ) );
         assertThat( command.opt1, is( "t-o-1" ) );
@@ -131,7 +131,7 @@ public class CommandLineParserTest
     public void parse04()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command04 command = new Command04();
         underTest.prepare( command, session, $( "t-a-1" ) );
         assertThat( command.arg1, is( "t-a-1" ) );
@@ -164,7 +164,7 @@ public class CommandLineParserTest
     public void parse05()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command05 command = new Command05();
         underTest.prepare( command, session, $( "t-a-1", "true", "3", "t-a-4" ) );
         assertThat( command.arg1, is( "t-a-1" ) );
@@ -212,7 +212,7 @@ public class CommandLineParserTest
     public void parse06()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command06 command = new Command06();
         underTest.prepare( command, session, $( "-opt1", "t-0-1", "-opt2", "-opt3", "3", "-opt4", "t-o-4",
                                                 "t-a-1", "true", "3", "t-a-4" ) );
@@ -245,7 +245,7 @@ public class CommandLineParserTest
     public void parse07()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command07 command = new Command07();
         underTest.prepare( command, session, $() );
         assertThat( command.opt1, is( "default" ) );
@@ -269,7 +269,7 @@ public class CommandLineParserTest
     public void parse08()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command08 command = new Command08();
         underTest.prepare( command, session, $( "t-a-1", "t-a-2" ) );
         assertThat( command.arg1, arrayContaining( "t-a-1", "t-a-2" ) );
@@ -296,7 +296,7 @@ public class CommandLineParserTest
     public void parse09()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command09 command = new Command09();
         underTest.prepare( command, session, $( "t-a-1", "t-a-2", "t-a-3" ) );
         assertThat( command.arg1, is( "t-a-1" ) );
@@ -324,7 +324,7 @@ public class CommandLineParserTest
     public void parse10()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command10 command = new Command10();
         underTest.prepare( command, session, $( "-opt1", "t-a-1" ) );
         assertThat( command.opt1, is( true ) );
@@ -352,7 +352,7 @@ public class CommandLineParserTest
     public void parse11()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         {
             final Command11 command = new Command11();
             underTest.prepare( command, session, $( "-opt1", "false", "t-a-1" ) );
@@ -389,7 +389,7 @@ public class CommandLineParserTest
     public void parse12()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command12 command = new Command12();
         underTest.prepare( command, session, $( "t-a-1", "true", "3", "t-a-4" ) );
     }
@@ -415,7 +415,7 @@ public class CommandLineParserTest
     public void parse13()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command13 command = new Command13();
         underTest.prepare( command, session, $( "t-a-1" ) );
         assertThat( command.arg1, is( "t-a-1" ) );
@@ -443,7 +443,7 @@ public class CommandLineParserTest
     public void parse14()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command14 command = new Command14();
         underTest.prepare( command, session, $( "t-a-1" ) );
     }
@@ -472,7 +472,7 @@ public class CommandLineParserTest
     public void parse15()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command15 command = new Command15();
         underTest.prepare( command, session, $( "t-a-1", "t-a-2", "t-a-3" ) );
     }
@@ -495,7 +495,7 @@ public class CommandLineParserTest
     public void parse16()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command16 command = new Command16();
         underTest.prepare( command, session, $( "-opt1", "t-o-1", "-opt2", "-opt3", "t-o-3" ) );
     }
@@ -521,7 +521,7 @@ public class CommandLineParserTest
     public void parse17()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command17 command = new Command17();
         underTest.prepare( command, session, $( "-opt1", "t-o-1" ) );
     }
@@ -547,7 +547,7 @@ public class CommandLineParserTest
     public void parse18()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command18 command = new Command18();
         underTest.prepare( command, session, $( "-opt1", "t-o-1" ) );
     }
@@ -573,7 +573,7 @@ public class CommandLineParserTest
     public void parse19()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command19 command = new Command19();
         underTest.prepare( command, session, $( "-opt1", "t-o-1" ) );
     }
@@ -605,7 +605,7 @@ public class CommandLineParserTest
     public void parse20()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command20 command = new Command20();
         underTest.prepare( command, session, $( "--help" ) );
     }
@@ -637,7 +637,7 @@ public class CommandLineParserTest
     public void parse21()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command21 command = new Command21();
         underTest.prepare( command, session, $( "t-a-1", "-opt1", "t-o-1", "t-a-2", "-opt2" ) );
         assertThat( command.opt1, is( "t-o-1" ) );
@@ -710,7 +710,7 @@ public class CommandLineParserTest
     public void parse23()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command23 command = new Command23();
         underTest.prepare( command, session, $( "t-a-1", "-opt1", "t-o-1", "t-a-2", "-opt2" ) );
         assertThat( command.opt1, is( "t-o-1" ) );
@@ -743,7 +743,7 @@ public class CommandLineParserTest
     public void parse24()
         throws Exception
     {
-        final CommandLineParser underTest = new CommandLineParser();
+        final DefaultActionPreparator underTest = new DefaultActionPreparator();
         final Command24 command = new Command24();
         underTest.prepare( command, session, $( "-opt1", "t-o-1", "-opt2", "t-o-2",
                                                 "-opt3", "t-o-3-1", "-opt3", "t-o-3-2" ) );

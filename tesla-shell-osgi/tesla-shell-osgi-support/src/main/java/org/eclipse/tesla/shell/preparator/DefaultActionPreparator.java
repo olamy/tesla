@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.eclipse.tesla.shell.ai;
+package org.eclipse.tesla.shell.preparator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,24 +49,24 @@ import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.commands.converter.DefaultConverter;
 import org.apache.karaf.shell.console.NameScoping;
-import org.eclipse.tesla.shell.ai.validation.ArgumentConversionException;
-import org.eclipse.tesla.shell.ai.validation.MissingRequiredArgumentException;
-import org.eclipse.tesla.shell.ai.validation.MissingRequiredOptionException;
-import org.eclipse.tesla.shell.ai.validation.MultipleArgumentsWithSameIndexException;
-import org.eclipse.tesla.shell.ai.validation.MultipleOptionsWithSameNameException;
-import org.eclipse.tesla.shell.ai.validation.OptionConversionException;
-import org.eclipse.tesla.shell.ai.validation.TooManyArgumentsException;
-import org.eclipse.tesla.shell.ai.validation.TooManyOptionsException;
+import org.eclipse.tesla.shell.preparator.validation.ArgumentConversionException;
+import org.eclipse.tesla.shell.preparator.validation.MissingRequiredArgumentException;
+import org.eclipse.tesla.shell.preparator.validation.MissingRequiredOptionException;
+import org.eclipse.tesla.shell.preparator.validation.MultipleArgumentsWithSameIndexException;
+import org.eclipse.tesla.shell.preparator.validation.MultipleOptionsWithSameNameException;
+import org.eclipse.tesla.shell.preparator.validation.OptionConversionException;
+import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
+import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
 
-public class CommandLineParser
+public class DefaultActionPreparator
     implements ActionPreparator
 {
 
-    public static final CommandLineParser INSTANCE = new CommandLineParser();
+    public static final DefaultActionPreparator INSTANCE = new DefaultActionPreparator();
 
-    protected CommandLineParser()
+    protected DefaultActionPreparator()
     {
         // just to almost force using of singleton instance
     }
@@ -75,15 +75,16 @@ public class CommandLineParser
         throws Exception
     {
         // Introspect action for extraction of command
-        final Command command = getCommand( action );
+        final CommandDescriptor commandDescriptor = getCommandDescriptor( action );
 
         // Introspect action for extraction of arguments
-        final List<ArgumentBinding> arguments = new ArrayList<ArgumentBinding>( getArguments( action ) );
+        final List<ArgumentDescriptor> arguments =
+            new ArrayList<ArgumentDescriptor>( getArgumentDescriptors( action ) );
         // sort arguments by index and ensure that index is unique
-        sortArguments( command, arguments );
+        sortArgumentDescriptors( commandDescriptor, arguments );
 
         // Introspect action for extraction of options
-        final List<OptionBinding> options = getOptions( action );
+        final List<OptionDescriptor> options = getOptionDescriptors( action );
 
         if ( isHelp( params ) )
         {
@@ -96,29 +97,28 @@ public class CommandLineParser
         // then extract options out
         final Map<String, Object> optionValues = extractOptions( findSwitches( options ), argumentValues );
 
-        injectOptions( action, session, command, options, optionValues );
-        injectArguments( action, session, command, arguments, argumentValues );
+        injectOptions( action, commandDescriptor, options, optionValues );
+        injectArguments( action, commandDescriptor, arguments, argumentValues );
 
         return true;
     }
 
-    private List<String> findSwitches( final List<OptionBinding> bindings )
+    private List<String> findSwitches( final List<OptionDescriptor> descriptors )
     {
         final ArrayList<String> switches = new ArrayList<String>();
-        for ( final OptionBinding binding : bindings )
+        for ( final OptionDescriptor descriptor : descriptors )
         {
-            final Class<?> optionType = binding.getInjector().getType();
+            final Class<?> optionType = descriptor.getInjector().getType();
             if ( optionType == boolean.class || optionType == Boolean.class )
             {
-                final Option option = binding.getOption();
-                switches.add( option.name() );
-                if ( option.aliases() != null )
+                switches.add( descriptor.getName() );
+                if ( descriptor.getAliases() != null )
                 {
-                    for ( final String name : option.aliases() )
+                    for ( final String alias : descriptor.getAliases() )
                     {
-                        if ( name != null && name.trim().length() > 0 )
+                        if ( alias != null && alias.trim().length() > 0 )
                         {
-                            switches.add( name );
+                            switches.add( alias );
                         }
                     }
                 }
@@ -128,20 +128,19 @@ public class CommandLineParser
     }
 
     private void injectArguments( final Action action,
-                                  final CommandSession session,
-                                  final Command command,
-                                  final List<ArgumentBinding> arguments,
+                                  final CommandDescriptor commandDescriptor,
+                                  final List<ArgumentDescriptor> argumentDescriptors,
                                   final List<Object> argumentValues )
         throws Exception
     {
         final ArrayList<Object> remainingValues = new ArrayList<Object>( argumentValues );
-        for ( ArgumentBinding binding : arguments )
+        for ( ArgumentDescriptor descriptor : argumentDescriptors )
         {
-            final ActionInjector injector = binding.getInjector();
+            final ActionInjector injector = descriptor.getInjector();
             if ( remainingValues.size() > 0 )
             {
                 Object value;
-                if ( binding.getArgument().multiValued() )
+                if ( descriptor.isMultiValued() )
                 {
                     value = new ArrayList<Object>( remainingValues );
                     remainingValues.clear();
@@ -153,93 +152,92 @@ public class CommandLineParser
                 try
                 {
                     final Object converted = convert(
-                        action, value, injector.getGenericType(), binding.getArgument().multiValued()
+                        action, value, injector.getGenericType(), descriptor.isMultiValued()
                     );
                     injector.set( converted );
                 }
                 catch ( Exception e )
                 {
                     throw new ArgumentConversionException(
-                        command, binding.getArgument(), value, injector.getGenericType(), e
+                        commandDescriptor, descriptor, value, injector.getGenericType(), e
                     );
                 }
             }
-            else if ( binding.getArgument().required() )
+            else if ( descriptor.isRequired() )
             {
-                throw new MissingRequiredArgumentException( command, binding.getArgument() );
+                throw new MissingRequiredArgumentException( commandDescriptor, descriptor );
             }
         }
         if ( remainingValues.size() > 0 )
         {
-            throw new TooManyArgumentsException( command, remainingValues );
+            throw new TooManyArgumentsException( commandDescriptor, remainingValues );
         }
     }
 
     private void injectOptions( final Action action,
-                                final CommandSession session,
-                                final Command command,
-                                final List<OptionBinding> options,
+                                final CommandDescriptor commandDescriptor,
+                                final List<OptionDescriptor> options,
                                 final Map<String, Object> optionValues )
         throws Exception
     {
-        final Map<String, OptionBinding> nameToBinding = mapOptionsByName( command, options );
-        final Set<OptionBinding> remainingOptions = new HashSet<OptionBinding>( options );
+        final Map<String, OptionDescriptor> nameToDescriptor = mapOptionsByName( commandDescriptor, options );
+        final Set<OptionDescriptor> remainingOptions = new HashSet<OptionDescriptor>( options );
 
         for ( Map.Entry<String, Object> entry : optionValues.entrySet() )
         {
-            final OptionBinding binding = nameToBinding.get( entry.getKey() );
-            if ( binding == null )
+            final OptionDescriptor descriptor = nameToDescriptor.get( entry.getKey() );
+            if ( descriptor == null )
             {
-                throw new TooManyOptionsException( command, entry.getKey() );
+                throw new TooManyOptionsException( commandDescriptor, entry.getKey() );
             }
-            remainingOptions.remove( binding );
-            final ActionInjector injector = binding.getInjector();
+            remainingOptions.remove( descriptor );
+            final ActionInjector injector = descriptor.getInjector();
             try
             {
                 final Object converted = convert(
-                    action, entry.getValue(), injector.getGenericType(), binding.getOption().multiValued()
+                    action, entry.getValue(), injector.getGenericType(), descriptor.isMultiValued()
                 );
                 injector.set( converted );
             }
             catch ( Exception e )
             {
                 throw new OptionConversionException(
-                    command, binding.getOption(), entry.getValue(), injector.getGenericType(), e
+                    commandDescriptor, descriptor, entry.getValue(), injector.getGenericType(), e
                 );
             }
         }
         if ( remainingOptions.size() > 0 )
         {
-            for ( final OptionBinding binding : remainingOptions )
+            for ( final OptionDescriptor descriptor : remainingOptions )
             {
-                if ( binding.getOption().required() )
+                if ( descriptor.isRequired() )
                 {
-                    throw new MissingRequiredOptionException( command, binding.getOption() );
+                    throw new MissingRequiredOptionException( commandDescriptor, descriptor );
                 }
             }
         }
     }
 
-    private Map<String, OptionBinding> mapOptionsByName( final Command command, final List<OptionBinding> bindings )
+    private Map<String, OptionDescriptor> mapOptionsByName( final CommandDescriptor commandDescriptor,
+                                                            final List<OptionDescriptor> descriptors )
         throws Exception
     {
-        final Map<String, OptionBinding> nameToBinding = new HashMap<String, OptionBinding>();
-        for ( final OptionBinding binding : bindings )
+        final Map<String, OptionDescriptor> nameToBinding = new HashMap<String, OptionDescriptor>();
+        for ( final OptionDescriptor descriptor : descriptors )
         {
-            final Option option = binding.getOption();
-            if ( nameToBinding.put( option.name(), binding ) != null )
+            if ( nameToBinding.put( descriptor.getName(), descriptor ) != null )
             {
-                throw new MultipleOptionsWithSameNameException( command, option.name() );
+                throw new MultipleOptionsWithSameNameException( commandDescriptor, descriptor.getName() );
             }
-            if ( option.aliases() != null )
+            if ( descriptor.getAliases() != null )
             {
-                for ( final String name : option.aliases() )
+                for ( final String alias : descriptor.getAliases() )
                 {
-                    if ( name != null && name.trim().length() > 0 )
+                    if ( alias != null && alias.trim().length() > 0 )
                     {
-                        if ( nameToBinding.put( name, binding ) != null )
+                        if ( nameToBinding.put( alias, descriptor ) != null )
                         {
-                            throw new MultipleOptionsWithSameNameException( command, name );
+                            throw new MultipleOptionsWithSameNameException( commandDescriptor, alias );
                         }
                     }
                 }
@@ -348,23 +346,23 @@ public class CommandLineParser
         }
     }
 
-    private void sortArguments( final Command command, final List<ArgumentBinding> arguments )
+    private void sortArgumentDescriptors( final CommandDescriptor commandDescriptor,
+                                          final List<ArgumentDescriptor> arguments )
         throws Exception
     {
         try
         {
-            Collections.sort( arguments, new Comparator<ArgumentBinding>()
+            Collections.sort( arguments, new Comparator<ArgumentDescriptor>()
             {
                 @Override
-                public int compare( final ArgumentBinding ab1, final ArgumentBinding ab2 )
+                public int compare( final ArgumentDescriptor ad1, final ArgumentDescriptor ad2 )
                 {
-                    final int result =
-                        Integer.valueOf( ab1.getArgument().index() ).compareTo( ab2.getArgument().index() );
+                    final int result = Integer.valueOf( ad1.getIndex() ).compareTo( ad2.getIndex() );
                     if ( result == 0 )
                     {
                         throw new IllegalArgumentException(
                             new MultipleArgumentsWithSameIndexException(
-                                command, ab1.getArgument(), ab2.getArgument()
+                                commandDescriptor, ad1, ad2
                             )
                         );
                     }
@@ -378,70 +376,98 @@ public class CommandLineParser
         }
     }
 
-    protected Command getCommand( final Action action )
+    protected CommandDescriptor getCommandDescriptor( final Action action )
     {
-        return action.getClass().getAnnotation( Command.class );
+        final Command command = action.getClass().getAnnotation( Command.class );
+        return new CommandDescriptor()
+            .setScope( command.scope() )
+            .setName( command.name() )
+            .setDescription( command.description() )
+            .setDetailedDescription( command.detailedDescription() );
     }
 
-    protected List<OptionBinding> getOptions( final Action action )
+    protected List<OptionDescriptor> getOptionDescriptors( final Action action )
     {
-        final List<OptionBinding> options = new ArrayList<OptionBinding>();
+        final List<OptionDescriptor> descriptors = new ArrayList<OptionDescriptor>();
         for ( Class type = action.getClass(); type != null; type = type.getSuperclass() )
         {
-            for ( Field field : type.getDeclaredFields() )
+            for ( final Field field : type.getDeclaredFields() )
             {
                 final Option option = field.getAnnotation( Option.class );
                 if ( option != null )
                 {
-                    options.add( new OptionBinding( option, new ActionFieldInjector( action, field ) ) );
+                    descriptors.add(
+                        new OptionDescriptor()
+                            .setName( option.name() )
+                            .setAliases( option.aliases() )
+                            .setMultiValued( option.multiValued() )
+                            .setRequired( option.required() )
+                            .setDescription( option.description() )
+                            .setValueToShowInHelp( option.valueToShowInHelp() )
+                            .setInjector( new ActionFieldInjector( action, field ) )
+                    );
                 }
             }
-            for ( Method method : type.getDeclaredMethods() )
+            for ( final Method method : type.getDeclaredMethods() )
             {
                 final Option option = method.getAnnotation( Option.class );
                 final Class<?>[] parameterTypes = method.getParameterTypes();
                 if ( option != null && parameterTypes != null && parameterTypes.length == 1 )
                 {
-                    options.add( new OptionBinding( option, new ActionMethodInjector( action, method ) ) );
+                    descriptors.add(
+                        new OptionDescriptor()
+                            .setName( option.name() )
+                            .setAliases( option.aliases() )
+                            .setMultiValued( option.multiValued() )
+                            .setRequired( option.required() )
+                            .setDescription( option.description() )
+                            .setValueToShowInHelp( option.valueToShowInHelp() )
+                            .setInjector( new ActionMethodInjector( action, method ) )
+                    );
                 }
             }
         }
-        return options;
+        return descriptors;
     }
 
-    protected List<ArgumentBinding> getArguments( final Action action )
+    protected List<ArgumentDescriptor> getArgumentDescriptors( final Action action )
     {
-        final List<ArgumentBinding> arguments = new ArrayList<ArgumentBinding>();
+        final List<ArgumentDescriptor> arguments = new ArrayList<ArgumentDescriptor>();
         for ( Class type = action.getClass(); type != null; type = type.getSuperclass() )
         {
-            for ( Field field : type.getDeclaredFields() )
+            for ( final Field field : type.getDeclaredFields() )
             {
-                Argument argument = field.getAnnotation( Argument.class );
+                final Argument argument = field.getAnnotation( Argument.class );
                 if ( argument != null )
                 {
-                    if ( Argument.DEFAULT.equals( argument.name() ) )
-                    {
-                        argument = new UnnamedArgument( field.getName(), argument );
-                    }
-                    arguments.add( new ArgumentBinding( argument, new ActionFieldInjector( action, field ) ) );
+                    arguments.add(
+                        new ArgumentDescriptor()
+                            .setName( Argument.DEFAULT.equals( argument.name() ) ? field.getName() : argument.name() )
+                            .setDescription( argument.description() )
+                            .setIndex( argument.index() )
+                            .setMultiValued( argument.multiValued() )
+                            .setRequired( argument.required() )
+                            .setValueToShowInHelp( argument.valueToShowInHelp() )
+                            .setInjector( new ActionFieldInjector( action, field ) )
+                    );
                 }
             }
-            for ( Method method : type.getDeclaredMethods() )
+            for ( final Method method : type.getDeclaredMethods() )
             {
-                Argument argument = method.getAnnotation( Argument.class );
-                if ( argument != null )
+                final Argument argument = method.getAnnotation( Argument.class );
+                final Class<?>[] parameterTypes = method.getParameterTypes();
+                if ( argument != null && parameterTypes != null && parameterTypes.length == 1 )
                 {
-                    if ( Argument.DEFAULT.equals( argument.name() ) )
-                    {
-                        arguments.add( new ArgumentBinding(
-                            new UnnamedArgument( method.getName(), argument ),
-                            new ActionMethodInjector( action, method ) )
-                        );
-                    }
-                    else
-                    {
-                        arguments.add( new ArgumentBinding( argument, new ActionMethodInjector( action, method ) ) );
-                    }
+                    arguments.add(
+                        new ArgumentDescriptor()
+                            .setName( Argument.DEFAULT.equals( argument.name() ) ? method.getName() : argument.name() )
+                            .setDescription( argument.description() )
+                            .setIndex( argument.index() )
+                            .setMultiValued( argument.multiValued() )
+                            .setRequired( argument.required() )
+                            .setValueToShowInHelp( argument.valueToShowInHelp() )
+                            .setInjector( new ActionMethodInjector( action, method ) )
+                    );
                 }
             }
         }
@@ -465,99 +491,127 @@ public class CommandLineParser
 
     private void printUsage( final CommandSession session,
                              final Action action,
-                             final List<OptionBinding> options,
-                             final List<ArgumentBinding> arguments,
+                             final List<OptionDescriptor> options,
+                             final List<ArgumentDescriptor> argumentDescriptors,
                              final PrintStream out )
     {
-        options.add( new OptionBinding( HelpOption.INSTANCE ) );
-        Command command = getCommand( action );
+        options.add(
+            new OptionDescriptor()
+                .setName( "-h" )
+                .setAliases( "--help" )
+                .setDescription( "Display this help message" )
+        );
+        CommandDescriptor commandDescriptor = getCommandDescriptor( action );
         Terminal term = session != null ? (Terminal) session.get( ".jline.terminal" ) : null;
 
-        boolean globalScope = NameScoping.isGlobalScope( session, command.scope() );
-        if ( command != null && ( command.description() != null || command.name() != null ) )
+        boolean globalScope = NameScoping.isGlobalScope( session, commandDescriptor.getScope() );
+        if ( commandDescriptor != null
+            && ( commandDescriptor.getDescription() != null || commandDescriptor.getName() != null ) )
         {
             out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "DESCRIPTION" ).a( Ansi.Attribute.RESET ) );
             out.print( "        " );
-            if ( command.name() != null )
+            if ( commandDescriptor.getName() != null )
             {
                 if ( globalScope )
                 {
                     out.println(
-                        Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( command.name() ).a( Ansi.Attribute.RESET ) );
+                        Ansi.ansi()
+                            .a( Ansi.Attribute.INTENSITY_BOLD )
+                            .a( commandDescriptor.getName() )
+                            .a( Ansi.Attribute.RESET )
+                    );
                 }
                 else
                 {
-                    out.println( Ansi.ansi().a( command.scope() ).a( ":" ).a( Ansi.Attribute.INTENSITY_BOLD ).a(
-                        command.name() ).a(
-                        Ansi.Attribute.RESET ) );
+                    out.println(
+                        Ansi.ansi()
+                            .a( commandDescriptor.getScope() )
+                            .a( ":" ).a( Ansi.Attribute.INTENSITY_BOLD )
+                            .a( commandDescriptor.getName() )
+                            .a( Ansi.Attribute.RESET )
+                    );
                 }
                 out.println();
             }
             out.print( "\t" );
-            out.println( command.description() );
+            out.println( commandDescriptor.getDescription() );
             out.println();
         }
         StringBuilder syntax = new StringBuilder();
-        if ( command != null )
+        if ( commandDescriptor != null )
         {
             if ( globalScope )
             {
-                syntax.append( command.name() );
+                syntax.append( commandDescriptor.getName() );
             }
             else
             {
-                syntax.append( String.format( "%s:%s", command.scope(), command.name() ) );
+                syntax.append( String.format( "%s:%s", commandDescriptor.getScope(), commandDescriptor.getName() ) );
             }
         }
         if ( options.size() > 0 )
         {
             syntax.append( " [options]" );
         }
-        if ( arguments.size() > 0 )
+        if ( argumentDescriptors.size() > 0 )
         {
             syntax.append( ' ' );
-            for ( ArgumentBinding binding : arguments )
+            for ( ArgumentDescriptor descriptor : argumentDescriptors )
             {
-                final Argument argument = binding.getArgument();
-                if ( !argument.required() )
+                if ( !descriptor.isRequired() )
                 {
-                    syntax.append( String.format( "[%s] ", argument.name() ) );
+                    syntax.append( String.format( "[%s] ", descriptor.getName() ) );
                 }
                 else
                 {
-                    syntax.append( String.format( "%s ", argument.name() ) );
+                    syntax.append( String.format( "%s ", descriptor.getName() ) );
                 }
             }
         }
 
-        out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "SYNTAX" ).a( Ansi.Attribute.RESET ) );
+        out.println(
+            Ansi.ansi()
+                .a( Ansi.Attribute.INTENSITY_BOLD )
+                .a( "SYNTAX" )
+                .a( Ansi.Attribute.RESET )
+        );
         out.print( "        " );
         out.println( syntax.toString() );
         out.println();
-        if ( arguments.size() > 0 )
+        if ( argumentDescriptors.size() > 0 )
         {
-            out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "ARGUMENTS" ).a( Ansi.Attribute.RESET ) );
-            for ( ArgumentBinding binding : arguments )
+            out.println(
+                Ansi.ansi()
+                    .a( Ansi.Attribute.INTENSITY_BOLD )
+                    .a( "ARGUMENTS" )
+                    .a( Ansi.Attribute.RESET )
+            );
+            for ( ArgumentDescriptor descriptor : argumentDescriptors )
             {
-                final Argument argument = binding.getArgument();
                 out.print( "        " );
                 out.println(
-                    Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( argument.name() ).a( Ansi.Attribute.RESET ) );
-                printFormatted( "                ", argument.description(), term != null ? term.getWidth() : 80, out );
-                if ( !argument.required() )
+                    Ansi.ansi()
+                        .a( Ansi.Attribute.INTENSITY_BOLD )
+                        .a( descriptor.getName() )
+                        .a( Ansi.Attribute.RESET )
+                );
+                printFormatted(
+                    "                ", descriptor.getDescription(), term != null ? term.getWidth() : 80, out
+                );
+                if ( !descriptor.isRequired() )
                 {
-                    if ( argument.valueToShowInHelp() != null && argument.valueToShowInHelp().length() != 0 )
+                    if ( descriptor.getValueToShowInHelp() != null && descriptor.getValueToShowInHelp().length() != 0 )
                     {
                         try
                         {
-                            if ( Argument.DEFAULT_STRING.equals( argument.valueToShowInHelp() ) )
+                            if ( ArgumentDescriptor.DEFAULT.equals( descriptor.getValueToShowInHelp() ) )
                             {
-                                Object o = binding.getInjector().get();
+                                Object o = descriptor.getInjector().get();
                                 printObjectDefaultsTo( out, o );
                             }
                             else
                             {
-                                printDefaultsTo( out, argument.valueToShowInHelp() );
+                                printDefaultsTo( out, descriptor.getValueToShowInHelp() );
                             }
                         }
                         catch ( Throwable t )
@@ -572,29 +626,30 @@ public class CommandLineParser
         if ( options.size() > 0 )
         {
             out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "OPTIONS" ).a( Ansi.Attribute.RESET ) );
-            for ( OptionBinding binding : options )
+            for ( OptionDescriptor descriptor : options )
             {
-                final Option option = binding.getOption();
-                String opt = option.name();
-                for ( String alias : option.aliases() )
+                String opt = descriptor.getName();
+                for ( final String alias : descriptor.getAliases() )
                 {
                     opt += ", " + alias;
                 }
                 out.print( "        " );
                 out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( opt ).a( Ansi.Attribute.RESET ) );
-                printFormatted( "                ", option.description(), term != null ? term.getWidth() : 80, out );
-                if ( option.valueToShowInHelp() != null && option.valueToShowInHelp().length() != 0 )
+                printFormatted(
+                    "                ", descriptor.getDescription(), term != null ? term.getWidth() : 80, out
+                );
+                if ( descriptor.getValueToShowInHelp() != null && descriptor.getValueToShowInHelp().length() != 0 )
                 {
                     try
                     {
-                        if ( Option.DEFAULT_STRING.equals( option.valueToShowInHelp() ) )
+                        if ( OptionDescriptor.DEFAULT.equals( descriptor.getValueToShowInHelp() ) )
                         {
-                            Object o = binding.getInjector().get();
+                            Object o = descriptor.getInjector().get();
                             printObjectDefaultsTo( out, o );
                         }
                         else
                         {
-                            printDefaultsTo( out, option.valueToShowInHelp() );
+                            printDefaultsTo( out, descriptor.getValueToShowInHelp() );
                         }
                     }
                     catch ( Throwable t )
@@ -605,10 +660,16 @@ public class CommandLineParser
             }
             out.println();
         }
-        if ( command.detailedDescription().length() > 0 )
+        if ( commandDescriptor.getDetailedDescription() != null
+            && commandDescriptor.getDetailedDescription().length() > 0 )
         {
-            out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "DETAILS" ).a( Ansi.Attribute.RESET ) );
-            String desc = loadDescription( action.getClass(), command.detailedDescription() );
+            out.println(
+                Ansi.ansi()
+                    .a( Ansi.Attribute.INTENSITY_BOLD )
+                    .a( "DETAILS" )
+                    .a( Ansi.Attribute.RESET )
+            );
+            String desc = loadDescription( action.getClass(), commandDescriptor.getDetailedDescription() );
             printFormatted( "        ", desc, term != null ? term.getWidth() : 80, out );
         }
     }

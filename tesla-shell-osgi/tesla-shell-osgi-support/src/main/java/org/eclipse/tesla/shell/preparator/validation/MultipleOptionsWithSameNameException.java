@@ -1,7 +1,7 @@
-package org.eclipse.tesla.shell.ai.validation;
+package org.eclipse.tesla.shell.preparator.validation;
 
-import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.CommandException;
+import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -13,23 +13,23 @@ public class MultipleOptionsWithSameNameException
     extends CommandException
 {
 
-    public MultipleOptionsWithSameNameException( final Command command,
-                                                 final String name )
+    public MultipleOptionsWithSameNameException( final CommandDescriptor command,
+                                                 final String optionName )
     {
         super(
             Ansi.ansi()
                 .fg( Ansi.Color.RED )
                 .a( "Error executing command " )
-                .a( command.scope() )
+                .a( command.getScope() )
                 .a( ":" )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( command.name() )
+                .a( command.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( ": there are more options with the same name: " )
-                .a( name )
+                .a( optionName )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            String.format( "There are more options with the same name: %s", name )
+            String.format( "There are more options with the same name: %s", optionName )
         );
     }
 

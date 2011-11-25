@@ -1,8 +1,8 @@
-package org.eclipse.tesla.shell.ai.validation;
+package org.eclipse.tesla.shell.preparator.validation;
 
-import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.CommandException;
-import org.apache.karaf.shell.commands.Option;
+import org.eclipse.tesla.shell.preparator.ArgumentDescriptor;
+import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -10,29 +10,30 @@ import org.fusesource.jansi.Ansi;
  *
  * @since 1.0
  */
-public class MissingRequiredOptionException
+public class MissingRequiredArgumentException
     extends CommandException
 {
 
-    public MissingRequiredOptionException( final Command command, final Option option )
+    public MissingRequiredArgumentException( final CommandDescriptor command,
+                                             final ArgumentDescriptor argument )
     {
         super(
             Ansi.ansi()
                 .fg( Ansi.Color.RED )
                 .a( "Error executing command " )
-                .a( command.scope() )
+                .a( command.getScope() )
                 .a( ":" )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( command.name() )
+                .a( command.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
-                .a( ": option " )
+                .a( ": argument " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( option.name() )
+                .a( argument.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( " is required" )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Option " + option.name() + " is required"
+            "Argument " + argument.getName() + " is required"
         );
     }
 

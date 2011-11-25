@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.ai;
+package org.eclipse.tesla.shell.preparator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

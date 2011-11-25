@@ -2,7 +2,7 @@ package org.eclipse.tesla.shell.support;
 
 import org.apache.karaf.shell.commands.basic.AbstractCommand;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
-import org.eclipse.tesla.shell.ai.CommandLineParser;
+import org.eclipse.tesla.shell.preparator.DefaultActionPreparator;
 
 /**
  * TODO
@@ -17,7 +17,7 @@ public abstract class GuiceCommandSupport
     protected ActionPreparator getPreparator()
         throws Exception
     {
-        return CommandLineParser.INSTANCE;
+        return DefaultActionPreparator.INSTANCE;
     }
 
 }

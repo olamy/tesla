@@ -1,7 +1,6 @@
-package org.eclipse.tesla.shell.ai;
+package org.eclipse.tesla.shell.preparator;
 
 import java.lang.reflect.Type;
-import javax.enterprise.inject.Instance;
 
 /**
  * TODO

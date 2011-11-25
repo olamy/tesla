@@ -1,11 +1,11 @@
-package org.eclipse.tesla.shell.ai.validation;
+package org.eclipse.tesla.shell.preparator.validation;
 
 import java.lang.reflect.Type;
 
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.CommandException;
 import org.apache.karaf.shell.commands.converter.GenericType;
+import org.eclipse.tesla.shell.preparator.ArgumentDescriptor;
+import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -17,8 +17,8 @@ public class ArgumentConversionException
     extends CommandException
 {
 
-    public ArgumentConversionException( final Command command,
-                                        final Argument argument,
+    public ArgumentConversionException( final CommandDescriptor command,
+                                        final ArgumentDescriptor argument,
                                         final Object value,
                                         final Type expectedType,
                                         final Exception cause )
@@ -27,14 +27,14 @@ public class ArgumentConversionException
             Ansi.ansi()
                 .fg( Ansi.Color.RED )
                 .a( "Error executing command " )
-                .a( command.scope() )
+                .a( command.getScope() )
                 .a( ":" )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( command.name() )
+                .a( command.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( ": unable to convert argument " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( argument.name() )
+                .a( argument.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( " with value '" )
                 .a( value )
@@ -42,8 +42,10 @@ public class ArgumentConversionException
                 .a( new GenericType( expectedType ).toString() )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Unable to convert argument " + argument.name() + " with value '"
-                + value + "' to type " + new GenericType( expectedType ).toString(),
+            String.format(
+                "Unable to convert argument '%s' with value '%s' to type %s",
+                argument.getName(), value, new GenericType( expectedType ).toString()
+            ),
             cause
 
         );

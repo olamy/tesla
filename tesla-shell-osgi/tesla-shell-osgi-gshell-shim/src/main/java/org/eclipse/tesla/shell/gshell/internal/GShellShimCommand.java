@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.basic.AbstractCommand;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
+import org.sonatype.gshell.command.Command;
 import org.sonatype.gshell.command.CommandAction;
 import org.sonatype.gshell.util.NameAware;
 import org.sonatype.inject.BeanEntry;
@@ -25,14 +25,10 @@ class GShellShimCommand
     implements CompletableFunction
 {
 
-    private final Command commandAnnotation;
-
     private BeanEntry<Annotation, Object> beanEntry;
 
-    GShellShimCommand( final Command commandAnnotation,
-                       final BeanEntry<Annotation, Object> beanEntry )
+    GShellShimCommand( final BeanEntry<Annotation, Object> beanEntry )
     {
-        this.commandAnnotation = commandAnnotation;
         this.beanEntry = beanEntry;
     }
 
@@ -48,7 +44,7 @@ class GShellShimCommand
         final CommandAction commandAction = (CommandAction) beanEntry.getProvider().get();
         if ( commandAction instanceof NameAware )
         {
-            String name = commandAnnotation.name();
+            String name = beanEntry.getImplementationClass().getAnnotation( Command.class ).name();
             if ( name == null )
             {
                 name = commandAction.getClass().getSimpleName();
@@ -69,7 +65,7 @@ class GShellShimCommand
     protected ActionPreparator getPreparator()
         throws Exception
     {
-        return new GShellShimCommandLineParser( commandAnnotation );
+        return new GShellShimActionPreparator( );
     }
 
     @Override

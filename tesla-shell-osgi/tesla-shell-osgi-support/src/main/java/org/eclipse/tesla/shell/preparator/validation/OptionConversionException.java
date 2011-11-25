@@ -1,11 +1,11 @@
-package org.eclipse.tesla.shell.ai.validation;
+package org.eclipse.tesla.shell.preparator.validation;
 
 import java.lang.reflect.Type;
 
-import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.CommandException;
-import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.commands.converter.GenericType;
+import org.eclipse.tesla.shell.preparator.CommandDescriptor;
+import org.eclipse.tesla.shell.preparator.OptionDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
@@ -17,8 +17,8 @@ public class OptionConversionException
     extends CommandException
 {
 
-    public OptionConversionException( final Command command,
-                                      final Option option,
+    public OptionConversionException( final CommandDescriptor command,
+                                      final OptionDescriptor option,
                                       final Object value,
                                       final Type expectedType,
                                       final Exception cause )
@@ -27,14 +27,14 @@ public class OptionConversionException
             Ansi.ansi()
                 .fg( Ansi.Color.RED )
                 .a( "Error executing command " )
-                .a( command.scope() )
+                .a( command.getScope() )
                 .a( ":" )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( command.name() )
+                .a( command.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( ": unable to convert option " )
                 .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( option.name() )
+                .a( option.getName() )
                 .a( Ansi.Attribute.INTENSITY_BOLD_OFF )
                 .a( " with value '" )
                 .a( value )
@@ -42,8 +42,10 @@ public class OptionConversionException
                 .a( new GenericType( expectedType ).toString() )
                 .fg( Ansi.Color.DEFAULT )
                 .toString(),
-            "Unable to convert option " + option.name() + " with value '"
-                + value + "' to type " + new GenericType( expectedType ).toString(),
+            String.format(
+                "Unable to convert option '%s' with value '%s' to type %s",
+                option.getName(), value, new GenericType( expectedType ).toString()
+            ),
             cause
 
         );
