@@ -2,8 +2,8 @@ package org.eclipse.tesla.shell.ai.validation;
 
 import java.util.ArrayList;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.CommandException;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.CommandException;
 import org.fusesource.jansi.Ansi;
 
 /**

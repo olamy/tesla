@@ -1,12 +1,14 @@
 package org.eclipse.tesla.shell.gshell.internal;
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.basic.AbstractCommand;
-import org.apache.felix.gogo.commands.basic.ActionPreparator;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.basic.AbstractCommand;
+import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
 import org.sonatype.gshell.command.CommandAction;
@@ -70,9 +72,18 @@ class GShellShimCommand
         return new GShellShimCommandLineParser( commandAnnotation );
     }
 
+    @Override
     public List<Completer> getCompleters()
     {
         // TODO
-        return null;
+        return Collections.emptyList();
     }
+
+    @Override
+    public Map<String, Completer> getOptionalCompleters()
+    {
+        // TODO
+        return Collections.emptyMap();
+    }
+
 }

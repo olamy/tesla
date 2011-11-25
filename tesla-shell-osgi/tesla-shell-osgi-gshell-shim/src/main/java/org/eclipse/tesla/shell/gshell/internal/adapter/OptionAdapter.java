@@ -3,7 +3,9 @@ package org.eclipse.tesla.shell.gshell.internal.adapter;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.console.Completer;
+import org.apache.karaf.shell.console.completer.NullCompleter;
 
 /**
  * TODO
@@ -23,16 +25,21 @@ public class OptionAdapter
 
     public String name()
     {
+        if ( delegate.name() == null || "__EMPTY__".equals( delegate.name() ) )
+        {
+            return "--" + delegate.longName();
+        }
         return "-" + delegate.name();
     }
 
     public String[] aliases()
     {
-        if ( delegate.longName() != null )
+        if ( delegate.name() == null || "__EMPTY__".equals( delegate.name() )
+            || delegate.longName() == null || "__EMPTY__".equals( delegate.longName() ) )
         {
-            return new String[]{ "--" + delegate.longName() };
+            return new String[0];
         }
-        return new String[0];
+        return new String[]{ "--" + delegate.longName() };
     }
 
     public String description()
@@ -48,6 +55,11 @@ public class OptionAdapter
     public boolean multiValued()
     {
         return false;
+    }
+
+    public Class<? extends Completer> completer()
+    {
+        return NullCompleter.class;
     }
 
     public String valueToShowInHelp()

@@ -2,13 +2,13 @@ package org.eclipse.tesla.shell.gshell.internal.adapter;
 
 import java.lang.annotation.Annotation;
 
-import org.apache.felix.gogo.commands.Command;
+import org.apache.karaf.shell.commands.Command;
 
 /**
-* TODO
-*
-* @since 1.0
-*/
+ * TODO
+ *
+ * @since 1.0
+ */
 public class CommandAdapter
     implements Command
 {

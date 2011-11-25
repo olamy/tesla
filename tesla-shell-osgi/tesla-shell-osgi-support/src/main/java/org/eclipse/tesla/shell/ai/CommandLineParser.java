@@ -41,13 +41,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Argument;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-import org.apache.felix.gogo.commands.basic.ActionPreparator;
-import org.apache.felix.gogo.commands.converter.DefaultConverter;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Argument;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.commands.basic.ActionPreparator;
+import org.apache.karaf.shell.commands.converter.DefaultConverter;
 import org.apache.karaf.shell.console.NameScoping;
 import org.eclipse.tesla.shell.ai.validation.ArgumentConversionException;
 import org.eclipse.tesla.shell.ai.validation.MissingRequiredArgumentException;
@@ -57,8 +57,6 @@ import org.eclipse.tesla.shell.ai.validation.MultipleOptionsWithSameNameExceptio
 import org.eclipse.tesla.shell.ai.validation.OptionConversionException;
 import org.eclipse.tesla.shell.ai.validation.TooManyArgumentsException;
 import org.eclipse.tesla.shell.ai.validation.TooManyOptionsException;
-import org.eclipse.tesla.shell.support.internal.adapter.ArgumentAdapter;
-import org.eclipse.tesla.shell.support.internal.adapter.OptionAdapter;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
 
@@ -400,15 +398,11 @@ public class CommandLineParser
             }
             for ( Method method : type.getDeclaredMethods() )
             {
-                final org.eclipse.tesla.shell.support.Option option = method.getAnnotation(
-                    org.eclipse.tesla.shell.support.Option.class
-                );
+                final Option option = method.getAnnotation( Option.class );
                 final Class<?>[] parameterTypes = method.getParameterTypes();
                 if ( option != null && parameterTypes != null && parameterTypes.length == 1 )
                 {
-                    options.add( new OptionBinding(
-                        new OptionAdapter( option ), new ActionMethodInjector( action, method ) )
-                    );
+                    options.add( new OptionBinding( option, new ActionMethodInjector( action, method ) ) );
                 }
             }
         }
@@ -434,24 +428,19 @@ public class CommandLineParser
             }
             for ( Method method : type.getDeclaredMethods() )
             {
-                org.eclipse.tesla.shell.support.Argument argument = method.getAnnotation(
-                    org.eclipse.tesla.shell.support.Argument.class
-                );
+                Argument argument = method.getAnnotation( Argument.class );
                 if ( argument != null )
                 {
-                    final ArgumentAdapter argumentAdapter = new ArgumentAdapter( argument );
-                    if ( org.eclipse.tesla.shell.support.Argument.DEFAULT.equals( argument.name() ) )
+                    if ( Argument.DEFAULT.equals( argument.name() ) )
                     {
                         arguments.add( new ArgumentBinding(
-                            new UnnamedArgument( method.getName(), argumentAdapter ),
+                            new UnnamedArgument( method.getName(), argument ),
                             new ActionMethodInjector( action, method ) )
                         );
                     }
                     else
                     {
-                        arguments.add( new ArgumentBinding(
-                            argumentAdapter, new ActionMethodInjector( action, method ) )
-                        );
+                        arguments.add( new ArgumentBinding( argument, new ActionMethodInjector( action, method ) ) );
                     }
                 }
             }

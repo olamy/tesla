@@ -1,12 +1,8 @@
 package org.eclipse.tesla.shell.support;
 
-import javax.inject.Inject;
-
-import org.apache.felix.gogo.commands.basic.AbstractCommand;
-import org.apache.felix.gogo.commands.basic.ActionPreparator;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.apache.karaf.shell.commands.basic.AbstractCommand;
+import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.eclipse.tesla.shell.ai.CommandLineParser;
-import org.osgi.framework.BundleContext;
 
 /**
  * TODO

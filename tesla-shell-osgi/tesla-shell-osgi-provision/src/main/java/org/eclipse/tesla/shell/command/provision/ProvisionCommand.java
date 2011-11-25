@@ -3,11 +3,11 @@ package org.eclipse.tesla.shell.command.provision;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Argument;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Argument;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
 import org.eclipse.tesla.osgi.provision.ProvisionSet;
 import org.eclipse.tesla.osgi.provision.Provisioner;
 

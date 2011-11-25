@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import org.apache.felix.gogo.commands.Argument;
+import org.apache.karaf.shell.commands.Argument;
 
 /**
  * TODO

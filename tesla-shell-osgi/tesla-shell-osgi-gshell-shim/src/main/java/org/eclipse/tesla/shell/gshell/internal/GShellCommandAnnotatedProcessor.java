@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.felix.gogo.commands.Command;
+import org.apache.karaf.shell.commands.Command;
 import org.eclipse.tesla.shell.gshell.internal.adapter.CommandAdapter;
 import org.eclipse.tesla.shell.support.spi.BindingProcessor;
 import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;

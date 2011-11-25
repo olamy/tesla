@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Command;
 import org.eclipse.tesla.shell.ai.ActionFieldInjector;
 import org.eclipse.tesla.shell.ai.ActionMethodInjector;
 import org.eclipse.tesla.shell.ai.ArgumentBinding;

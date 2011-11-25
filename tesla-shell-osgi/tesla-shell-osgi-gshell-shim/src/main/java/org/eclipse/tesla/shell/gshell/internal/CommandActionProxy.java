@@ -2,10 +2,9 @@ package org.eclipse.tesla.shell.gshell.internal;
 
 import java.util.List;
 
-import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.shell.commands.Action;
 import org.sonatype.gshell.command.CommandAction;
-import org.sonatype.gshell.shell.Shell;
 import org.sonatype.gshell.shell.ShellHolder;
 import org.sonatype.gshell.util.io.StreamJack;
 
@@ -33,8 +32,8 @@ public class CommandActionProxy
         try
         {
             StreamJack.install();
-            ShellHolder.set( new GShellShimShell(commandSession) );
-            commandAction.execute( new GShellShimCommandContext(arguments) );
+            ShellHolder.set( new GShellShimShell( commandSession ) );
+            commandAction.execute( new GShellShimCommandContext( arguments ) );
             return null;
         }
         finally

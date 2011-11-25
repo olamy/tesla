@@ -4,8 +4,8 @@ import java.lang.annotation.Annotation;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.Function;
+import org.apache.karaf.shell.commands.Command;
 import org.eclipse.tesla.shell.support.spi.BindingProcessor;
 import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;
 import org.sonatype.inject.BeanEntry;
@@ -32,7 +32,7 @@ public abstract class GogoCommandAnnotatedProcessor
         return new FunctionDescriptor.Default(
             annotation.scope(),
             annotation.name(),
-            getFunction(beanEntry)
+            getFunction( beanEntry )
         );
     }
 

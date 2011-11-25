@@ -4,8 +4,8 @@ import java.lang.annotation.Annotation;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.felix.service.command.Function;
+import org.apache.karaf.shell.commands.basic.AbstractCommand;
 import org.eclipse.tesla.shell.support.spi.BindingProcessor;
 import org.sonatype.inject.BeanEntry;
 

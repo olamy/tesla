@@ -2,7 +2,7 @@ package org.eclipse.tesla.shell.ai;
 
 import java.lang.annotation.Annotation;
 
-import org.apache.felix.gogo.commands.Argument;
+import org.apache.karaf.shell.commands.Argument;
 
 /**
  * TODO

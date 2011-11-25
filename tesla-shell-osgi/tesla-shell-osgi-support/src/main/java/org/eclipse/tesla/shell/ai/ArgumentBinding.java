@@ -1,6 +1,6 @@
 package org.eclipse.tesla.shell.ai;
 
-import org.apache.felix.gogo.commands.Argument;
+import org.apache.karaf.shell.commands.Argument;
 
 /**
  * TODO

@@ -10,9 +10,9 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.felix.gogo.commands.basic.AbstractCommand;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
+import org.apache.karaf.shell.commands.basic.AbstractCommand;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.junit.Test;
 import org.mockito.Matchers;

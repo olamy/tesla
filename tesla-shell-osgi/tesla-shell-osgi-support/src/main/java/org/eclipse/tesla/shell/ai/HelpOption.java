@@ -2,7 +2,8 @@ package org.eclipse.tesla.shell.ai;
 
 import java.lang.annotation.Annotation;
 
-import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.console.Completer;
 
 /**
  * TODO
@@ -43,6 +44,11 @@ public class HelpOption
     public boolean multiValued()
     {
         return false;
+    }
+
+    public Class<? extends Completer> completer()
+    {
+        return null;
     }
 
     public String valueToShowInHelp()
