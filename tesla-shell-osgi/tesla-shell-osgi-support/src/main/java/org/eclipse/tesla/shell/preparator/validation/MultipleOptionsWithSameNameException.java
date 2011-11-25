@@ -23,9 +23,7 @@ import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Exception thrown in case that an action implementation has multiple options withs same name / alias.
  */
 public class MultipleOptionsWithSameNameException
     extends CommandException

@@ -21,9 +21,7 @@ package org.eclipse.tesla.shell.preparator;
 import java.lang.reflect.Type;
 
 /**
- * TODO
- *
- * @since 1.0
+ * An argument/option injector used to inject the argument/option value and provide information about injection point.
  */
 public interface ActionInjector
 {

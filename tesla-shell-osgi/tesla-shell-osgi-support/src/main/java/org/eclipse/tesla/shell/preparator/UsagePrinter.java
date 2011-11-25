@@ -36,6 +36,9 @@ import org.apache.karaf.shell.console.NameScoping;
 import org.fusesource.jansi.Ansi;
 import jline.Terminal;
 
+/**
+ * Utility class for printing usage (help) information about an action.
+ */
 public class UsagePrinter
 {
 

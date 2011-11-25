@@ -21,9 +21,7 @@ package org.eclipse.tesla.shell.preparator;
 import org.apache.karaf.shell.commands.Option;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Describes an action option.
  */
 public class OptionDescriptor
 {

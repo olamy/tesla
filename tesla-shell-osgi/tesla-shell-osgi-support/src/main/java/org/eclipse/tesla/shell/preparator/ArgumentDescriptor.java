@@ -21,9 +21,7 @@ package org.eclipse.tesla.shell.preparator;
 import org.apache.karaf.shell.commands.Argument;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Describes an action argument.
  */
 public class ArgumentDescriptor
 {

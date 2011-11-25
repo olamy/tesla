@@ -24,9 +24,7 @@ import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Exception thrown in case that an action implementation has more arguments with same index.
  */
 public class MultipleArgumentsWithSameIndexException
     extends CommandException

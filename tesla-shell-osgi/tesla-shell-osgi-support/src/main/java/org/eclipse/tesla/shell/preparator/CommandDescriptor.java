@@ -19,9 +19,7 @@
 package org.eclipse.tesla.shell.preparator;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Describes an action command.
  */
 public class CommandDescriptor
 {

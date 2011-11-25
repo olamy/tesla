@@ -22,9 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 /**
- * TODO
- *
- * @since 1.0
+ * A {@link Field} {@link ActionInjector}.
  */
 public class ActionFieldInjector
     implements ActionInjector

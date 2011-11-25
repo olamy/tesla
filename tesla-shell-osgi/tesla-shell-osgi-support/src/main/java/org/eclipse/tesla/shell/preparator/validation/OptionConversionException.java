@@ -27,9 +27,7 @@ import org.eclipse.tesla.shell.preparator.OptionDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Exception thrown in case that an option could not be converted to expected type.
  */
 public class OptionConversionException
     extends CommandException

@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.util.Arrays;
@@ -21,17 +22,14 @@ import org.eclipse.tesla.shell.preparator.validation.MultipleOptionsWithSameName
 import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
 import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * TODO
- *
- * @since 1.0
+ * {@link DefaultActionPreparator} UTs.
  */
 public class DefaultActionPreparatorTest
 {
 
-    final CommandSession session = Mockito.mock( CommandSession.class );
+    final CommandSession session = mock( CommandSession.class );
 
     // ----------------------------------------------------------------------
     // no option, no arguments

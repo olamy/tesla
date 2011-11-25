@@ -25,9 +25,7 @@ import org.eclipse.tesla.shell.preparator.CommandDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Exception thrown in case that there are more arguments then expected.
  */
 public class TooManyArgumentsException
     extends CommandException

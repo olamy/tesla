@@ -23,9 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
- * TODO
- *
- * @since 1.0
+ * A {@link Method} {@link ActionInjector}.
  */
 public class ActionMethodInjector
     implements ActionInjector

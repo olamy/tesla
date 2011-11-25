@@ -24,9 +24,7 @@ import org.eclipse.tesla.shell.preparator.OptionDescriptor;
 import org.fusesource.jansi.Ansi;
 
 /**
- * TODO
- *
- * @since 1.0
+ * Exception thrown in case that a required option is not present.
  */
 public class MissingRequiredOptionException
     extends CommandException
