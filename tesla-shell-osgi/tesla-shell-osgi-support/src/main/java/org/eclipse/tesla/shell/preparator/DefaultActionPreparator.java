@@ -18,12 +18,6 @@
  */
 package org.eclipse.tesla.shell.preparator;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -38,8 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
@@ -48,7 +40,6 @@ import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.commands.converter.DefaultConverter;
-import org.apache.karaf.shell.console.NameScoping;
 import org.eclipse.tesla.shell.preparator.validation.ArgumentConversionException;
 import org.eclipse.tesla.shell.preparator.validation.MissingRequiredArgumentException;
 import org.eclipse.tesla.shell.preparator.validation.MissingRequiredOptionException;
@@ -57,8 +48,6 @@ import org.eclipse.tesla.shell.preparator.validation.MultipleOptionsWithSameName
 import org.eclipse.tesla.shell.preparator.validation.OptionConversionException;
 import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
 import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
-import org.fusesource.jansi.Ansi;
-import jline.Terminal;
 
 public class DefaultActionPreparator
     implements ActionPreparator
@@ -78,27 +67,29 @@ public class DefaultActionPreparator
         final CommandDescriptor commandDescriptor = getCommandDescriptor( action );
 
         // Introspect action for extraction of arguments
-        final List<ArgumentDescriptor> arguments =
+        final List<ArgumentDescriptor> argumentDescriptors =
             new ArrayList<ArgumentDescriptor>( getArgumentDescriptors( action ) );
         // sort arguments by index and ensure that index is unique
-        sortArgumentDescriptors( commandDescriptor, arguments );
+        sortArgumentDescriptors( commandDescriptor, argumentDescriptors );
 
         // Introspect action for extraction of options
-        final List<OptionDescriptor> options = getOptionDescriptors( action );
+        final List<OptionDescriptor> optionDescriptors = getOptionDescriptors( action );
 
         if ( isHelp( params ) )
         {
-            printUsage( session, action, options, arguments, System.out );
+            UsagePrinter.print(
+                session, action, commandDescriptor, optionDescriptors, argumentDescriptors, System.out
+            );
             return false;
         }
 
         // start considering all params as arguments
         final List<Object> argumentValues = new ArrayList<Object>( params == null ? Collections.emptyList() : params );
         // then extract options out
-        final Map<String, Object> optionValues = extractOptions( findSwitches( options ), argumentValues );
+        final Map<String, Object> optionValues = extractOptions( findSwitches( optionDescriptors ), argumentValues );
 
-        injectOptions( action, commandDescriptor, options, optionValues );
-        injectArguments( action, commandDescriptor, arguments, argumentValues );
+        injectOptions( action, commandDescriptor, optionDescriptors, optionValues );
+        injectArguments( action, commandDescriptor, argumentDescriptors, argumentValues );
 
         return true;
     }
@@ -487,274 +478,6 @@ public class DefaultActionPreparator
             }
         }
         return false;
-    }
-
-    private void printUsage( final CommandSession session,
-                             final Action action,
-                             final List<OptionDescriptor> options,
-                             final List<ArgumentDescriptor> argumentDescriptors,
-                             final PrintStream out )
-    {
-        options.add(
-            new OptionDescriptor()
-                .setName( "-h" )
-                .setAliases( "--help" )
-                .setDescription( "Display this help message" )
-        );
-        CommandDescriptor commandDescriptor = getCommandDescriptor( action );
-        Terminal term = session != null ? (Terminal) session.get( ".jline.terminal" ) : null;
-
-        boolean globalScope = NameScoping.isGlobalScope( session, commandDescriptor.getScope() );
-        if ( commandDescriptor != null
-            && ( commandDescriptor.getDescription() != null || commandDescriptor.getName() != null ) )
-        {
-            out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "DESCRIPTION" ).a( Ansi.Attribute.RESET ) );
-            out.print( "        " );
-            if ( commandDescriptor.getName() != null )
-            {
-                if ( globalScope )
-                {
-                    out.println(
-                        Ansi.ansi()
-                            .a( Ansi.Attribute.INTENSITY_BOLD )
-                            .a( commandDescriptor.getName() )
-                            .a( Ansi.Attribute.RESET )
-                    );
-                }
-                else
-                {
-                    out.println(
-                        Ansi.ansi()
-                            .a( commandDescriptor.getScope() )
-                            .a( ":" ).a( Ansi.Attribute.INTENSITY_BOLD )
-                            .a( commandDescriptor.getName() )
-                            .a( Ansi.Attribute.RESET )
-                    );
-                }
-                out.println();
-            }
-            out.print( "\t" );
-            out.println( commandDescriptor.getDescription() );
-            out.println();
-        }
-        StringBuilder syntax = new StringBuilder();
-        if ( commandDescriptor != null )
-        {
-            if ( globalScope )
-            {
-                syntax.append( commandDescriptor.getName() );
-            }
-            else
-            {
-                syntax.append( String.format( "%s:%s", commandDescriptor.getScope(), commandDescriptor.getName() ) );
-            }
-        }
-        if ( options.size() > 0 )
-        {
-            syntax.append( " [options]" );
-        }
-        if ( argumentDescriptors.size() > 0 )
-        {
-            syntax.append( ' ' );
-            for ( ArgumentDescriptor descriptor : argumentDescriptors )
-            {
-                if ( !descriptor.isRequired() )
-                {
-                    syntax.append( String.format( "[%s] ", descriptor.getName() ) );
-                }
-                else
-                {
-                    syntax.append( String.format( "%s ", descriptor.getName() ) );
-                }
-            }
-        }
-
-        out.println(
-            Ansi.ansi()
-                .a( Ansi.Attribute.INTENSITY_BOLD )
-                .a( "SYNTAX" )
-                .a( Ansi.Attribute.RESET )
-        );
-        out.print( "        " );
-        out.println( syntax.toString() );
-        out.println();
-        if ( argumentDescriptors.size() > 0 )
-        {
-            out.println(
-                Ansi.ansi()
-                    .a( Ansi.Attribute.INTENSITY_BOLD )
-                    .a( "ARGUMENTS" )
-                    .a( Ansi.Attribute.RESET )
-            );
-            for ( ArgumentDescriptor descriptor : argumentDescriptors )
-            {
-                out.print( "        " );
-                out.println(
-                    Ansi.ansi()
-                        .a( Ansi.Attribute.INTENSITY_BOLD )
-                        .a( descriptor.getName() )
-                        .a( Ansi.Attribute.RESET )
-                );
-                printFormatted(
-                    "                ", descriptor.getDescription(), term != null ? term.getWidth() : 80, out
-                );
-                if ( !descriptor.isRequired() )
-                {
-                    if ( descriptor.getValueToShowInHelp() != null && descriptor.getValueToShowInHelp().length() != 0 )
-                    {
-                        try
-                        {
-                            if ( ArgumentDescriptor.DEFAULT.equals( descriptor.getValueToShowInHelp() ) )
-                            {
-                                Object o = descriptor.getInjector().get();
-                                printObjectDefaultsTo( out, o );
-                            }
-                            else
-                            {
-                                printDefaultsTo( out, descriptor.getValueToShowInHelp() );
-                            }
-                        }
-                        catch ( Throwable t )
-                        {
-                            // Ignore
-                        }
-                    }
-                }
-            }
-            out.println();
-        }
-        if ( options.size() > 0 )
-        {
-            out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( "OPTIONS" ).a( Ansi.Attribute.RESET ) );
-            for ( OptionDescriptor descriptor : options )
-            {
-                String opt = descriptor.getName();
-                for ( final String alias : descriptor.getAliases() )
-                {
-                    opt += ", " + alias;
-                }
-                out.print( "        " );
-                out.println( Ansi.ansi().a( Ansi.Attribute.INTENSITY_BOLD ).a( opt ).a( Ansi.Attribute.RESET ) );
-                printFormatted(
-                    "                ", descriptor.getDescription(), term != null ? term.getWidth() : 80, out
-                );
-                if ( descriptor.getValueToShowInHelp() != null && descriptor.getValueToShowInHelp().length() != 0 )
-                {
-                    try
-                    {
-                        if ( OptionDescriptor.DEFAULT.equals( descriptor.getValueToShowInHelp() ) )
-                        {
-                            Object o = descriptor.getInjector().get();
-                            printObjectDefaultsTo( out, o );
-                        }
-                        else
-                        {
-                            printDefaultsTo( out, descriptor.getValueToShowInHelp() );
-                        }
-                    }
-                    catch ( Throwable t )
-                    {
-                        // Ignore
-                    }
-                }
-            }
-            out.println();
-        }
-        if ( commandDescriptor.getDetailedDescription() != null
-            && commandDescriptor.getDetailedDescription().length() > 0 )
-        {
-            out.println(
-                Ansi.ansi()
-                    .a( Ansi.Attribute.INTENSITY_BOLD )
-                    .a( "DETAILS" )
-                    .a( Ansi.Attribute.RESET )
-            );
-            String desc = loadDescription( action.getClass(), commandDescriptor.getDetailedDescription() );
-            printFormatted( "        ", desc, term != null ? term.getWidth() : 80, out );
-        }
-    }
-
-    private void printObjectDefaultsTo( final PrintStream out, final Object o )
-    {
-        if ( o != null
-            && ( !( o instanceof Boolean ) || ( (Boolean) o ) )
-            && ( !( o instanceof Number ) || ( (Number) o ).doubleValue() != 0.0 ) )
-        {
-            printDefaultsTo( out, o.toString() );
-        }
-    }
-
-    private void printDefaultsTo( PrintStream out, String value )
-    {
-        out.print( "                (defaults to " );
-        out.print( value );
-        out.println( ")" );
-    }
-
-    protected String loadDescription( final Class clazz, final String description )
-    {
-        String resolved = description;
-        if ( description.startsWith( "classpath:" ) )
-        {
-            InputStream is = clazz.getResourceAsStream( resolved.substring( "classpath:".length() ) );
-            if ( is == null )
-            {
-                is = clazz.getClassLoader().getResourceAsStream( resolved.substring( "classpath:".length() ) );
-            }
-            if ( is == null )
-            {
-                resolved = "Unable to load description from " + description;
-            }
-            else
-            {
-                try
-                {
-                    Reader r = new InputStreamReader( is );
-                    StringWriter sw = new StringWriter();
-                    int c;
-                    while ( ( c = r.read() ) != -1 )
-                    {
-                        sw.append( (char) c );
-                    }
-                    resolved = sw.toString();
-                }
-                catch ( IOException e )
-                {
-                    resolved = "Unable to load description from " + description;
-                }
-                finally
-                {
-                    try
-                    {
-                        is.close();
-                    }
-                    catch ( IOException e )
-                    {
-                        // Ignore
-                    }
-                }
-            }
-        }
-        return resolved;
-    }
-
-    // TODO move this to a helper class?
-    public static void printFormatted( String prefix, String str, int termWidth, PrintStream out )
-    {
-        int pfxLen = length( prefix );
-        int maxwidth = termWidth - pfxLen;
-        Pattern wrap = Pattern.compile( "(\\S\\S{" + maxwidth + ",}|.{1," + maxwidth + "})(\\s+|$)" );
-        Matcher m = wrap.matcher( str );
-        while ( m.find() )
-        {
-            out.print( prefix );
-            out.println( m.group() );
-        }
-    }
-
-    public static int length( String str )
-    {
-        return str.length();
     }
 
     protected Object convert( final Action action,
