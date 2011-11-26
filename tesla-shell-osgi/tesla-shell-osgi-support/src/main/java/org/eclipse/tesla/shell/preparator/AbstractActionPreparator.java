@@ -18,6 +18,8 @@
  */
 package org.eclipse.tesla.shell.preparator;
 
+import static java.util.ResourceBundle.getBundle;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.felix.service.command.CommandSession;
@@ -103,6 +107,20 @@ public abstract class AbstractActionPreparator
     protected abstract List<OptionDescriptor> getOptionDescriptors( final Action action );
 
     protected abstract List<ArgumentDescriptor> getArgumentDescriptors( final Action action );
+
+    protected ResourceBundle loadResourceBundle( final Class<?> clazz )
+    {
+        ResourceBundle resourceBundle = null;
+        try
+        {
+            resourceBundle = getBundle( clazz.getName(), Locale.getDefault(), clazz.getClassLoader() );
+        }
+        catch ( Exception ignore )
+        {
+            // ignore
+        }
+        return resourceBundle;
+    }
 
     // ----------------------------------------------------------------------
     // Implementation methods

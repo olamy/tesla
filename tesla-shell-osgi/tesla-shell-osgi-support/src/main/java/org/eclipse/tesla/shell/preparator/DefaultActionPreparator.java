@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
@@ -49,16 +50,19 @@ public class DefaultActionPreparator
     protected CommandDescriptor getCommandDescriptor( final Action action )
     {
         final Command command = action.getClass().getAnnotation( Command.class );
+        final ResourceBundle resourceBundle = loadResourceBundle( action.getClass() );
         return new CommandDescriptor()
             .setScope( command.scope() )
             .setName( command.name() )
             .setDescription( command.description() )
+            .loadDescription( resourceBundle )
             .setDetailedDescription( command.detailedDescription() );
     }
 
     @Override
     protected List<OptionDescriptor> getOptionDescriptors( final Action action )
     {
+        final ResourceBundle resourceBundle = loadResourceBundle( action.getClass() );
         final List<OptionDescriptor> descriptors = new ArrayList<OptionDescriptor>();
         for ( Class type = action.getClass(); type != null; type = type.getSuperclass() )
         {
@@ -74,6 +78,7 @@ public class DefaultActionPreparator
                             .setMultiValued( option.multiValued() )
                             .setRequired( option.required() )
                             .setDescription( option.description() )
+                            .loadDescription( resourceBundle, field.getName() )
                             .setValueToShowInHelp( option.valueToShowInHelp() )
                             .setInjector( new ActionFieldInjector( action, field ) )
                     );
@@ -92,6 +97,7 @@ public class DefaultActionPreparator
                             .setMultiValued( option.multiValued() )
                             .setRequired( option.required() )
                             .setDescription( option.description() )
+                            .loadDescription( resourceBundle, method.getName() )
                             .setValueToShowInHelp( option.valueToShowInHelp() )
                             .setInjector( new ActionMethodInjector( action, method ) )
                     );
@@ -104,6 +110,7 @@ public class DefaultActionPreparator
     @Override
     protected List<ArgumentDescriptor> getArgumentDescriptors( final Action action )
     {
+        final ResourceBundle resourceBundle = loadResourceBundle( action.getClass() );
         final List<ArgumentDescriptor> arguments = new ArrayList<ArgumentDescriptor>();
         for ( Class type = action.getClass(); type != null; type = type.getSuperclass() )
         {
@@ -116,6 +123,7 @@ public class DefaultActionPreparator
                         new ArgumentDescriptor()
                             .setName( Argument.DEFAULT.equals( argument.name() ) ? field.getName() : argument.name() )
                             .setDescription( argument.description() )
+                            .loadDescription( resourceBundle, field.getName() )
                             .setIndex( argument.index() )
                             .setMultiValued( argument.multiValued() )
                             .setRequired( argument.required() )
@@ -134,6 +142,7 @@ public class DefaultActionPreparator
                         new ArgumentDescriptor()
                             .setName( Argument.DEFAULT.equals( argument.name() ) ? method.getName() : argument.name() )
                             .setDescription( argument.description() )
+                            .loadDescription( resourceBundle, method.getName() )
                             .setIndex( argument.index() )
                             .setMultiValued( argument.multiValued() )
                             .setRequired( argument.required() )

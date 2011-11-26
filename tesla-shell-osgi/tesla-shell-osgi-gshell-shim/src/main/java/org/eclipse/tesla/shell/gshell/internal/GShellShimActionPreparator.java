@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
@@ -32,6 +33,8 @@ public class GShellShimActionPreparator
     implements ActionPreparator
 {
 
+    private static final String EMPTY = "__EMPTY__";
+
     @Override
     public boolean prepare( final Action action, final CommandSession session, final List<Object> params )
         throws Exception
@@ -48,17 +51,22 @@ public class GShellShimActionPreparator
     {
         final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
 
+        final ResourceBundle resourceBundle = loadResourceBundle( commandAction.getClass() );
+
         final String[] segments = commandAction.getClass().getPackage().getName().split( "\\." );
 
         return new CommandDescriptor()
             .setScope( segments.length > 0 ? segments[segments.length - 1] : GShellCommandAnnotatedProcessor.SHIM )
-            .setName( commandAction.getClass().getAnnotation( Command.class ).name() );
+            .setName( commandAction.getClass().getAnnotation( Command.class ).name() )
+            .loadDescription( resourceBundle );
     }
 
     @Override
     protected List<OptionDescriptor> getOptionDescriptors( final Action action )
     {
         final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
+
+        final ResourceBundle resourceBundle = loadResourceBundle( commandAction.getClass() );
 
         final List<OptionDescriptor> options = new ArrayList<OptionDescriptor>();
         for ( Class type = commandAction.getClass(); type != null; type = type.getSuperclass() )
@@ -69,7 +77,7 @@ public class GShellShimActionPreparator
                 if ( option != null )
                 {
                     options.add(
-                        optionDescriptor( option )
+                        optionDescriptor( option, resourceBundle, field.getName() )
                             .setInjector( new ActionFieldInjector( commandAction, field ) )
                     );
                 }
@@ -81,7 +89,7 @@ public class GShellShimActionPreparator
                 if ( option != null && parameterTypes != null && parameterTypes.length == 1 )
                 {
                     options.add(
-                        optionDescriptor( option )
+                        optionDescriptor( option, resourceBundle, method.getName() )
                             .setInjector( new ActionMethodInjector( commandAction, method ) )
                     );
                 }
@@ -95,6 +103,8 @@ public class GShellShimActionPreparator
     {
         final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
 
+        final ResourceBundle resourceBundle = loadResourceBundle( commandAction.getClass() );
+
         final List<ArgumentDescriptor> arguments = new ArrayList<ArgumentDescriptor>();
         for ( Class type = commandAction.getClass(); type != null; type = type.getSuperclass() )
         {
@@ -104,7 +114,7 @@ public class GShellShimActionPreparator
                 if ( argument != null )
                 {
                     arguments.add(
-                        argumentDescriptor( argument, field )
+                        argumentDescriptor( argument, field, resourceBundle )
                             .setInjector( new ActionFieldInjector( commandAction, field ) )
                     );
                 }
@@ -116,7 +126,7 @@ public class GShellShimActionPreparator
                 if ( argument != null && parameterTypes != null && parameterTypes.length == 1 )
                 {
                     arguments.add(
-                        argumentDescriptor( argument, method )
+                        argumentDescriptor( argument, method, resourceBundle )
                             .setInjector( new ActionMethodInjector( commandAction, method ) )
                     );
                 }
@@ -125,17 +135,23 @@ public class GShellShimActionPreparator
         return arguments;
     }
 
-    private ArgumentDescriptor argumentDescriptor( final Argument argument, final Field field )
+    private ArgumentDescriptor argumentDescriptor( final Argument argument,
+                                                   final Field field,
+                                                   final ResourceBundle resourceBundle )
     {
         return argumentDescriptor( argument )
             .setName( field.getName() )
+            .loadDescription( resourceBundle, field.getName() )
             .setMultiValued( field.getType().isArray() || Collection.class.isAssignableFrom( field.getType() ) );
     }
 
-    private ArgumentDescriptor argumentDescriptor( final Argument argument, final Method method )
+    private ArgumentDescriptor argumentDescriptor( final Argument argument,
+                                                   final Method method,
+                                                   final ResourceBundle resourceBundle )
     {
         return argumentDescriptor( argument )
             .setName( method.getName() )
+            .loadDescription( resourceBundle, method.getName() )
             .setMultiValued( method.getParameterTypes()[0].isArray()
                                  || Collection.class.isAssignableFrom( method.getParameterTypes()[0] ) );
     }
@@ -148,25 +164,29 @@ public class GShellShimActionPreparator
             .setRequired( argument.required() );
     }
 
-    private OptionDescriptor optionDescriptor( final Option option )
+    private OptionDescriptor optionDescriptor( final Option option,
+                                               final ResourceBundle resourceBundle,
+                                               final String resourceBundleKey )
     {
-        final OptionDescriptor optionDescriptor = new OptionDescriptor();
-        if ( option.name() == null || "__EMPTY__".equals( option.name() ) )
+        final OptionDescriptor descriptor = new OptionDescriptor();
+        if ( option.name() == null || EMPTY.equals( option.name() ) )
         {
-            optionDescriptor.setName( "--" + option.longName() );
+            descriptor.setName( "--" + option.longName() );
         }
         else
         {
-            optionDescriptor.setName( "-" + option.name() );
+            descriptor.setName( "-" + option.name() );
         }
-        if ( !( option.name() == null || "__EMPTY__".equals( option.name() )
-            || option.longName() == null || "__EMPTY__".equals( option.longName() ) ) )
+        if ( !( option.name() == null || EMPTY.equals( option.name() )
+            || option.longName() == null || EMPTY.equals( option.longName() ) ) )
         {
-            optionDescriptor.setAliases( "--" + option.longName() );
+            descriptor.setAliases( "--" + option.longName() );
         }
-        optionDescriptor.setDescription( option.description() );
-        optionDescriptor.setRequired( option.required() );
-        return optionDescriptor;
+        descriptor.setDescription( EMPTY.equals( option.description() ) ? "" : option.description() );
+        descriptor.setRequired( option.required() );
+        descriptor.loadDescription( resourceBundle, resourceBundleKey );
+
+        return descriptor;
     }
 
 }

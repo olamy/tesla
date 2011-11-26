@@ -18,6 +18,8 @@
  */
 package org.eclipse.tesla.shell.preparator;
 
+import java.util.ResourceBundle;
+
 /**
  * Describes an action command.
  */
@@ -81,6 +83,26 @@ public class CommandDescriptor
     public CommandDescriptor setDetailedDescription( final String detailedDescription )
     {
         this.detailedDescription = detailedDescription;
+        return this;
+    }
+
+    public CommandDescriptor loadDescription( final ResourceBundle resourceBundle )
+    {
+        if ( resourceBundle != null )
+        {
+            try
+            {
+                final String rbDescription = resourceBundle.getString( "command.description" );
+                if ( rbDescription != null && rbDescription.trim().length() > 0 )
+                {
+                    setDescription( rbDescription );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
+        }
         return this;
     }
 

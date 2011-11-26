@@ -18,6 +18,8 @@
  */
 package org.eclipse.tesla.shell.preparator;
 
+import java.util.ResourceBundle;
+
 import org.apache.karaf.shell.commands.Argument;
 
 /**
@@ -126,4 +128,40 @@ public class ArgumentDescriptor
         this.valueToShowInHelp = valueToShowInHelp;
         return this;
     }
+
+    public ArgumentDescriptor loadDescription( final ResourceBundle resourceBundle,
+                                               final String key )
+    {
+        if ( resourceBundle != null )
+        {
+            try
+            {
+                final String rbDescription = resourceBundle.getString( "command.argument." + key );
+                if ( rbDescription != null && rbDescription.trim().length() > 0 )
+                {
+                    setDescription( rbDescription );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
+        }
+        return this;
+    }
+
+    public ArgumentDescriptor loadDescription( final ResourceBundle resourceBundle )
+    {
+        String key = getName();
+        if ( key.startsWith( "--" ) )
+        {
+            key = key.substring( 2 );
+        }
+        else if ( key.startsWith( "-" ) )
+        {
+            key = key.substring( 1 );
+        }
+        return loadDescription( resourceBundle, key );
+    }
+
 }
