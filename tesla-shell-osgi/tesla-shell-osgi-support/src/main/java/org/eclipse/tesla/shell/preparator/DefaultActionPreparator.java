@@ -56,7 +56,8 @@ public class DefaultActionPreparator
             .setName( command.name() )
             .setDescription( command.description() )
             .loadDescription( resourceBundle )
-            .setDetailedDescription( command.detailedDescription() );
+            .setDetailedDescription( command.detailedDescription() )
+            .loadDetailedDescription( resourceBundle );
     }
 
     @Override
@@ -80,6 +81,7 @@ public class DefaultActionPreparator
                             .setDescription( option.description() )
                             .loadDescription( resourceBundle, field.getName() )
                             .setValueToShowInHelp( option.valueToShowInHelp() )
+                            .loadValueToShowInHelp( resourceBundle, field.getName() )
                             .setInjector( new ActionFieldInjector( action, field ) )
                     );
                 }
@@ -99,6 +101,7 @@ public class DefaultActionPreparator
                             .setDescription( option.description() )
                             .loadDescription( resourceBundle, method.getName() )
                             .setValueToShowInHelp( option.valueToShowInHelp() )
+                            .loadValueToShowInHelp( resourceBundle, method.getName() )
                             .setInjector( new ActionMethodInjector( action, method ) )
                     );
                 }
@@ -128,6 +131,7 @@ public class DefaultActionPreparator
                             .setMultiValued( argument.multiValued() )
                             .setRequired( argument.required() )
                             .setValueToShowInHelp( argument.valueToShowInHelp() )
+                            .loadValueToShowInHelp( resourceBundle, field.getName() )
                             .setInjector( new ActionFieldInjector( action, field ) )
                     );
                 }
@@ -147,6 +151,7 @@ public class DefaultActionPreparator
                             .setMultiValued( argument.multiValued() )
                             .setRequired( argument.required() )
                             .setValueToShowInHelp( argument.valueToShowInHelp() )
+                            .loadValueToShowInHelp( resourceBundle, method.getName() )
                             .setInjector( new ActionMethodInjector( action, method ) )
                     );
                 }

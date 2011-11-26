@@ -152,16 +152,33 @@ public class ArgumentDescriptor
 
     public ArgumentDescriptor loadDescription( final ResourceBundle resourceBundle )
     {
-        String key = getName();
-        if ( key.startsWith( "--" ) )
+        return loadDescription( resourceBundle, getName() );
+    }
+
+    public ArgumentDescriptor loadValueToShowInHelp( final ResourceBundle resourceBundle,
+                                                     final String key )
+    {
+        if ( resourceBundle != null )
         {
-            key = key.substring( 2 );
+            try
+            {
+                final String rbDescription = resourceBundle.getString( "command.argument." + key + ".details" );
+                if ( rbDescription != null && rbDescription.trim().length() > 0 )
+                {
+                    setDescription( rbDescription );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
         }
-        else if ( key.startsWith( "-" ) )
-        {
-            key = key.substring( 1 );
-        }
-        return loadDescription( resourceBundle, key );
+        return this;
+    }
+
+    public ArgumentDescriptor loadValueToShowInHelp( final ResourceBundle resourceBundle )
+    {
+        return loadValueToShowInHelp( resourceBundle, getName() );
     }
 
 }

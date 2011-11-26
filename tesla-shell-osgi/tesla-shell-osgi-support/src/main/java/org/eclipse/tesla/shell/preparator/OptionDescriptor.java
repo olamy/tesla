@@ -164,4 +164,39 @@ public class OptionDescriptor
         return loadDescription( resourceBundle, key );
     }
 
+    public OptionDescriptor loadValueToShowInHelp( final ResourceBundle resourceBundle,
+                                                   final String key )
+    {
+        if ( resourceBundle != null )
+        {
+            try
+            {
+                final String rbDescription = resourceBundle.getString( "command.option." + key + ".details" );
+                if ( rbDescription != null && rbDescription.trim().length() > 0 )
+                {
+                    setDescription( rbDescription );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
+        }
+        return this;
+    }
+
+    public OptionDescriptor loadValueToShowInHelp( final ResourceBundle resourceBundle )
+    {
+        String key = getName();
+        if ( key.startsWith( "--" ) )
+        {
+            key = key.substring( 2 );
+        }
+        else if ( key.startsWith( "-" ) )
+        {
+            key = key.substring( 1 );
+        }
+        return loadValueToShowInHelp( resourceBundle, key );
+    }
+
 }

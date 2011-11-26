@@ -106,4 +106,24 @@ public class CommandDescriptor
         return this;
     }
 
+    public CommandDescriptor loadDetailedDescription( final ResourceBundle resourceBundle )
+    {
+        if ( resourceBundle != null )
+        {
+            try
+            {
+                final String rbDescription = resourceBundle.getString( "command.description.details" );
+                if ( rbDescription != null && rbDescription.trim().length() > 0 )
+                {
+                    setDescription( rbDescription );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
+        }
+        return this;
+    }
+
 }
