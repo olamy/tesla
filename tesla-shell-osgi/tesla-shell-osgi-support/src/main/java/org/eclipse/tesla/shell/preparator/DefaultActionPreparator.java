@@ -20,34 +20,14 @@ package org.eclipse.tesla.shell.preparator;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
-import org.apache.karaf.shell.commands.converter.DefaultConverter;
-import org.eclipse.tesla.shell.preparator.validation.ArgumentConversionException;
-import org.eclipse.tesla.shell.preparator.validation.MissingRequiredArgumentException;
-import org.eclipse.tesla.shell.preparator.validation.MissingRequiredOptionException;
-import org.eclipse.tesla.shell.preparator.validation.MultipleArgumentsWithSameIndexException;
-import org.eclipse.tesla.shell.preparator.validation.MultipleOptionsWithSameNameException;
-import org.eclipse.tesla.shell.preparator.validation.OptionConversionException;
-import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
-import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
 
 public class DefaultActionPreparator
     extends AbstractActionPreparator
