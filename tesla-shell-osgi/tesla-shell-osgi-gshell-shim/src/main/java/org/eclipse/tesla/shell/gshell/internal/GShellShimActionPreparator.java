@@ -150,8 +150,10 @@ public class GShellShimActionPreparator
 
         final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
 
+        final String[] segments = commandAction.getClass().getPackage().getName().split( "." );
+
         return new CommandDescriptor()
-            .setScope( GShellCommandAnnotatedProcessor.SHIM )
+            .setScope( segments.length > 0 ? segments[segments.length - 1] : GShellCommandAnnotatedProcessor.SHIM )
             .setName( commandAction.getClass().getAnnotation( Command.class ).name() );
     }
 
