@@ -107,6 +107,7 @@ public class Main
                 propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
             );
             PropertiesHelper.substituteVariables( properties );
+            properties.setProperty( "exit-on-error", Boolean.TRUE.toString() );
 
             bundleContext.registerService(
                 String.class.getName(),

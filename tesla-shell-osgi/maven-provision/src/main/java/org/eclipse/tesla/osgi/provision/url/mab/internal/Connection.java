@@ -87,18 +87,23 @@ public class Connection
     {
         try
         {
-            final Artifact artifact = artifactResolver.resolveArtifact( request().artifact( url.getPath() ) );
+            final String coordinates = url.getPath();
+
+            logger.debug( "Resolving artifact {}", coordinates );
+
+            final Artifact artifact = artifactResolver.resolveArtifact( request().artifact( coordinates ) );
             if ( isAlreadyAnOSGiBundle( artifact.getFile() ) )
             {
+                logger.debug( "Artifact {} is already an OSGi bundle. No transformation required.", coordinates );
                 return new FileInputStream( artifact.getFile() );
             }
 
-            final Properties recipe = calculateRecipe( artifact, url.getPath() );
+            final Properties recipe = calculateRecipe( artifact, coordinates );
             final Artifact pomArtifact = pomArtifactFor( artifact );
             recipe.store( storage.outputStreamFor( pathFor( pomArtifact ) ), RECIPE_COMMENT );
 
             final Artifact osgiArtifact = osgiArtifactFor( artifact );
-            return createOSGiBundle( pathFor( osgiArtifact ), recipe, artifact.getFile() );
+            return createOSGiBundle( pathFor( osgiArtifact ), recipe, artifact.getFile(), coordinates );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -122,6 +127,8 @@ public class Connection
 
     private Properties calculateRecipe( final Artifact artifact, final String coordinates )
     {
+        logger.debug( "Building OSGi transformation recipe for {}", coordinates );
+
         final Boolean useImportPackage = Boolean.valueOf( System.getProperty(
             getClass().getName() + ".useImportPackage", "true" )
         );
@@ -141,6 +148,7 @@ public class Connection
 
         try
         {
+            logger.debug( "Resolving effective POM of {}", coordinates );
             final Model model = modelResolver.resolveModel(
                 model().pom( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() )
             );
@@ -156,6 +164,7 @@ public class Connection
 
             if ( useRequireBundle )
             {
+                logger.debug( "Resolving dependency tree of {}", coordinates );
                 final DependencyNode tree = dependencyTreeResolver.resolveDependencyTree(
                     tree().model( model().pom( coordinates ) )
                 );
@@ -248,8 +257,10 @@ public class Connection
 
     private InputStream createOSGiBundle( final String path,
                                           final Properties recipe,
-                                          final File jarFile )
+                                          final File jarFile,
+                                          final String coordinates)
     {
+        logger.debug( "Creating OSGi bundle for {}", coordinates );
         final Builder builder = new Builder();
         try
         {

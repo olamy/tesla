@@ -18,6 +18,7 @@ import org.eclipse.tesla.osgi.provision.Provisioner;
 import org.eclipse.tesla.osgi.provision.url.masor.MavenArtifactSetObrRepository;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -88,10 +89,28 @@ class DefaultProvisioner
                         }
                         if ( !coordinates.isEmpty() )
                         {
-                            final ProvisionSet provisionSet = resolve(
-                                coordinates.toArray( new String[coordinates.size()] )
-                            );
-                            provisionSet.installAndStart();
+                            try
+                            {
+                                final ProvisionSet provisionSet = resolve(
+                                    coordinates.toArray( new String[coordinates.size()] )
+                                );
+                                provisionSet.installAndStart();
+                            }
+                            catch ( Exception e )
+                            {
+                                System.out.println( "Problem found during provisioning. See log for details." );
+                                if ( Boolean.valueOf( (String) serviceReference.getProperty( "exit-on-error" ) ) )
+                                {
+                                    try
+                                    {
+                                        bundleContext.getBundle(0).stop();
+                                    }
+                                    catch ( BundleException ignore )
+                                    {
+                                        // ignore
+                                    }
+                                }
+                            }
                         }
                         return bundleContext.getService( serviceReference );
                     }
@@ -161,6 +180,7 @@ class DefaultProvisioner
         }
         catch ( Exception e )
         {
+            logger.error( "Provisioning failed", e );
             throw new RuntimeException( e );
         }
     }
