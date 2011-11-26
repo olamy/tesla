@@ -1,5 +1,7 @@
 package org.eclipse.tesla.shell.gshell.internal;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,11 +10,12 @@ import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.basic.ActionPreparator;
+import org.eclipse.tesla.shell.preparator.AbstractActionPreparator;
 import org.eclipse.tesla.shell.preparator.ActionFieldInjector;
 import org.eclipse.tesla.shell.preparator.ActionMethodInjector;
 import org.eclipse.tesla.shell.preparator.ArgumentDescriptor;
 import org.eclipse.tesla.shell.preparator.CommandDescriptor;
-import org.eclipse.tesla.shell.preparator.DefaultActionPreparator;
 import org.eclipse.tesla.shell.preparator.OptionDescriptor;
 import org.sonatype.gshell.command.Command;
 import org.sonatype.gshell.command.CommandAction;
@@ -25,30 +28,39 @@ import org.sonatype.gshell.util.cli2.Option;
  * @since 1.0
  */
 public class GShellShimActionPreparator
-    extends DefaultActionPreparator
+    extends AbstractActionPreparator
+    implements ActionPreparator
 {
 
     @Override
     public boolean prepare( final Action action, final CommandSession session, final List<Object> params )
         throws Exception
     {
-        if ( action instanceof CommandActionProxy )
-        {
-            ( (CommandActionProxy) action ).setArguments( params );
-        }
+        checkArgument( action instanceof CommandActionProxy );
+
+        ( (CommandActionProxy) action ).setArguments( params );
+
         return super.prepare( action, session, params );
+    }
+
+    @Override
+    protected CommandDescriptor getCommandDescriptor( final Action action )
+    {
+        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
+
+        final String[] segments = commandAction.getClass().getPackage().getName().split( "\\." );
+
+        return new CommandDescriptor()
+            .setScope( segments.length > 0 ? segments[segments.length - 1] : GShellCommandAnnotatedProcessor.SHIM )
+            .setName( commandAction.getClass().getAnnotation( Command.class ).name() );
     }
 
     @Override
     protected List<OptionDescriptor> getOptionDescriptors( final Action action )
     {
-        if ( !( action instanceof CommandActionProxy ) )
-        {
-            return super.getOptionDescriptors( action );
-        }
+        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
 
         final List<OptionDescriptor> options = new ArrayList<OptionDescriptor>();
-        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
         for ( Class type = commandAction.getClass(); type != null; type = type.getSuperclass() )
         {
             for ( final Field field : type.getDeclaredFields() )
@@ -81,13 +93,9 @@ public class GShellShimActionPreparator
     @Override
     protected List<ArgumentDescriptor> getArgumentDescriptors( final Action action )
     {
-        if ( !( action instanceof CommandActionProxy ) )
-        {
-            return super.getArgumentDescriptors( action );
-        }
+        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
 
         final List<ArgumentDescriptor> arguments = new ArrayList<ArgumentDescriptor>();
-        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
         for ( Class type = commandAction.getClass(); type != null; type = type.getSuperclass() )
         {
             for ( final Field field : type.getDeclaredFields() )
@@ -138,23 +146,6 @@ public class GShellShimActionPreparator
             .setDescription( argument.description() )
             .setIndex( argument.index() )
             .setRequired( argument.required() );
-    }
-
-    @Override
-    protected CommandDescriptor getCommandDescriptor( final Action action )
-    {
-        if ( !( action instanceof CommandActionProxy ) )
-        {
-            return super.getCommandDescriptor( action );
-        }
-
-        final CommandAction commandAction = ( (CommandActionProxy) action ).getCommandAction();
-
-        final String[] segments = commandAction.getClass().getPackage().getName().split( "\\." );
-
-        return new CommandDescriptor()
-            .setScope( segments.length > 0 ? segments[segments.length - 1] : GShellCommandAnnotatedProcessor.SHIM )
-            .setName( commandAction.getClass().getAnnotation( Command.class ).name() );
     }
 
     private OptionDescriptor optionDescriptor( final Option option )

@@ -94,9 +94,10 @@
         <configuration>
           <instructions>
             <Import-Package>
-              javax.inject,
+              com.google.common.base,
               com.google.inject.*,
               javax.management,
+              javax.inject,
               jline.*,
               org.apache.felix.service.command,
               org.apache.karaf.shell.commands,
