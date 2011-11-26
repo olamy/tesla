@@ -32,8 +32,9 @@ public class GShellCommandAnnotatedProcessor
     public FunctionDescriptor process( final BeanEntry<Annotation, Object> beanEntry )
     {
         final Command annotation = getAnnotation( beanEntry.getImplementationClass() );
+        final String[] segments = beanEntry.getImplementationClass().getPackage().getName().split( "\\." );
         return new FunctionDescriptor.Default(
-            SHIM,
+            segments.length > 0 ? segments[segments.length - 1] : SHIM,
             annotation.name(),
             new GShellShimCommand( beanEntry )
         );
