@@ -69,13 +69,15 @@ public class Main
     private void boot()
         throws Exception
     {
-        final File etc4tsh = new File( System.getProperty( "shell.home" ), "etc/tsh" );
+        final File confDir = new File( System.getProperty( "shell.home" ), "conf/tsh" );
+        final File profilesDir = new File( confDir, "profiles" );
+
         final File initialBundles = new File( System.getProperty( "shell.home" ), "lib/shell/bundles" );
 
-        System.setProperty( "logback.configurationFile", new File( etc4tsh, "logback.xml" ).getAbsolutePath() );
+        System.setProperty( "logback.configurationFile", new File( confDir, "logback.xml" ).getAbsolutePath() );
 
-        final Properties shellProperties = loadShellProperties( etc4tsh );
-        final Properties bundleProperties = loadBundleProperties( etc4tsh );
+        final Properties shellProperties = loadShellProperties( profilesDir );
+        final Properties bundleProperties = loadBundleProperties( profilesDir );
 
         if ( !reset )
         {
@@ -233,13 +235,13 @@ public class Main
         }
     }
 
-    private Properties loadShellProperties( final File etc )
+    private Properties loadShellProperties( final File profilesDir )
         throws Exception
     {
-        File propertiesFile = new File( new File( etc, profile ), "shell.properties" );
+        File propertiesFile = new File( new File( profilesDir, profile ), "shell.properties" );
         if ( !propertiesFile.exists() )
         {
-            propertiesFile = new File( new File( etc, DEFAULT_PROFILE ), "shell.properties" );
+            propertiesFile = new File( new File( profilesDir, DEFAULT_PROFILE ), "shell.properties" );
         }
         final Properties properties = loadPropertiesFile(
             propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
@@ -255,13 +257,13 @@ public class Main
         return properties;
     }
 
-    private Properties loadBundleProperties( final File etc )
+    private Properties loadBundleProperties( final File profilesDir )
         throws Exception
     {
-        File propertiesFile = new File( new File( etc, profile ), "bundles.properties" );
+        File propertiesFile = new File( new File( profilesDir, profile ), "bundles.properties" );
         if ( !propertiesFile.exists() )
         {
-            propertiesFile = new File( new File( etc, DEFAULT_PROFILE ), "bundles.properties" );
+            propertiesFile = new File( new File( profilesDir, DEFAULT_PROFILE ), "bundles.properties" );
         }
         final Properties properties = loadPropertiesFile(
             propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
