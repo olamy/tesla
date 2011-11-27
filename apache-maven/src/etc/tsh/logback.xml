@@ -10,23 +10,26 @@
 -->
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
 
-    <contextName>default</contextName>
+  <contextName>default</contextName>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${user.home}/.m2/tsh/tsh.log</file>
-        <append>false</append>
-        <encoder>
-            <pattern>%date %level [%thread%X{DC}] %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${user.home}/.m2/tsh/tsh.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>%date %level [%thread%X{DC}] %logger - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>${user.home}/.m2/tsh/tsh.%d{yyyy-MM-dd}.log</FileNamePattern>
+    </rollingPolicy>
+  </appender>
 
-    <logger name="Sisu" level="INFO"/>
+  <logger name="Sisu" level="INFO"/>
 
   <logger name="org.eclipse.tesla.osgi" level="DEBUG"/>
   <logger name="org.eclipse.tesla.shell" level="DEBUG"/>
 
-    <root level="INFO">
-        <appender-ref ref="FILE"/>
-    </root>
+  <root level="INFO">
+    <appender-ref ref="FILE"/>
+  </root>
 
 </configuration>
