@@ -1,17 +1,21 @@
 package org.eclipse.tesla.shell.gshell.internal;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.basic.AbstractCommand;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
+import org.apache.karaf.shell.console.jline.CommandSessionHolder;
 import org.sonatype.gshell.command.Command;
 import org.sonatype.gshell.command.CommandAction;
+import org.sonatype.gshell.shell.ShellHolder;
 import org.sonatype.gshell.util.NameAware;
 import org.sonatype.inject.BeanEntry;
 
@@ -65,20 +69,39 @@ class GShellShimCommand
     protected ActionPreparator getPreparator()
         throws Exception
     {
-        return new GShellShimActionPreparator( );
+        return new GShellShimActionPreparator();
     }
 
     @Override
     public List<Completer> getCompleters()
     {
-        // TODO
+        final CommandAction commandAction = (CommandAction) beanEntry.getProvider().get();
+        final jline.console.completer.Completer[] completers = commandAction.getCompleters();
+        if ( completers != null && completers.length > 0 )
+        {
+            final ArrayList<Completer> shimCompleters = new ArrayList<Completer>();
+            for ( final jline.console.completer.Completer completer : completers )
+            {
+                shimCompleters.add( new Completer()
+                {
+                    @SuppressWarnings( "unchecked" )
+                    @Override
+                    public int complete( final String buffer, final int cursor, final List<String> candidates )
+                    {
+                        final CommandSession session = CommandSessionHolder.getSession();
+                        ShellHolder.set( new GShellShimShell( session ) );
+                        return completer.complete( buffer, cursor, (List) candidates );
+                    }
+                } );
+            }
+            return shimCompleters;
+        }
         return Collections.emptyList();
     }
 
     @Override
     public Map<String, Completer> getOptionalCompleters()
     {
-        // TODO
         return Collections.emptyMap();
     }
 

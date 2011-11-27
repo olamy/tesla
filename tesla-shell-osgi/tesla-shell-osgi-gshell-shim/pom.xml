@@ -104,6 +104,7 @@
               org.apache.karaf.shell.commands.basic,
               org.apache.karaf.shell.console,
               org.apache.karaf.shell.console.completer,
+              org.apache.karaf.shell.console.jline,
               org.fusesource.jansi,
               org.eclipse.tesla.shell.*,
               org.sonatype.inject,

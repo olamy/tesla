@@ -26,13 +26,13 @@ public class CommandActionProxy
         this.commandAction = commandAction;
     }
 
-    public Object execute( final CommandSession commandSession )
+    public Object execute( final CommandSession session )
         throws Exception
     {
         try
         {
             StreamJack.install();
-            ShellHolder.set( new GShellShimShell( commandSession ) );
+            ShellHolder.set( new GShellShimShell( session ) );
             commandAction.execute( new GShellShimCommandContext( arguments ) );
             return null;
         }
