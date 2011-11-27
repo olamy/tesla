@@ -14,6 +14,8 @@ import org.eclipse.tesla.shell.spi.BindingProcessor;
 import org.eclipse.tesla.shell.spi.FunctionDescriptor;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.guice.bean.locators.BeanLocator;
 import org.sonatype.inject.BeanEntry;
 import org.sonatype.inject.EagerSingleton;
@@ -32,7 +34,9 @@ import com.google.inject.Key;
 class BindingWatcher
 {
 
-    private Map<BeanEntry<Annotation, Object>, ServiceRegistration> commands;
+    private final Logger logger;
+
+    private Map<BeanEntry<Annotation, Object>, Holder> commands;
 
     private BeanLocator beanLocator;
 
@@ -42,9 +46,11 @@ class BindingWatcher
     BindingWatcher( final BeanLocator beanLocator,
                     final List<BindingProcessor> processors )
     {
+        logger = LoggerFactory.getLogger( this.getClass() );
+
         this.beanLocator = beanLocator;
         this.processors = processors;
-        commands = new HashMap<BeanEntry<Annotation, Object>, ServiceRegistration>();
+        commands = new HashMap<BeanEntry<Annotation, Object>, Holder>();
         beanLocator.watch(
             Key.get( Object.class ),
             new Mediator<Annotation, Object, BindingWatcher>()
@@ -84,8 +90,28 @@ class BindingWatcher
                     descriptor.getFunction(),
                     commandProperties
                 );
-                commands.put( beanEntry, serviceRegistration );
+                commands.put(
+                    beanEntry, new Holder( descriptor.getScope(), descriptor.getName(), serviceRegistration )
+                );
             }
+            logger.debug( "Registered command '{}' in scope '{}'", descriptor.getName(), descriptor.getScope() );
+        }
+    }
+
+    private void unregisterFunction( final BeanEntry<Annotation, Object> beanEntry )
+    {
+        final Holder holder = commands.remove( beanEntry );
+        if ( holder != null )
+        {
+            try
+            {
+                holder.registration.unregister();
+            }
+            catch ( Exception ignore )
+            {
+                // ignore, as service could have been already unregistered because, for example, bundle was uninstalled
+            }
+            logger.debug( "Unregistered command '{}' in scope '{}'", holder.name, holder.scope );
         }
     }
 
@@ -119,20 +145,22 @@ class BindingWatcher
         return null;
     }
 
-    private void unregisterFunction( final BeanEntry<Annotation, Object> beanEntry )
+    private static class Holder
     {
-        final ServiceRegistration serviceRegistration = commands.remove( beanEntry );
-        if ( serviceRegistration != null )
+
+        private final String scope;
+
+        private final String name;
+
+        private final ServiceRegistration registration;
+
+        public Holder( final String scope, final String name, final ServiceRegistration registration )
         {
-            try
-            {
-                serviceRegistration.unregister();
-            }
-            catch ( Exception ignore )
-            {
-                // ignore, as service could have been already unregistered because, for example, bundle was uninstalled
-            }
+            this.scope = scope;
+            this.name = name;
+            this.registration = registration;
         }
+
     }
 
 }
