@@ -54,6 +54,10 @@ public class ActionProxy
     @Override
     public Map<String, Completer> getOptionalCompleters()
     {
+        if ( CompletableFunction.class.isAssignableFrom( getActionClass() ) )
+        {
+            return ( (CompletableFunction) createNewAction() ).getOptionalCompleters();
+        }
         return Collections.emptyMap();
     }
 
