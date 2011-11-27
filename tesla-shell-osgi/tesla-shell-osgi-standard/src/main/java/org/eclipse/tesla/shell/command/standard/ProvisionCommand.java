@@ -17,7 +17,7 @@ import org.eclipse.tesla.osgi.provision.Provisioner;
  * @since 1.0
  */
 @Named
-@Command( scope = "provision", name = "install", description = "Provision jars" )
+@Command( scope = "standard", name = "provision", description = "Provision jars" )
 class ProvisionCommand
     implements Action
 {
