@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import javax.inject.Named;
 
 /**
  * Fetch a file from a URL.
@@ -39,6 +40,7 @@ import java.net.URLConnection;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 2.3
  */
+@Named
 @Command(name="wget")
 public class WgetCommand
     extends CommandActionSupport

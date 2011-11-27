@@ -22,6 +22,7 @@ import org.sonatype.gshell.command.IO;
 import org.sonatype.gshell.util.cli2.Option;
 
 import java.net.InetAddress;
+import javax.inject.Named;
 
 /**
  * Displays the name of the current host.
@@ -29,6 +30,7 @@ import java.net.InetAddress;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 2.0
  */
+@Named
 @Command(name="hostname")
 public class HostnameCommand
     extends CommandActionSupport
