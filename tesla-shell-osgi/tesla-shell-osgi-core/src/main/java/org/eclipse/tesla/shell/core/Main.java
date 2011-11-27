@@ -1,5 +1,8 @@
 package org.eclipse.tesla.shell.core;
 
+import static org.codehaus.plexus.util.FileUtils.fileRead;
+import static org.codehaus.plexus.util.FileUtils.fileWrite;
+import static org.eclipse.tesla.shell.core.internal.PropertiesHelper.SHA1;
 import static org.eclipse.tesla.shell.core.internal.PropertiesHelper.loadPropertiesFile;
 
 import java.io.BufferedReader;
@@ -71,18 +74,32 @@ public class Main
 
         System.setProperty( "logback.configurationFile", new File( etc4tsh, "logback.xml" ).getAbsolutePath() );
 
-        final Properties properties = loadProperties( etc4tsh );
+        final Properties shellProperties = loadShellProperties( etc4tsh );
+        final Properties bundleProperties = loadBundleProperties( etc4tsh );
 
-        prepareProfile( properties );
+        if ( !reset )
+        {
+            reset = shouldForceReset( shellProperties, bundleProperties );
+        }
 
-        final Framework framework = loadFramework( properties );
+        prepareProfile( shellProperties );
+
+        final Framework framework = loadFramework( shellProperties );
         framework.init();
 
-        provisionFromAssembly( initialBundles, framework.getBundleContext() );
+        if ( reset )
+        {
+            provisionFromAssembly( initialBundles, framework.getBundleContext() );
+        }
 
         Thread.currentThread().setContextClassLoader( null );
         framework.start();
-        provisionFromStartup( etc4tsh, framework.getBundleContext() );
+
+        if ( reset )
+        {
+            provisionFromBundles( bundleProperties, framework.getBundleContext() );
+            saveChecksum( shellProperties, bundleProperties );
+        }
 
         while ( true )
         {
@@ -94,19 +111,50 @@ public class Main
         }
     }
 
-    private void provisionFromStartup( final File etc, final BundleContext bundleContext )
+    private void saveChecksum( final Properties shellProperties, final Properties bundleProperties )
+        throws Exception
+    {
+        final File checksumFile = new File( new File( shellProperties.getProperty( PROFILE ) ), "checksum" );
+
+        final Properties properties = new Properties();
+        properties.putAll( shellProperties );
+        properties.putAll( bundleProperties );
+
+        fileWrite( checksumFile, SHA1( properties ) );
+    }
+
+    private boolean shouldForceReset( final Properties shellProperties, final Properties bundleProperties )
+    {
+        final File checksumFile = new File( new File( shellProperties.getProperty( PROFILE ) ), "checksum" );
+        if ( !checksumFile.exists() )
+        {
+            return true;
+        }
+        try
+        {
+            final Properties properties = new Properties();
+            properties.putAll( shellProperties );
+            properties.putAll( bundleProperties );
+
+            final String checksum = fileRead( checksumFile );
+            final String newChecksum = SHA1( properties );
+
+            return !newChecksum.equals( checksum );
+        }
+        catch ( Exception ignore )
+        {
+            // ignore
+            return true;
+        }
+    }
+
+    private void provisionFromBundles( final Properties bundleProperties, final BundleContext bundleContext )
     {
         try
         {
-            File propertiesFile = new File( etc, profile + "/bundles.properties" );
-            if ( !propertiesFile.exists() )
-            {
-                propertiesFile = new File( etc, DEFAULT_PROFILE + "/bundles.properties" );
-            }
-            final Properties properties = loadPropertiesFile(
-                propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
-            );
-            PropertiesHelper.substituteVariables( properties );
+            final Properties properties = new Properties();
+            properties.putAll( bundleProperties );
+
             properties.setProperty( "exit-on-error", Boolean.TRUE.toString() );
 
             bundleContext.registerService(
@@ -143,12 +191,12 @@ public class Main
     }
 
     // @TestAccessible
-    static File[] findAssemblyBundles( final File startup )
+    static File[] findAssemblyBundles( final File bundlesDir )
         throws Exception
     {
-        if ( startup.exists() && startup.isDirectory() )
+        if ( bundlesDir.exists() && bundlesDir.isDirectory() )
         {
-            return startup.listFiles( new FilenameFilter()
+            return bundlesDir.listFiles( new FilenameFilter()
             {
 
                 @Override
@@ -185,13 +233,13 @@ public class Main
         }
     }
 
-    private Properties loadProperties( final File etc )
+    private Properties loadShellProperties( final File etc )
         throws Exception
     {
-        File propertiesFile = new File( etc, profile + "/shell.properties" );
+        File propertiesFile = new File( new File( etc, profile ), "shell.properties" );
         if ( !propertiesFile.exists() )
         {
-            propertiesFile = new File( etc, DEFAULT_PROFILE + "/shell.properties" );
+            propertiesFile = new File( new File( etc, DEFAULT_PROFILE ), "shell.properties" );
         }
         final Properties properties = loadPropertiesFile(
             propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
@@ -204,6 +252,21 @@ public class Main
         final File storageDir = new File( profileDir, "storage" );
         properties.setProperty( Constants.FRAMEWORK_STORAGE, storageDir.getAbsolutePath() );
 
+        return properties;
+    }
+
+    private Properties loadBundleProperties( final File etc )
+        throws Exception
+    {
+        File propertiesFile = new File( new File( etc, profile ), "bundles.properties" );
+        if ( !propertiesFile.exists() )
+        {
+            propertiesFile = new File( new File( etc, DEFAULT_PROFILE ), "bundles.properties" );
+        }
+        final Properties properties = loadPropertiesFile(
+            propertiesFile.getParentFile(), propertiesFile.getName(), FAIL_IF_NOT_FOUND
+        );
+        PropertiesHelper.substituteVariables( properties );
         return properties;
     }
 
