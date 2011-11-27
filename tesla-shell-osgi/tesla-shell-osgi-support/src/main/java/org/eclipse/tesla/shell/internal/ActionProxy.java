@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.console.CompletableFunction;
 import org.apache.karaf.shell.console.Completer;
+import org.eclipse.tesla.shell.Completable;
 import org.eclipse.tesla.shell.support.GuiceCommandSupport;
 import org.sonatype.inject.BeanEntry;
 
@@ -48,6 +49,10 @@ public class ActionProxy
         {
             return ( (CompletableFunction) createNewAction() ).getCompleters();
         }
+        if ( Completable.class.isAssignableFrom( getActionClass() ) )
+        {
+            return (List<Completer>) ( (Completable) createNewAction() ).getCompleters();
+        }
         return Collections.emptyList();
     }
 
@@ -57,6 +62,10 @@ public class ActionProxy
         if ( CompletableFunction.class.isAssignableFrom( getActionClass() ) )
         {
             return ( (CompletableFunction) createNewAction() ).getOptionalCompleters();
+        }
+        if ( Completable.class.isAssignableFrom( getActionClass() ) )
+        {
+            return (Map<String, Completer>) ( (Completable) createNewAction() ).getOptionalCompleters();
         }
         return Collections.emptyMap();
     }
