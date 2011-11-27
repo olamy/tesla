@@ -2,6 +2,7 @@ package org.eclipse.tesla.shell.command.standard;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.karaf.shell.console.Completer;
@@ -43,7 +44,11 @@ public class CoordinatesCompleter
         }
 
         String workBuffer = buffer == null ? "" : buffer;
-        workBuffer = workBuffer.replace( '.', File.separatorChar ).replace( ':', File.separatorChar );
+        if ( segments.length > 0 && segments[0].trim().length() > 0 )
+        {
+            workBuffer = segments[0].replace( '.', File.separatorChar ) + workBuffer.substring( segments[0].length() );
+        }
+        workBuffer = workBuffer.replace( ':', File.separatorChar );
         workBuffer = localRepository + workBuffer;
 
         if ( segments.length > 2 && new File( workBuffer ).exists() )
@@ -55,7 +60,18 @@ public class CoordinatesCompleter
             workBuffer, cursor + localRepository.getAbsolutePath().length(), (List) candidates
         );
 
-        if ( candidates != null && candidates.size() == 1 && candidates.get( 0 ).endsWith( File.separator ) )
+        final Iterator<String> it = candidates.iterator();
+        while ( it.hasNext() )
+        {
+            final String candidate = it.next().trim();
+            if ( ( candidate.startsWith( "maven-metadata" ) && candidate.endsWith( ".xml" ) )
+                || candidate.startsWith( "." ) )
+            {
+                it.remove();
+            }
+        }
+
+        if ( candidates.size() == 1 && candidates.get( 0 ).endsWith( File.separator ) )
         {
             String candidate = candidates.remove( 0 );
             candidate = candidate.substring( 0, candidate.length() - 1 );
