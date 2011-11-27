@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.support.internal;
+package org.eclipse.tesla.shell.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;

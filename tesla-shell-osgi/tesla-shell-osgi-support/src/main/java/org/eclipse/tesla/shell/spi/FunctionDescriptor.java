@@ -1,7 +1,6 @@
-package org.eclipse.tesla.shell.support.spi;
+package org.eclipse.tesla.shell.spi;
 
 import org.apache.felix.service.command.Function;
-import com.google.common.base.internal.Finalizer;
 
 /**
  * TODO

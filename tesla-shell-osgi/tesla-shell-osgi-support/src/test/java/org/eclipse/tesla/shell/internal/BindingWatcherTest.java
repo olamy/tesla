@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.support.internal;
+package org.eclipse.tesla.shell.internal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

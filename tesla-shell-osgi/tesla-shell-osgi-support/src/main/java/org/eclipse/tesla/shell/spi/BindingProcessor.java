@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.support.spi;
+package org.eclipse.tesla.shell.spi;
 
 import java.lang.annotation.Annotation;
 

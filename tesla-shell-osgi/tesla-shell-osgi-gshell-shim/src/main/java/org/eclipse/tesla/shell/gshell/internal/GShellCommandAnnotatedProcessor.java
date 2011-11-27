@@ -4,8 +4,8 @@ import java.lang.annotation.Annotation;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.eclipse.tesla.shell.support.spi.BindingProcessor;
-import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;
+import org.eclipse.tesla.shell.spi.BindingProcessor;
+import org.eclipse.tesla.shell.spi.FunctionDescriptor;
 import org.sonatype.gshell.command.Command;
 import org.sonatype.gshell.command.CommandAction;
 import org.sonatype.inject.BeanEntry;

@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.support.internal;
+package org.eclipse.tesla.shell.internal;
 
 import java.lang.annotation.Annotation;
 import javax.inject.Named;
@@ -6,8 +6,8 @@ import javax.inject.Singleton;
 
 import org.apache.felix.service.command.Function;
 import org.apache.karaf.shell.commands.Command;
-import org.eclipse.tesla.shell.support.spi.BindingProcessor;
-import org.eclipse.tesla.shell.support.spi.FunctionDescriptor;
+import org.eclipse.tesla.shell.spi.BindingProcessor;
+import org.eclipse.tesla.shell.spi.FunctionDescriptor;
 import org.sonatype.inject.BeanEntry;
 
 /**
@@ -17,7 +17,7 @@ import org.sonatype.inject.BeanEntry;
  */
 @Named
 @Singleton
-public abstract class GogoCommandAnnotatedProcessor
+public abstract class KarafCommandAnnotatedProcessor
     implements BindingProcessor
 {
 

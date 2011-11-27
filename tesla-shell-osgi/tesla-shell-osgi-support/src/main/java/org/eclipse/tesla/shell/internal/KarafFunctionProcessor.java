@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.support.internal;
+package org.eclipse.tesla.shell.internal;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -7,7 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.felix.service.command.Function;
-import org.eclipse.tesla.shell.support.spi.BindingProcessor;
+import org.eclipse.tesla.shell.spi.BindingProcessor;
 import org.sonatype.inject.BeanEntry;
 
 /**
@@ -17,15 +17,15 @@ import org.sonatype.inject.BeanEntry;
  */
 @Named
 @Singleton
-public class GogoFunctionProcessor
-    extends GogoCommandAnnotatedProcessor
+public class KarafFunctionProcessor
+    extends KarafCommandAnnotatedProcessor
     implements BindingProcessor
 {
 
     private final List<BindingProcessor> processors;
 
     @Inject
-    GogoFunctionProcessor( final List<BindingProcessor> processors )
+    KarafFunctionProcessor( final List<BindingProcessor> processors )
     {
         this.processors = processors;
     }
@@ -39,7 +39,7 @@ public class GogoFunctionProcessor
         }
         for ( final BindingProcessor processor : processors )
         {
-            if ( !( processor instanceof GogoFunctionProcessor )
+            if ( !( processor instanceof KarafFunctionProcessor )
                 && processor.handles( implementationClass ) )
             {
                 return false;
