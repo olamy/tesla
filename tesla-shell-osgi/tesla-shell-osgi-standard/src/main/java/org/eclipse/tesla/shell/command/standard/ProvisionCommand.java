@@ -1,5 +1,9 @@
 package org.eclipse.tesla.shell.command.standard;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -8,8 +12,10 @@ import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.console.Completer;
 import org.eclipse.tesla.osgi.provision.ProvisionSet;
 import org.eclipse.tesla.osgi.provision.Provisioner;
+import org.eclipse.tesla.shell.Completable;
 
 /**
  * TODO
@@ -19,7 +25,7 @@ import org.eclipse.tesla.osgi.provision.Provisioner;
 @Named
 @Command( scope = "standard", name = "provision", description = "Provision jars" )
 class ProvisionCommand
-    implements Action
+    implements Action, Completable
 {
 
     @Argument( name = "coordinates", description = "Maven coordinates of jar to be provisioned", required = true,
@@ -53,4 +59,17 @@ class ProvisionCommand
         }
         return null;
     }
+
+    @Override
+    public List<? extends Completer> getCompleters()
+    {
+        return Arrays.asList( CoordinatesCompleter.INSTANCE );
+    }
+
+    @Override
+    public Map<String, ? extends Completer> getOptionalCompleters()
+    {
+        return Collections.emptyMap();
+    }
+
 }
