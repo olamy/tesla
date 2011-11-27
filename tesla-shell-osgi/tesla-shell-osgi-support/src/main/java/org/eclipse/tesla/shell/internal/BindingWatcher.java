@@ -124,7 +124,14 @@ class BindingWatcher
         final ServiceRegistration serviceRegistration = commands.remove( beanEntry );
         if ( serviceRegistration != null )
         {
-            serviceRegistration.unregister();
+            try
+            {
+                serviceRegistration.unregister();
+            }
+            catch ( Exception ignore )
+            {
+                // ignore, as service could have been already unregistered because, for example, bundle was uninstalled
+            }
         }
     }
 
