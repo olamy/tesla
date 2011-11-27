@@ -27,7 +27,7 @@
     <module>tesla-shell-osgi-core</module>
     <module>tesla-shell-osgi-support</module>
     <module>tesla-shell-osgi-gshell-shim</module>
-    <module>tesla-shell-osgi-provision</module>
+    <module>tesla-shell-osgi-standard</module>
   </modules>
 
   <dependencyManagement>

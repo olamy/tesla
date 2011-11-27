@@ -14,10 +14,10 @@
     <version>3.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla-shell-osgi-provision</artifactId>
+  <artifactId>tesla-shell-osgi-standard</artifactId>
   <packaging>bundle</packaging>
 
-  <name>Tesla Shell OSGi :: Commands :: Provision</name>
+  <name>Tesla Shell OSGi :: Commands :: Standard</name>
 
   <dependencies>
     <dependency>

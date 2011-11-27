@@ -1,4 +1,4 @@
-package org.eclipse.tesla.shell.command.provision;
+package org.eclipse.tesla.shell.command.standard;
 
 import javax.inject.Inject;
 import javax.inject.Named;
