@@ -23,6 +23,7 @@ import org.apache.maven.model.Model;
 import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.tesla.osgi.provision.PathResolver;
 import org.eclipse.tesla.osgi.provision.Storage;
+import org.eclipse.tesla.osgi.provision.internal.URLAwareInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.aether.artifact.Artifact;
@@ -95,7 +96,7 @@ public class Connection
             if ( isAlreadyAnOSGiBundle( artifact.getFile() ) )
             {
                 logger.debug( "Artifact {} is already an OSGi bundle. No transformation required.", coordinates );
-                return new FileInputStream( artifact.getFile() );
+                return new URLAwareInputStream( url, new FileInputStream( artifact.getFile() ) );
             }
 
             final Properties recipe = calculateRecipe( artifact, coordinates );
@@ -103,7 +104,10 @@ public class Connection
             recipe.store( storage.outputStreamFor( pathFor( pomArtifact ) ), RECIPE_COMMENT );
 
             final Artifact osgiArtifact = osgiArtifactFor( artifact );
-            return createOSGiBundle( pathFor( osgiArtifact ), recipe, artifact.getFile(), coordinates );
+            return new URLAwareInputStream(
+                url,
+                createOSGiBundle( pathFor( osgiArtifact ), recipe, artifact.getFile(), coordinates )
+            );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -258,7 +262,7 @@ public class Connection
     private InputStream createOSGiBundle( final String path,
                                           final Properties recipe,
                                           final File jarFile,
-                                          final String coordinates)
+                                          final String coordinates )
     {
         logger.debug( "Creating OSGi bundle for {}", coordinates );
         final Builder builder = new Builder();
