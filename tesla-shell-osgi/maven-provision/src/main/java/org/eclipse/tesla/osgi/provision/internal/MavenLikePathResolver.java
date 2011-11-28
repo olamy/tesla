@@ -18,9 +18,8 @@ import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.spi.locator.ServiceLocator;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 public class MavenLikePathResolver

@@ -16,9 +16,8 @@ import org.sonatype.gshell.shell.ShellHolder;
 import org.sonatype.gshell.util.io.StreamJack;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class CommandActionProxy
     implements Action

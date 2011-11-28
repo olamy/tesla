@@ -14,6 +14,9 @@ import org.fusesource.jansi.Ansi;
 
 /**
  * Exception thrown in case that a required option is not present.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class MissingRequiredOptionException
     extends CommandException

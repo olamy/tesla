@@ -11,6 +11,9 @@ import java.lang.reflect.Type;
 
 /**
  * An argument/option injector used to inject the argument/option value and provide information about injection point.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public interface ActionInjector
 {

@@ -12,9 +12,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class URLAwareInputStream
     extends FilterInputStream

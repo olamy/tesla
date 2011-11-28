@@ -22,6 +22,10 @@ import java.util.zip.ZipEntry;
 
 import aQute.lib.osgi.Analyzer;
 
+/**
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
+ */
 class Maven2OSGiUtils
 {
 

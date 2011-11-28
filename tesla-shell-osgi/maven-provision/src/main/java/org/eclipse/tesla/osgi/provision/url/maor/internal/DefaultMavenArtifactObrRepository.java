@@ -37,9 +37,8 @@ import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.sisu.maven.bridge.MavenDependencyTreeResolver;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 public class DefaultMavenArtifactObrRepository

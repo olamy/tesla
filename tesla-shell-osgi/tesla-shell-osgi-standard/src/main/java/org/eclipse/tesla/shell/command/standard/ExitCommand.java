@@ -16,7 +16,8 @@ import org.apache.karaf.shell.commands.Command;
 /**
  * Alias for "shell:logout".
  *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 @Command( scope = "shell", name = "exit", description = "Exit shell" )

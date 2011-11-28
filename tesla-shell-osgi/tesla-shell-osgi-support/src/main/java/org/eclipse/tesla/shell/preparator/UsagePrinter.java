@@ -27,6 +27,9 @@ import jline.Terminal;
 
 /**
  * Utility class for printing usage (help) information about an action.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class UsagePrinter
 {

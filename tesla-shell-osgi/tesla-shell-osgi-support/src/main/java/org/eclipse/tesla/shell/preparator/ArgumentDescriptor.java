@@ -13,6 +13,9 @@ import org.apache.karaf.shell.commands.Argument;
 
 /**
  * Describes an action argument.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class ArgumentDescriptor
 {

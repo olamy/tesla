@@ -11,9 +11,8 @@ import java.security.MessageDigest;
 import javax.inject.Named;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 public class Sha1Digester

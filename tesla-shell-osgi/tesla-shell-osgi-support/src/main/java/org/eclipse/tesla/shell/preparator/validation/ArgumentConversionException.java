@@ -17,6 +17,9 @@ import org.fusesource.jansi.Ansi;
 
 /**
  * Exception thrown in case that an argument could not be converted to expected type.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class ArgumentConversionException
     extends CommandException

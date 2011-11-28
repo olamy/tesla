@@ -27,9 +27,8 @@ import org.sonatype.gshell.util.NameAware;
 import org.sonatype.inject.BeanEntry;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 class GShellShimCommand
     extends AbstractCommand

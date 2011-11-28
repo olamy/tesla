@@ -32,9 +32,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 @EagerSingleton

@@ -35,9 +35,8 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.inject.EagerSingleton;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 @EagerSingleton
@@ -110,7 +109,7 @@ class DefaultProvisioner
                                 {
                                     try
                                     {
-                                        bundleContext.getBundle(0).stop();
+                                        bundleContext.getBundle( 0 ).stop();
                                     }
                                     catch ( BundleException ignore )
                                     {

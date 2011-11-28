@@ -13,6 +13,9 @@ import org.fusesource.jansi.Ansi;
 
 /**
  * Exception thrown in case that an action implementation has multiple options withs same name / alias.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class MultipleOptionsWithSameNameException
     extends CommandException

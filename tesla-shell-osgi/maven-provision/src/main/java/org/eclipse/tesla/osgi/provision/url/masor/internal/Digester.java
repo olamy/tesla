@@ -8,13 +8,12 @@
 package org.eclipse.tesla.osgi.provision.url.masor.internal;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public interface Digester
 {
 
-    String digest(String... values);
+    String digest( String... values );
 
 }

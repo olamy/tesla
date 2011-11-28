@@ -32,9 +32,8 @@ import org.sonatype.sisu.maven.bridge.support.session.MavenBridgeRepositorySyste
 import org.sonatype.sisu.maven.bridge.support.settings.DefaultMavenSettingsFactory;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class Handler
     extends URLStreamHandler

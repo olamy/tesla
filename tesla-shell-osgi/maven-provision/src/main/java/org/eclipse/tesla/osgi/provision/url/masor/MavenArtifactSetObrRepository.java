@@ -10,9 +10,8 @@ package org.eclipse.tesla.osgi.provision.url.masor;
 import java.io.InputStream;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public interface MavenArtifactSetObrRepository
 {

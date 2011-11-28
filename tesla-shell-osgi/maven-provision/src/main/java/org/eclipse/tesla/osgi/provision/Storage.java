@@ -14,9 +14,8 @@ import org.eclipse.tesla.osgi.provision.internal.TempDirStorage;
 import com.google.inject.ImplementedBy;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @ImplementedBy( TempDirStorage.class )
 public interface Storage

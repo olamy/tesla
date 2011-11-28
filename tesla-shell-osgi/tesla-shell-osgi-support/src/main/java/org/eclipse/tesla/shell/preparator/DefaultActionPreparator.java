@@ -19,6 +19,10 @@ import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 import org.apache.karaf.shell.commands.basic.ActionPreparator;
 
+/**
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
+ */
 public class DefaultActionPreparator
     extends AbstractActionPreparator
     implements ActionPreparator

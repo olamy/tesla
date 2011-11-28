@@ -32,6 +32,9 @@ import org.junit.Test;
 
 /**
  * {@link DefaultActionPreparator} UTs.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class DefaultActionPreparatorTest
 {

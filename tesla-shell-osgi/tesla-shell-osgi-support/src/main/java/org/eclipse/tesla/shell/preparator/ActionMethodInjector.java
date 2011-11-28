@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 
 /**
  * A {@link Method} {@link ActionInjector}.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class ActionMethodInjector
     implements ActionInjector

@@ -43,9 +43,8 @@ import org.sonatype.sisu.maven.bridge.MavenModelResolver;
 import aQute.lib.osgi.Builder;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class Connection
     extends URLConnection

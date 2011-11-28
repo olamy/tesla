@@ -15,9 +15,8 @@ import java.net.URLConnection;
 import org.eclipse.tesla.osgi.provision.url.maor.MavenArtifactObrRepository;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class Connection
     extends URLConnection

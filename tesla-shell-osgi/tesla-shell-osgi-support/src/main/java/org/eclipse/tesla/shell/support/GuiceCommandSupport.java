@@ -12,9 +12,8 @@ import org.apache.karaf.shell.commands.basic.ActionPreparator;
 import org.eclipse.tesla.shell.preparator.DefaultActionPreparator;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public abstract class GuiceCommandSupport
     extends AbstractCommand

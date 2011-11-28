@@ -10,9 +10,8 @@ package org.eclipse.tesla.shell.spi;
 import org.apache.felix.service.command.Function;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public interface FunctionDescriptor
 {
@@ -33,7 +32,7 @@ public interface FunctionDescriptor
 
         private final Function function;
 
-        public Default(final String scope, final String name, final Function function)
+        public Default( final String scope, final String name, final Function function )
         {
             this.scope = scope;
             this.name = name;

@@ -11,9 +11,8 @@ import java.io.Closeable;
 import java.io.IOException;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class IOUtils
 {

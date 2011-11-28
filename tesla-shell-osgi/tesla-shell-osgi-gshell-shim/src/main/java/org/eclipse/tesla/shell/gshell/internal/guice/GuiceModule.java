@@ -14,9 +14,8 @@ import org.sonatype.gshell.guice.CoreModule;
 import com.google.inject.AbstractModule;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 @Named
 @Singleton

@@ -13,6 +13,9 @@ import org.apache.karaf.shell.commands.Option;
 
 /**
  * Describes an action option.
+ *
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class OptionDescriptor
 {

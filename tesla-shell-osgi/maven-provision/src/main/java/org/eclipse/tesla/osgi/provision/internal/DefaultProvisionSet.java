@@ -29,9 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 class DefaultProvisionSet
     implements ProvisionSet
@@ -115,7 +114,7 @@ class DefaultProvisionSet
         for ( final Reason reason : reasons )
         {
             // TODO make a human readable printout
-            if ( reason.getResource() == null || reason.getResource().getId() ==null )
+            if ( reason.getResource() == null || reason.getResource().getId() == null )
             {
                 err.println( String.format( "  %s", reason.getRequirement() ) );
             }

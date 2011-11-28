@@ -18,9 +18,8 @@ import org.eclipse.tesla.osgi.provision.url.masor.internal.DefaultMavenArtifactS
 import org.eclipse.tesla.osgi.provision.url.masor.internal.Sha1Digester;
 
 /**
- * TODO
- *
- * @since 1.0
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
  */
 public class Handler
     extends URLStreamHandler

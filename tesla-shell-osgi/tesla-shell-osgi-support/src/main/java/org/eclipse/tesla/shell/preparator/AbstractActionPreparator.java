@@ -37,6 +37,10 @@ import org.eclipse.tesla.shell.preparator.validation.OptionConversionException;
 import org.eclipse.tesla.shell.preparator.validation.TooManyArgumentsException;
 import org.eclipse.tesla.shell.preparator.validation.TooManyOptionsException;
 
+/**
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
+ */
 public abstract class AbstractActionPreparator
     implements ActionPreparator
 {
