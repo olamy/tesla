@@ -1,3 +1,10 @@
+/**********************************************************************************************************************
+ * Copyright (c) 2011 to original author or authors                                                                   *
+ * All rights reserved. This program and the accompanying materials                                                   *
+ * are made available under the terms of the Eclipse Public License v1.0                                              *
+ * which accompanies this distribution, and is available at                                                           *
+ *   http://www.eclipse.org/legal/epl-v10.html                                                                        *
+ **********************************************************************************************************************/
 package org.sonatype.maven.shell.maven.internal;
 
 import java.io.IOException;
@@ -9,7 +16,12 @@ import java.util.NoSuchElementException;
 
 import org.osgi.framework.Bundle;
 
-public class BundleClassLoader extends ClassLoader
+/**
+ * @author <a href="mailto:adreghiciu@gmail.com">Alin Dreghiciu</a>
+ * @since 3.0.4
+ */
+public class OsgiBundleClassLoader
+    extends ClassLoader
 {
 
     private static final EmptyEnumeration<URL> EMPTY_URL_ENUMERATION = new EmptyEnumeration<URL>();
@@ -17,6 +29,7 @@ public class BundleClassLoader extends ClassLoader
     private static final class EmptyEnumeration<T>
         implements Enumeration<T>
     {
+
         public boolean hasMoreElements()
         {
             return false;
@@ -37,12 +50,10 @@ public class BundleClassLoader extends ClassLoader
      * Privileged factory method.
      *
      * @param bundle bundle to be used for class loading. Cannot be null.
-     *
      * @return created bundle class loader
-     *
-     * @see BundleClassLoader#BundleClassLoader(Bundle)
+     * @see OsgiBundleClassLoader#OsgiBundleClassLoader(Bundle)
      */
-    public static BundleClassLoader newPriviledged( final Bundle bundle )
+    public static OsgiBundleClassLoader newPriviledged( final Bundle bundle )
     {
         return newPriviledged( bundle, null );
     }
@@ -52,18 +63,16 @@ public class BundleClassLoader extends ClassLoader
      *
      * @param bundle bundle to be used for class loading. Cannot be null.
      * @param parent parent class loader
-     *
      * @return created bundle class loader
-     *
-     * @see BundleClassLoader#BundleClassLoader(Bundle,ClassLoader)
+     * @see OsgiBundleClassLoader#OsgiBundleClassLoader(Bundle, ClassLoader)
      */
-    public static BundleClassLoader newPriviledged( final Bundle bundle, final ClassLoader parent )
+    public static OsgiBundleClassLoader newPriviledged( final Bundle bundle, final ClassLoader parent )
     {
-        return AccessController.doPrivileged( new PrivilegedAction<BundleClassLoader>()
+        return AccessController.doPrivileged( new PrivilegedAction<OsgiBundleClassLoader>()
         {
-            public BundleClassLoader run()
+            public OsgiBundleClassLoader run()
             {
-                return new BundleClassLoader( bundle, parent );
+                return new OsgiBundleClassLoader( bundle, parent );
             }
         } );
     }
@@ -73,7 +82,7 @@ public class BundleClassLoader extends ClassLoader
      *
      * @param bundle bundle to be used for class loading. Cannot be null.
      */
-    public BundleClassLoader( final Bundle bundle )
+    public OsgiBundleClassLoader( final Bundle bundle )
     {
         this( bundle, null );
     }
@@ -84,7 +93,7 @@ public class BundleClassLoader extends ClassLoader
      * @param bundle bundle to be used for class loading. Cannot be null.
      * @param parent parent class loader
      */
-    public BundleClassLoader( final Bundle bundle, final ClassLoader parent )
+    public OsgiBundleClassLoader( final Bundle bundle, final ClassLoader parent )
     {
         super( parent );
         m_bundle = bundle;
@@ -110,7 +119,7 @@ public class BundleClassLoader extends ClassLoader
     @Override
     public URL getResource( final String name )
     {
-        if( getParent() != null )
+        if ( getParent() != null )
         {
             return super.getResource( name );
         }
@@ -125,11 +134,11 @@ public class BundleClassLoader extends ClassLoader
      * @see ClassLoader#getResources(String)
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public Enumeration<URL> getResources( final String name )
         throws IOException
     {
-        if( getParent() != null )
+        if ( getParent() != null )
         {
             return super.getResources( name );
         }
@@ -162,12 +171,12 @@ public class BundleClassLoader extends ClassLoader
     protected Class loadClass( final String name, final boolean resolve )
         throws ClassNotFoundException
     {
-        if( getParent() != null )
+        if ( getParent() != null )
         {
             return super.loadClass( name, resolve );
         }
         final Class classToLoad = findClass( name );
-        if( resolve )
+        if ( resolve )
         {
             resolveClass( classToLoad );
         }
@@ -191,13 +200,13 @@ public class BundleClassLoader extends ClassLoader
      * @see ClassLoader#findResources(String)
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected Enumeration<URL> findResources( final String name )
         throws IOException
     {
         Enumeration resources = m_bundle.getResources( name );
         // Bundle.getResources may return null, in such case return empty enumeration
-        if( resources == null )
+        if ( resources == null )
         {
             return EMPTY_URL_ENUMERATION;
         }
@@ -217,23 +226,23 @@ public class BundleClassLoader extends ClassLoader
     @Override
     public boolean equals( Object o )
     {
-        if( this == o )
+        if ( this == o )
         {
             return true;
         }
-        if( o == null || getClass() != o.getClass() )
+        if ( o == null || getClass() != o.getClass() )
         {
             return false;
         }
 
-        BundleClassLoader that = (BundleClassLoader) o;
+        OsgiBundleClassLoader that = (OsgiBundleClassLoader) o;
 
-        if( m_bundle != null ? !m_bundle.equals( that.m_bundle ) : that.m_bundle != null )
+        if ( m_bundle != null ? !m_bundle.equals( that.m_bundle ) : that.m_bundle != null )
         {
             return false;
         }
 
-        if( getParent() != null ? !getParent().equals( that.getParent() ) : that.getParent() != null )
+        if ( getParent() != null ? !getParent().equals( that.getParent() ) : that.getParent() != null )
         {
             return false;
         }
@@ -244,6 +253,8 @@ public class BundleClassLoader extends ClassLoader
     @Override
     public int hashCode()
     {
-        return (m_bundle != null ? m_bundle.hashCode() : 0) * 37 + (getParent() != null ? getParent().hashCode() : 0);
+        return ( m_bundle != null ? m_bundle.hashCode() : 0 ) * 37 + ( getParent() != null
+            ? getParent().hashCode()
+            : 0 );
     }
 }
